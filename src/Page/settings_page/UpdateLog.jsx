@@ -42,7 +42,7 @@ export function UpdateLog(){
 ## Build 2024/11/01
 项目突然崩溃，导致被迫重构代码
 ### 🎉 优化
-*优化移动端点击效果
+* 优化移动端点击效果
 ---
 ## Build 2024/10/31 <BetaTag></BetaTag> <LatestTag></LatestTag>
 ### 🎁 新增
