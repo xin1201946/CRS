@@ -1,7 +1,6 @@
 import { MarkdownRender, Tag} from '@douyinfe/semi-ui';
 import {IconVerify} from "@douyinfe/semi-icons";
 import {getSettings} from "../../code/Settings.js";
-import { AiOutlineBug } from "react-icons/ai";
 import Text from "@douyinfe/semi-ui/lib/es/typography/text.js";
 export function UpdateLog(){
     const components = {}
@@ -18,16 +17,6 @@ export function UpdateLog(){
             Release
         </Tag>
     }
-    components['BetaTag'] = () => {
-        return <Tag
-            color='light-blue'
-            prefixIcon={<AiOutlineBug />}
-            size='large'
-            shape='circle'
-        >
-            Beta
-        </Tag>
-    }
     components['LatestTag'] = () => {
         return <Tag
             color='light-blue'
@@ -39,12 +28,12 @@ export function UpdateLog(){
         </Tag>
     }
     const raw_source=`
-## Build 2024/11/01
+## Build 2024/11/01 <ReleaseTag></ReleaseTag> <LatestTag></LatestTag>
 项目突然崩溃，导致被迫重构代码
 ### 🎉 优化
 * 优化移动端点击效果
 ---
-## Build 2024/10/31 <BetaTag></BetaTag> <LatestTag></LatestTag>
+## Build 2024/10/31 <ReleaseTag></ReleaseTag>
 ### 🎁 新增
 * 按下 \`esc\` 可以退出所有已打开的抽屉
 * 新的 404 界面 <Link404></Link404>
@@ -71,7 +60,7 @@ export function UpdateLog(){
 * 完善\`主题\`的具体功能
 
 ---
-## Build 2024/10/29 <BetaTag></BetaTag>
+## Build 2024/10/29 <ReleaseTag></ReleaseTag>
 ### 🔧 修复
 * 修复 \`服务器检测\` 功能在正常联通服务器的情况下仍显示无法联通服务器的问题
 

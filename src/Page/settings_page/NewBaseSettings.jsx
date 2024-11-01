@@ -9,7 +9,6 @@ import {
     Switch,
     Tag,
     Toast,
-    Tooltip,
     Typography
 } from "@douyinfe/semi-ui";
 import {getSettings, setSettings} from "../../code/Settings.js";

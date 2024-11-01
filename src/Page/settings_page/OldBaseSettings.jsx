@@ -9,7 +9,6 @@ import {
     Space, Switch,
     Tag,
     Toast,
-    Tooltip,
     Typography
 } from "@douyinfe/semi-ui";
 import {isHalloweenPeriod} from "../../code/is_wsj.js";
