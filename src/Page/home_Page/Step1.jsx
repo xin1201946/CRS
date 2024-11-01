@@ -1,7 +1,7 @@
 
-import {Toast, Col, Row, Upload, Button, Descriptions, Card, Spin} from '@douyinfe/semi-ui';
+import {Toast, Col, Row, Upload, Button, Descriptions, Spin} from '@douyinfe/semi-ui';
 import {getSettings} from "../../code/Settings.js";
-import {IconPlus, IconUpload} from "@douyinfe/semi-icons";
+import {IconPlus} from "@douyinfe/semi-icons";
 import {useState} from "react";
 
 
