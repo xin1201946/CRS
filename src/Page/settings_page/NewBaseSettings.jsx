@@ -77,6 +77,15 @@ export function NewBaseSettingsPage() {
     }
     function save_data(){
         let server_ip=document.getElementById("server_ip_inputbox").value;
+        // 去掉前缀
+        if (server_ip.startsWith("https://")) {
+            server_ip = server_ip.substring(8); // 去掉 https://
+        } else if (server_ip.startsWith("http://")) {
+            server_ip = server_ip.substring(7); // 去掉 http://
+        }
+        if (server_ip.endsWith("/")) {
+            server_ip = server_ip.slice(0, -1);
+        }
         if (setSettings('server_ip',server_ip)){
             let opts = {
                 content: (
