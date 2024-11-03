@@ -1,5 +1,4 @@
 import {
-    Banner,
     Button,
     Card,
     Input, Popover,
@@ -13,13 +12,11 @@ import {
 } from "@douyinfe/semi-ui";
 import {getSettings, setSettings} from "../../code/Settings.js";
 import React, {useState} from "react";
-import {isHalloweenPeriod} from "../../code/is_wsj.js";
 import {Title} from "@douyinfe/semi-ui/lib/es/skeleton/item.js";
 import {IconInfoCircle} from "@douyinfe/semi-icons";
+import {setDarkTheme,setLightTheme,setAutoTheme,getTheme} from "../../code/theme_color.js";
 
 export function NewBaseSettingsPage() {
-    const body = document.body;
-    const [showWSJTheme, setWSJTheme] = useState(getSettings('new_settings_page') === 'true');
     const { Text } = Typography;
     const [switchchecked, setswitchChecked] = useState(true);
     const onswitchChange = checked => {
@@ -39,40 +36,18 @@ export function NewBaseSettingsPage() {
         Toast.info(opts);
         setSettings('new_settings_page',checked.toString());
     };
-    React.useEffect(() => {
-        const isHalloween = isHalloweenPeriod();
-        if(isHalloween){
-            setWSJTheme(false)
-        }
-    }, []);
-    function theme_int() {
-        const isHalloween = isHalloweenPeriod();
-        if(isHalloween && (getSettings('is_wsj') ==='true')){
-            return 2
-        }else{
-            return 1
-        }
-    }
-    function showToast(message) {
-        let opts = {
-            content: (
-                <Space>
-                    <Text>{message}</Text>
-                    <Text link={{ href: window.location.href }}>
-                        刷新主题
-                    </Text>
-                </Space>
-            ),
-            duration: 3,
-            stack: true,
-        };
-        Toast.info(opts);
+
+    function set_autocolor(){
+        setAutoTheme();
+        setSettings('theme_color','auto')
     }
     function set_light(){
-        body.removeAttribute('theme-mode');
+        setLightTheme();
+        setSettings('theme_color','light')
     }
     function set_dark(){
-        body.setAttribute('theme-mode', 'dark');
+        setDarkTheme();
+        setSettings('theme_color','dark')
     }
     function save_data(){
         let server_ip=document.getElementById("server_ip_inputbox").value;
@@ -108,10 +83,14 @@ export function NewBaseSettingsPage() {
     }
     function color_int(){
         const body = document.body;
-        if (body.hasAttribute('theme-mode')) {
-            return 2
+        if (getSettings('theme_color')!=='auto') {
+            if (body.hasAttribute('theme-mode')) {
+                return 2
+            }else{
+                return 1
+            }
         } else {
-            return 1
+            return 0
         }
     }
     return(
@@ -127,7 +106,6 @@ export function NewBaseSettingsPage() {
             </Card>
             <br/>
             <Card title='主题色'>
-
                 <Space>
                     <RadioGroup
                         type='pureCard'
@@ -136,6 +114,17 @@ export function NewBaseSettingsPage() {
                         aria-label="主题色"
                         name="demo-radio-group-pureCard"
                     >
+                        <Radio value={0} extra='' style={{width: 280}}
+                               onChange={function () {
+                                   set_autocolor()
+                               }}
+                        >
+                            <Space>
+                                自动切换
+                                <Tag size="small" shape='circle' color='blue'> New </Tag>
+                            </Space>
+                        </Radio>
+
                         <Radio value={1} extra='' style={{width: 280}}
                                onChange={function () {
                                    set_light()
@@ -149,43 +138,6 @@ export function NewBaseSettingsPage() {
                                }}
                         >
                             暗色模式
-                        </Radio>
-                    </RadioGroup>
-                </Space>
-            </Card>
-            <br/>
-            <Card title='主题'>
-                <Banner type={'warning'} fullMode={false}
-                        description="部分主题可能影响设备流畅度。如遇卡顿，请切换至默认主题"
-                />
-                <br/>
-                <Space>
-
-                    <RadioGroup
-                        type='pureCard'
-                        defaultValue={theme_int()}
-                        direction='vertical'
-                        aria-label="主题"
-                        name="demo-radio-group-pureCard"
-                    >
-
-                        <Radio value={1} extra='UI 默认配色主题' style={{width: 280}}
-                               onChange={function () {
-                                   setSettings('is_wsj', 'false');
-                                   showToast('加载成功')
-                               }}
-                        >
-                            默认主题
-                        </Radio>
-                        <Radio value={2} disabled={showWSJTheme} extra='限时在万圣节先后15天内开放'
-                               style={{width: 280, fontFamily: "HalloweenEN,HalloweenCN"}}
-                               onChange={function () {
-                                   setSettings('is_wsj', 'true');
-                                   showToast('加载成功')
-                               }}
-                        >
-                            万圣节主题 &nbsp;
-                            <Tag size="small" shape='circle' color='blue'> Beta </Tag>
                         </Radio>
                     </RadioGroup>
                 </Space>

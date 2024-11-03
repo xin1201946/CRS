@@ -7,6 +7,7 @@ export function UpdateLog(){
     components['Link404']=()=>{
         return <Text link={{href:'http://'+getSettings('server_ip')+'/abc',target:'_blank'}}>点我访问</Text>
     }
+
     components['ReleaseTag'] = () => {
         return <Tag
             color='light-blue'
@@ -28,8 +29,18 @@ export function UpdateLog(){
         </Tag>
     }
     const raw_source=`
-## Build 2024/11/01 <ReleaseTag></ReleaseTag> <LatestTag></LatestTag>
-项目突然崩溃，导致被迫重构代码
+## Build 2024/11/04 <ReleaseTag></ReleaseTag> <LatestTag></LatestTag>
+### 🎁 新增
+* Header可以切换自动主题啦
+* 事件查看器(仅监控API事件，不监控服务器事件)
+* UI主题色的 “自动切换” 功能
+* 新的主题色切换API
+### 🎉 优化
+* 删除部分冗余代码
+### 📢 通知
+* 主题功能已经下线
+---
+## Build 2024/11/01 <ReleaseTag></ReleaseTag>
 ### 🎉 优化
 * 优化移动端点击效果
 ---

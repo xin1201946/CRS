@@ -1,26 +1,34 @@
 
 import "./header.css"
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react';
-import {Button, SideSheet, Col, Row, Space, Toast} from '@douyinfe/semi-ui';
-import {IconSetting,IconMoon} from '@douyinfe/semi-icons';
+import React, {useEffect, useState} from 'react';
+import {Button, SideSheet, Col, Row, Space} from '@douyinfe/semi-ui';
 import {Settings} from "../Page/Settings.jsx";
 import {FooterPage} from "../Footer/Footer.jsx";
+import {getSettings} from "../code/Settings.js";
+import {MdHdrAuto, MdNightlight, MdOutlineDarkMode, MdOutlineLightMode} from "react-icons/md";
+import {IoMdSettings} from "react-icons/io";
+import {getSetTheme, setAutoTheme, setDarkTheme, setLightTheme} from "../code/theme_color.js";
 
 
 export function Header1 (){
     const [settingP_visible, set_settingP_Visible] = useState(false);
+    const [settingThemeIcon, set_ThemeIcon] = useState(getSettings('theme_color')==='auto'?<MdHdrAuto />:getSettings('theme_color')==='light'?<MdOutlineLightMode />:<MdNightlight />);
     const s_side_sheet_change = () => {
         set_settingP_Visible(!settingP_visible);
     };
-    const switchDarkMode = () => {
-        const body = document.body;
-        if (body.hasAttribute('theme-mode')) {
-            body.removeAttribute('theme-mode');
-        } else {
-            body.setAttribute('theme-mode', 'dark');
+    function switchDarkMode() {
+        if (getSetTheme() === 'dark') {
+            setAutoTheme(); // 确保调用函数
+            set_ThemeIcon(<MdHdrAuto />);
+        } else if (getSetTheme() === 'light') {
+            setDarkTheme(); // 确保调用函数
+            set_ThemeIcon(<MdOutlineDarkMode />);
+        } else if (getSetTheme() === 'auto') {
+            setLightTheme(); // 确保调用函数
+            set_ThemeIcon(<MdOutlineLightMode />);
         }
-    };
+    }
     return(
         <>
             <div style={{ fontFamily:"var(--Default-font)"}} className="grid">
@@ -30,9 +38,9 @@ export function Header1 (){
                 <Row type="flex" justify="end">
                     <Col>
                         <Space align={'center'}>
-                            <Button style={{margin: "10px"}} theme='borderless' icon={<IconMoon/>} onClick={switchDarkMode}
+                            <Button style={{margin: "10px"}} theme='borderless' icon={settingThemeIcon} onClick={switchDarkMode}
                                     aria-label="切换颜色"/>
-                            <Button style={{margin: "10px"}} theme='borderless' icon={<IconSetting/>}
+                            <Button style={{margin: "10px"}} theme='borderless' icon={<IoMdSettings />}
                                     onClick={s_side_sheet_change} aria-label="设置"/>
                         </Space>
                     </Col>

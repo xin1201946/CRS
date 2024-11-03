@@ -11,15 +11,12 @@ import {
     Toast,
     Typography
 } from "@douyinfe/semi-ui";
-import {isHalloweenPeriod} from "../../code/is_wsj.js";
 import {getSettings, setSettings} from "../../code/Settings.js";
 import {IconInfoCircle} from "@douyinfe/semi-icons";
 import {Title} from "@douyinfe/semi-ui/lib/es/skeleton/item.js";
 
 export function  OldBaseSettingsPage() {
     const body = document.body;
-    const [showWSJTheme, setWSJTheme] = useState(true);
-    const [themeValue, setThemeValue] = useState(1);
     const { Text } = Typography;
     const [switchchecked, setswitchChecked] = useState(getSettings('new_settings_page') === 'true');
     const onswitchChange = checked => {
@@ -39,30 +36,6 @@ export function  OldBaseSettingsPage() {
         Toast.info(opts);
         setSettings('new_settings_page',checked.toString());
     };
-    React.useEffect(() => {
-        const isHalloween = isHalloweenPeriod();
-        if(isHalloween){
-            setWSJTheme(false)
-        }
-        if(isHalloween && (getSettings('is_wsj') ==='true')){
-            setThemeValue(2)
-        }
-    }, []);
-    function showToast(message) {
-        let opts = {
-            content: (
-                <Space>
-                    <Text>{message}</Text>
-                    <Text link={{ href: window.location.href }}>
-                        刷新主题
-                    </Text>
-                </Space>
-            ),
-            duration: 3,
-            stack: true,
-        };
-        Toast.info(opts);
-    }
     function set_light(){
         body.removeAttribute('theme-mode');
     }
@@ -113,8 +86,13 @@ export function  OldBaseSettingsPage() {
     }
     return(
         <>
+            <Banner
+                fullMode={false}
+                closeIcon={null}
+                type="warning"
+                description="当前设置页仍在使用兼容Hook模式，并未迁移至新的API，可能会在某些功能产生兼容性问题。"
+            />
             <Collapse  accordion  defaultActiveKey="1">
-
                 <Collapse.Panel header="服务器地址" itemKey="1">
                     <Space>
                         <Input id={'server_ip_inputbox'} style={{width:'70%'}} defaultValue={getSettings('server_ip')}
@@ -123,6 +101,13 @@ export function  OldBaseSettingsPage() {
                     </Space>
                 </Collapse.Panel>
                 <Collapse.Panel header="主题色" itemKey="2">
+                    <Banner
+                        fullMode={false}
+                        closeIcon={null}
+                        type="warning"
+                        description="切换的主题色将会在刷新页面后重置"
+                    />
+                    <br/>
                     <Space>
                         <RadioGroup
                             type='pureCard'
@@ -146,45 +131,6 @@ export function  OldBaseSettingsPage() {
                                 暗色模式
                             </Radio>
                         </RadioGroup>
-                    </Space>
-                </Collapse.Panel>
-                <Collapse.Panel header="主题" itemKey="3" >
-                    <Banner type={'warning'} fullMode={false}
-                            description="部分主题可能影响设备流畅度。如遇卡顿，请切换至默认主题"
-                    />
-                    <br/>
-                    <Space>
-
-                        <RadioGroup
-                            type='pureCard'
-                            defaultValue={themeValue}
-                            direction='vertical'
-                            aria-label="主题"
-                            name="demo-radio-group-pureCard"
-                        >
-
-                            <Radio value={1} extra='UI 默认配色主题' style={{ width: 280 }}
-                                   onChange={function () {
-                                       setSettings('is_wsj','false');
-                                       showToast('加载成功')
-                                   }}
-                            >
-                                默认主题
-                            </Radio>
-                            <Radio value={2} disabled={showWSJTheme} extra='限时在万圣节先后15天内开放' style={{ width: 280 ,fontFamily:"HalloweenEN,HalloweenCN"}}
-                                   onChange={function () {
-                                       setSettings('is_wsj','true');
-                                       showToast('加载成功')
-                                   }}
-                            >
-                                万圣节主题 &nbsp;
-                                <Tag size="small" shape='circle' color='blue'> Beta </Tag>
-                            </Radio>
-                        </RadioGroup>
-                        {/*<Button   onClick={function () {*/}
-                        {/*    setSettings('is_wsj','true');*/}
-                        {/*    showToast('加载成功')*/}
-                        {/*}}>万圣节主题</Button>*/}
                     </Space>
                 </Collapse.Panel>
 

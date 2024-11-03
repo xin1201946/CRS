@@ -1,6 +1,7 @@
+import {add_log} from "./log.js";
 
 export function check_browser() {
-
+  add_log('Try_Check_Browser_Version','successfully')
   if (typeof window !== 'undefined') {
       const ua = navigator.userAgent.toLowerCase()
         let browserName = 'Unknown'
@@ -19,6 +20,7 @@ export function check_browser() {
           if (match) {
             browserName = browser.name
             browserVersion = match[1]
+            add_log('Check_Browser_Version','successfully',browserName+' == '+browserVersion)
             break
           }
         }

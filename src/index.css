@@ -6,14 +6,18 @@ html{
   -webkit-tap-highlight-color: transparent;
 }
 @font-face {
+    font-family: "Inter";
+    src: url('./Fonts/NotoSansSC-VariableFont_wght.ttf') format('truetype');
+}
+@font-face {
     font-family: 'Noto Sans SC';
     src: url('./Fonts/NotoSansSC-VariableFont_wght.ttf') format('truetype');
-    font-weight: 400; /* 可根据需要调整 */
+    font-weight: 700; /* 可根据需要调整 */
     font-style: normal; /* 可根据需要调整 */
 }
 @font-face {
     font-family: 'HalloweenCN';
-    src: url('./Fonts/HYHalloweenJ.ttf') format('truetype');
+    src: url('./Fonts/HYH.ttf') format('truetype');
     font-weight: 400; /* 可根据需要调整 */
     font-style: normal; /* 可根据需要调整 */
 }
@@ -45,9 +49,13 @@ body {
   transition-duration: 0.4s;
   -webkit-transition-duration: 0.4s;
 }
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
   }
+}
+.semi-sidesheet-content{
+    background-color: var(--semi-color-bg-0);
 }

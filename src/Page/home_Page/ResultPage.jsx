@@ -1,8 +1,6 @@
 import checkNetwork from '../../code/NetWorkConnect.js'
 import {Banner, Button, SideSheet} from "@douyinfe/semi-ui";
 import {getSettings} from "../../code/Settings.js";
-import { Lottie } from '@douyinfe/semi-ui';
-import {isHalloweenPeriod} from "../../code/is_wsj.js";
 import React, {useEffect, useState} from "react";
 import {FooterPage} from "../../Footer/Footer.jsx";
 import BaseSPage from "../settings_page/BaseS.jsx";
@@ -10,28 +8,10 @@ import './resultpage_css.css'
 import {Step1} from "./Step1.jsx";
 export function ResultPage(){
     const [settingP_visible, set_settingP_Visible] = useState(false);
-    const [HWvisible, setHWvisibleVisible] = useState('hidden');
-    const [jsonURL,setjsonURL] = useState('');
     const s_side_sheet_change = () => {
         set_settingP_Visible(!settingP_visible);
     };
 
-    React.useEffect(() => {
-    const isHalloween = isHalloweenPeriod();
-    if(isHalloween && (getSettings('is_wsj') ==='true')){
-        setjsonURL('https://lottie.host/7ccaf0cf-d9b1-4bdd-b0ec-01a6ced432a8/1ISnQCB6IB.json' );
-        setHWvisibleVisible("visible");
-    }
-    }, []);
-    function addDH(){
-        let height=0
-        if (isHalloweenPeriod() && (getSettings('is_wsj') ==='true')){
-            height="30%"
-        }
-        return(
-            <Lottie params={{ path: jsonURL }} width={'100%'}  height={height} />
-        )
-    }
     function MyComponent() {
     const [networkCheckResult, setNetworkCheckResult] = useState([null, null, null]);
 
@@ -86,8 +66,6 @@ export function ResultPage(){
         <>
             {MyComponent()}
             <br/>
-            {addDH()}
-            <p style={{visibility:HWvisible,fontSize:"30px",fontFamily:"HalloweenEN"}}>Happy Halloween 🎃</p>
             <div id={'container'}>
                 <div id={'returnpage'}>
                     <Step1></Step1>
