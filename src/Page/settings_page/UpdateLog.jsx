@@ -1,11 +1,11 @@
 import { MarkdownRender, Tag} from '@douyinfe/semi-ui';
 import {IconVerify} from "@douyinfe/semi-icons";
-import {getSettings} from "../../code/Settings.js";
 import Text from "@douyinfe/semi-ui/lib/es/typography/text.js";
+import {getServer} from "../../code/get_server.js";
 export function UpdateLog(){
     const components = {}
     components['Link404']=()=>{
-        return <Text link={{href:'http://'+getSettings('server_ip')+'/abc',target:'_blank'}}>点我访问</Text>
+        return <Text link={{href:getServer()+'/abc',target:'_blank'}}>点我访问</Text>
     }
 
     components['ReleaseTag'] = () => {
@@ -29,7 +29,15 @@ export function UpdateLog(){
         </Tag>
     }
     const raw_source=`
-## Build 2024/11/04 <ReleaseTag></ReleaseTag> <LatestTag></LatestTag>
+## Build 2024/11/05 <ReleaseTag></ReleaseTag>  <LatestTag></LatestTag>
+### 🎉 优化
+* 删除部分冗余代码
+### ⚠ 警告 
+本程序附带证书仅适用于域名 https://localhost.1201946.xyz/
+### 📢 通知
+* 网站已完全支持HTTPS服务器地址，在链接前加上HTTPS 以开启HTTPS服务。开启前请询问服务器管理员服务器是否已启用HTTPS服务，否则会导致数据无法发送！
+---
+## Build 2024/11/04 <ReleaseTag></ReleaseTag> 
 ### 🎁 新增
 * Header可以切换自动主题啦
 * 事件查看器(仅监控API事件，不监控服务器事件)

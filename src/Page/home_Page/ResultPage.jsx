@@ -1,11 +1,11 @@
 import checkNetwork from '../../code/NetWorkConnect.js'
 import {Banner, Button, SideSheet} from "@douyinfe/semi-ui";
-import {getSettings} from "../../code/Settings.js";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {FooterPage} from "../../Footer/Footer.jsx";
 import BaseSPage from "../settings_page/BaseS.jsx";
 import './resultpage_css.css'
 import {Step1} from "./Step1.jsx";
+import {getServer} from "../../code/get_server.js";
 export function ResultPage(){
     const [settingP_visible, set_settingP_Visible] = useState(false);
     const s_side_sheet_change = () => {
@@ -31,7 +31,7 @@ export function ResultPage(){
     function checkNetworks() {
        let message, type, children, result1;
        return new Promise((resolve) => {
-           checkNetwork(getSettings('server_ip')).then(result => {
+           checkNetwork(getServer()).then(result => {
                result1 = result;
                if (result1) {
                    message = '服务器连通成功。';

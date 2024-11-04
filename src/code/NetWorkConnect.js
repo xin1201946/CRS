@@ -3,7 +3,7 @@ import {add_log} from "./log.js";
 export default async function checkNetwork(serverIP) {
    let result;
    try {
-       const response = await fetch("http://"+serverIP+'/test');
+       const response = await fetch(serverIP+'/test');
        result = (response.status === 200);
        add_log('checkServerConnect','successfully',(response.status === 200).toString());
        // eslint-disable-next-line no-unused-vars

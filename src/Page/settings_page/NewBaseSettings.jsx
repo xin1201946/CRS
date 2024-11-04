@@ -11,14 +11,15 @@ import {
     Typography
 } from "@douyinfe/semi-ui";
 import {getSettings, setSettings} from "../../code/Settings.js";
-import React, {useState} from "react";
+import {useState} from "react";
 import {Title} from "@douyinfe/semi-ui/lib/es/skeleton/item.js";
 import {IconInfoCircle} from "@douyinfe/semi-icons";
-import {setDarkTheme,setLightTheme,setAutoTheme,getTheme} from "../../code/theme_color.js";
+import {setDarkTheme,setLightTheme,setAutoTheme} from "../../code/theme_color.js";
 
 export function NewBaseSettingsPage() {
     const { Text } = Typography;
     const [switchchecked, setswitchChecked] = useState(true);
+    const [httpschecked, sethttpsChecked] = useState(getSettings('use_https')==='true');
     const onswitchChange = checked => {
         setswitchChecked(checked);
         let opts = {
@@ -36,7 +37,10 @@ export function NewBaseSettingsPage() {
         Toast.info(opts);
         setSettings('new_settings_page',checked.toString());
     };
-
+    const onhttpschange = (e) =>{
+        sethttpsChecked(e)
+        setSettings('use_https',e);
+    }
     function set_autocolor(){
         setAutoTheme();
         setSettings('theme_color','auto')
@@ -54,8 +58,10 @@ export function NewBaseSettingsPage() {
         // 去掉前缀
         if (server_ip.startsWith("https://")) {
             server_ip = server_ip.substring(8); // 去掉 https://
+            setSettings('use_https','true')
         } else if (server_ip.startsWith("http://")) {
             server_ip = server_ip.substring(7); // 去掉 http://
+            setSettings('use_https','false')
         }
         if (server_ip.endsWith("/")) {
             server_ip = server_ip.slice(0, -1);
@@ -103,6 +109,42 @@ export function NewBaseSettingsPage() {
                            placeholder='一般是 IP:端口号 或者 域名' size='default'></Input>
                     <Button theme='outline' onClick={save_data} type='primary' style={{marginRight: 8}}>保存</Button>
                 </Space>
+                <br/>
+                <br/>
+                <Card
+                >
+                    <Space>
+                        使用HTTPS
+                        <Popover
+                            showArrow
+                            position={'top'}
+                            content={
+                                <article>
+                                    {getSettings('use_https')==='true' ? '关闭后失去Https传输保护' : '开启后刷新网页生效'}
+                                </article>
+                            }
+                        >
+                            <IconInfoCircle style={{color: 'var(--semi-color-primary)'}}></IconInfoCircle>
+                        </Popover>
+                        <Switch checked={httpschecked} onChange={onhttpschange} aria-label="a switch for demo"></Switch>
+                    </Space>
+                    <br/>
+                    <br/>
+                    <Space>
+                        HTTPS状态 {getSettings('use_https')}
+                        <Popover
+                            showArrow
+                            position={'top'}
+                            content={
+                                <article>
+                                    {getSettings('use_https')==='true' ? '你已启用HTTPS，发送的信息将加密传输' : '你输入的地址并未启用HTTPS'}
+                                </article>
+                            }
+                        >
+                            <IconInfoCircle style={{color: 'var(--semi-color-primary)'}}></IconInfoCircle>
+                        </Popover>
+                    </Space>
+                </Card>
             </Card>
             <br/>
             <Card title='主题色'>

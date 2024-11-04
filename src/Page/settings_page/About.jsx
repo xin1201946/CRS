@@ -8,6 +8,7 @@ import {Logs_Viewer} from "./Logs_Viewer.jsx"
 import {check_browser} from "../../code/browserCheck.js"
 import Meta from "@douyinfe/semi-ui/lib/es/card/meta.js";
 import {IconChevronRight} from "@douyinfe/semi-icons";
+import {getServer} from "../../code/get_server.js";
 
 
 export  default  function AboutWE(){
@@ -55,7 +56,7 @@ export  default  function AboutWE(){
                         <Descriptions.Item itemKey="应用名称">铸造字识别系统</Descriptions.Item>
                         <Descriptions.Item itemKey="构建日期">{getSettings('buile_time')}</Descriptions.Item>
                         <Descriptions.Item itemKey="服务器地址"><Text link={{
-                            href: "http://" + getSettings('server_ip'),
+                            href: getServer(),
                             target: '_blank'
                         }}>{getSettings('server_ip')}</Text></Descriptions.Item>
                     </Descriptions>

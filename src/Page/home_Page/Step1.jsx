@@ -1,16 +1,16 @@
 
 import {Toast, Col, Row, Upload, Button, Descriptions, Spin} from '@douyinfe/semi-ui';
-import {getSettings} from "../../code/Settings.js";
 import {IconPlus} from "@douyinfe/semi-icons";
 import {useState} from "react";
+import {getServer} from "../../code/get_server.js";
 
 
 export function Step1() {
     const [b1en,setb1en]=useState(true);
     const [datas,setdata]=useState([]);
     const [loading, toggleLoading] = useState(false);
-    let action = "http://"+getSettings('server_ip')+'/upload';
-    let clearfile = "http://"+getSettings('server_ip')+'/clear';
+    let action = getServer()+'/upload';
+    let clearfile = getServer()+'/clear';
     let imageOnly = '.png,.jpeg,.jpg,.bmp';
     function setLoading(bool){
         toggleLoading(bool);
@@ -21,7 +21,7 @@ export function Step1() {
     async function get_result() {
         setLoading(true)
         try {
-            const response = await fetch("http://"+getSettings('server_ip') + '/start');
+            const response = await fetch(getServer() + '/start');
             const data = await response.json(); // 根据需要解析数据
             update(data); // 调用 update 函数处理数据
         } catch (error) {

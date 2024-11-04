@@ -1,10 +1,11 @@
 import {Button, Modal,Input, Card, Descriptions, Tag, Space, Popover} from "@douyinfe/semi-ui";
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import { Table } from '@douyinfe/semi-ui';
 import {get_error_logs, get_logs, get_successfully_logs, get_warning_logs} from "../../code/log.js";
 import { VChart } from "@visactor/react-vchart";
 import {  Row } from '@douyinfe/semi-ui';
 import {IconInfoCircle} from "@douyinfe/semi-icons";
+import {detectDevice} from "../../code/check_platform.js";
 export  function Logs_Viewer(){
     const [filteredValue, setFilteredValue] = useState([]);
     const compositionRef = useRef({ isComposition: false });
@@ -133,14 +134,28 @@ export  function Logs_Viewer(){
                 <Button onClick={() => showDialog(text)}>查看</Button>
             );
         };
+        let pagination
 
-        const pagination = useMemo(
-            () => ({
-                pageSize: 5,
-                position: 'top',
-            }),
-            []
-        );
+        if (detectDevice()==='Phone'){
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            pagination = useMemo(
+                () => ({
+                    pageSize: 5,
+                    formatPageText:false ,
+                    position: 'top',
+                }),
+                []
+            );
+        }else{
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            pagination = useMemo(
+                () => ({
+                    pageSize: 7,
+                    position: 'top',
+                }),
+                []
+            );
+        }
 
         const handleChange = (value) => {
             if (compositionRef.current.isComposition) {
@@ -236,6 +251,7 @@ export  function Logs_Viewer(){
                 </h3>
 
                 <Table
+                    style={{width:'100%'}}
                     pagination={pagination}
                     dataSource={dataSource}
                     columns={columns}
@@ -271,7 +287,6 @@ export  function Logs_Viewer(){
                     </Space>
                 </Row>
             </div>
-
             {show_logs()}
         </>
     )

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import {useState} from "react";
 import {
     Banner,
     Button,
@@ -47,8 +47,10 @@ export function  OldBaseSettingsPage() {
         // 去掉前缀
         if (server_ip.startsWith("https://")) {
             server_ip = server_ip.substring(8); // 去掉 https://
+            setSettings('use_https','true')
         } else if (server_ip.startsWith("http://")) {
             server_ip = server_ip.substring(7); // 去掉 http://
+            setSettings('use_https','false')
         }
         if (server_ip.endsWith("/")) {
             server_ip = server_ip.slice(0, -1);
