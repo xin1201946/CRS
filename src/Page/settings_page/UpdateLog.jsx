@@ -30,10 +30,13 @@ export function UpdateLog(){
     }
     const raw_source=`
 ## Build 2024/11/05 <ReleaseTag></ReleaseTag>  <LatestTag></LatestTag>
+### 🎁 新增
+* 曾经被删除的 \`高级设置\`
+* 允许用户根据服务器设置更改 API 端口
 ### 🎉 优化
 * 删除部分冗余代码
 ### ⚠ 警告 
-本程序附带证书仅适用于域名 https://localhost.1201946.xyz/
+- 更改API 端口属于高级设置，随意更改会导致无法正常使用对应服务！
 ### 📢 通知
 * 网站已完全支持HTTPS服务器地址，在链接前加上HTTPS 以开启HTTPS服务。开启前请询问服务器管理员服务器是否已启用HTTPS服务，否则会导致数据无法发送！
 ---

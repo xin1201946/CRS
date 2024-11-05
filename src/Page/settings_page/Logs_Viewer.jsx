@@ -1,4 +1,4 @@
-import {Button, Modal,Input, Card, Descriptions, Tag, Space, Popover} from "@douyinfe/semi-ui";
+import {Button, Modal, Input, Card, Descriptions, Tag, Space, Popover, Typography} from "@douyinfe/semi-ui";
 import {useEffect, useMemo, useRef, useState} from 'react';
 import { Table } from '@douyinfe/semi-ui';
 import {get_error_logs, get_logs, get_successfully_logs, get_warning_logs} from "../../code/log.js";
@@ -7,6 +7,7 @@ import {  Row } from '@douyinfe/semi-ui';
 import {IconInfoCircle} from "@douyinfe/semi-icons";
 import {detectDevice} from "../../code/check_platform.js";
 export  function Logs_Viewer(){
+    const { Text } = Typography;
     const [filteredValue, setFilteredValue] = useState([]);
     const compositionRef = useRef({ isComposition: false });
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -28,7 +29,7 @@ export  function Logs_Viewer(){
     function showDialog(message){
         Modal.info({
             title: '详细信息',
-            content: message,
+            content: <><Text>{message}</Text></>,
             cancelButtonProps: { theme: 'borderless' },
             okButtonProps: { theme: 'solid' },
         });

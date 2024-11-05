@@ -6,10 +6,15 @@ import BaseSPage from "../settings_page/BaseS.jsx";
 import './resultpage_css.css'
 import {Step1} from "./Step1.jsx";
 import {getServer} from "../../code/get_server.js";
+import {AdvancedSettingsPage} from "../settings_page/AdvancedSettings.jsx";
 export function ResultPage(){
     const [settingP_visible, set_settingP_Visible] = useState(false);
     const s_side_sheet_change = () => {
         set_settingP_Visible(!settingP_visible);
+    };
+    const [settingadv_visible, set_settingadv_Visible] = useState(false);
+    const adv_side_sheet_change = () => {
+        set_settingadv_Visible(!settingadv_visible);
     };
 
     function MyComponent() {
@@ -39,12 +44,13 @@ export function ResultPage(){
 
                    children = "";
                } else {
-                   message = '服务器连通失败,请检查服务器IP是否发生变动。';
+                   message = '服务器连通失败,请检查服务器IP是否发生变动或者检查高级设置的HTTPS设置以及API设置。';
                    type = 'danger';
                    children = <>
                        {/* eslint-disable-next-line no-self-assign */}
                        <Button onClick={function(){window.location.href = window.location.href}}>刷新</Button>
-                       <Button style={{marginLeft:'5px'}} className="semi-button semi-button-warning" onClick={s_side_sheet_change} type="button">打开设置</Button>
+                       <Button style={{marginLeft:'5px'}} className="semi-button semi-button-warning" onClick={s_side_sheet_change} type="button">服务器IP</Button>
+                       <Button style={{marginLeft:'5px'}} className="semi-button semi-button-warning" onClick={adv_side_sheet_change} type="button">HTTPS设置和API设置</Button>
                        </>;
                }
                resolve([message, type, children]);
@@ -71,7 +77,10 @@ export function ResultPage(){
                     <Step1></Step1>
                 </div>
             </div>
-
+            <SideSheet closeOnEsc={true} style={{ maxWidth:"100%",fontFamily:"var(--Default-font)"}} title="高级设置" visible={settingadv_visible} onCancel={adv_side_sheet_change}
+                       footer={<FooterPage></FooterPage>}>
+                <AdvancedSettingsPage></AdvancedSettingsPage>
+            </SideSheet>
             <SideSheet closeOnEsc={true} style={{ maxWidth:"100%",fontFamily:"var(--Default-font)"}} title="基本设置" visible={settingP_visible} onCancel={s_side_sheet_change}
                        footer={<FooterPage></FooterPage>}>
                 <BaseSPage></BaseSPage>
