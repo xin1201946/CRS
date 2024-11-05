@@ -3,7 +3,7 @@ import {
     Card,
     Input, Popover,
     Radio,
-    RadioGroup,
+    RadioGroup, SideSheet,
     Space,
     Switch,
     Tag,
@@ -15,11 +15,15 @@ import {useState} from "react";
 import {Title} from "@douyinfe/semi-ui/lib/es/skeleton/item.js";
 import {IconInfoCircle} from "@douyinfe/semi-icons";
 import {setDarkTheme,setLightTheme,setAutoTheme} from "../../code/theme_color.js";
+import {AdvancedSettingsPage} from "./AdvancedSettings.jsx";
 
 export function NewBaseSettingsPage() {
     const { Text } = Typography;
     const [switchchecked, setswitchChecked] = useState(true);
-
+    const [advanSvisible, setadvanSVisible] = useState(false);
+    const advanSchange = () => {
+        setadvanSVisible(!advanSvisible);
+    };
     const onswitchChange = checked => {
         setswitchChecked(checked);
         let opts = {
@@ -170,6 +174,21 @@ export function NewBaseSettingsPage() {
                 </div>
             </Card>
             <br/>
+            <Card  style={{backgroundColor:'var( --semi-color-fill-0)'}}>
+                <Space spacing={'medium'} vertical align='left'>
+                    <Text style={{
+                        fontSize: 'medium',
+                        fontWeight: "bold",
+                        color: "var( --semi-color-text-2)"
+                    }}>在查找其他设置吗？</Text>
+                    <Text onClick={advanSchange} style={{color: 'var( --semi-color-link)',cursor:'pointer'}}>HTTPS服务</Text>
+                    <Text onClick={advanSchange} style={{color: 'var( --semi-color-link)',cursor:'pointer'}}>API设置</Text>
+                </Space>
+            </Card>
+            <br/>
+            <SideSheet style={{maxWidth:"100%"}}  closeOnEsc={true} title="高级设置" visible={advanSvisible} onCancel={advanSchange}>
+                <AdvancedSettingsPage></AdvancedSettingsPage>
+            </SideSheet>
         </>
     )
 }
