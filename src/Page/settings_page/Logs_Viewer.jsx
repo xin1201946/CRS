@@ -1,4 +1,4 @@
-import {Button, Modal, Input, Card, Descriptions, Tag, Space, Popover, Typography} from "@douyinfe/semi-ui";
+import {Button, Modal, Input, Card, Descriptions, Tag, Space, Popover, Typography, Toast} from "@douyinfe/semi-ui";
 import {useEffect, useMemo, useRef, useState} from 'react';
 import { Table } from '@douyinfe/semi-ui';
 import {get_error_logs, get_logs, get_successfully_logs, get_warning_logs} from "../../code/log.js";
@@ -27,12 +27,20 @@ export  function Logs_Viewer(){
         };
     }, []);
     function showDialog(message){
-        Modal.info({
-            title: '详细信息',
-            content: <><Text>{message}</Text></>,
-            cancelButtonProps: { theme: 'borderless' },
-            okButtonProps: { theme: 'solid' },
-        });
+        if(detectDevice() === 'Phone'){
+            Toast.info({
+                content: <><Text>{message}</Text></>,
+                duration: 5,
+                stack: true,
+            });
+        }else{
+            Modal.info({
+                title: '详细信息',
+                content: <><Text>{message}</Text></>,
+                cancelButtonProps: { theme: 'borderless' },
+                okButtonProps: { theme: 'solid' },
+            });
+        }
     }
     function get_logs_pie(){
         const commonSpec = {

@@ -9,6 +9,7 @@
 // info[已上传所有图片的信息]
 
 import {getSettings, setSettings} from "./Settings.js";
+import {add_log} from "./log.js";
 
 
 export function getAPI(name){
@@ -19,10 +20,12 @@ export function setAPI(name, value){
     let api_service=getSettings('api_service',true);
     api_service['api_'+name] = value;
     setSettings('api_service',api_service,true);
+    add_log('setAPI','successfully', name+" => "+value);
 }
 export function setAPIJ(JsonValue){
     console.log(JsonValue);
     setSettings('api_service',JsonValue,true);
+    add_log('setAPIJson','successfully');
 }
 export function setDefaultAPI(){
     let api_service = {
