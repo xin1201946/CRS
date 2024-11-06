@@ -7,9 +7,11 @@ import {HomePage} from "./Page/Home.jsx";
 import {getSettings} from "./code/Settings.js";
 import {setAutoTheme, queck_change_theme} from "./code/theme_color.js";
 import {add_log} from "./code/log.js";
+import register from "./code/registerServiceWorker.js";
 
 function App()
 {
+    register();
     add_log('UI Loading...','successfully','UI Loading(1/3)...');
     add_log('Check Settings...','successfully','UI Loading(2/3)...');
     initializeSettings()

@@ -4,7 +4,7 @@ import { Table } from '@douyinfe/semi-ui';
 import {get_error_logs, get_logs, get_successfully_logs, get_warning_logs} from "../../code/log.js";
 import { VChart } from "@visactor/react-vchart";
 import {  Row } from '@douyinfe/semi-ui';
-import {IconInfoCircle} from "@douyinfe/semi-icons";
+import {IconInfoCircle,IconHelpCircle} from "@douyinfe/semi-icons";
 import {detectDevice} from "../../code/check_platform.js";
 export  function Logs_Viewer(){
     const { Text } = Typography;
@@ -26,6 +26,35 @@ export  function Logs_Viewer(){
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+    function showInfoDialog(){
+        if(detectDevice() === 'Phone'){
+            Toast.info({
+                content: <><Text>本选项所使用的组件不兼容你的设备，请切换到PC以查看</Text></>,
+                duration: 5,
+                stack: true,
+            });
+        }else{
+            Modal.info({
+                title: '详细信息',
+                content: <>
+                    <Card bordered={false} style={{backgroundColor:'var( --semi-color-bg-2)'}}>
+                        <Text style={{color:'var(--semi-color-info)'}}>日志数量</Text>： 当前已经监听到的已发生事件总数
+                    </Card>
+                    <Card bordered={false} style={{backgroundColor:'var( --semi-color-bg-2)'}}>
+                        <Text style={{color:'var(--semi-color-success)'}}>Success级别数量</Text>：代表存在这些数目的事件已经完成操作，且未发生错误
+                    </Card>
+                    <Card bordered={false} style={{backgroundColor:'var( --semi-color-bg-2)'}}>
+                        <Text style={{color:'var( --semi-color-warning)'}}>Warning级别数量</Text>：代表存在这些数目的事件已完成操作，但是发生错误。但并不影响程序运行。
+                    </Card>
+                    <Card bordered={false} style={{backgroundColor:'var( --semi-color-bg-2)'}}>
+                        <Text style={{color:'var(--semi-color-danger)'}}>Error级别数量</Text>：代表存在这些数目的事件未完成操作且影响程序运行。你应重点观察此类事件的发生。通常在服务器未能联通便会触发。
+                    </Card>
+                </>,
+                cancelButtonProps: { theme: 'borderless' },
+                okButtonProps: { theme: 'solid' },
+            });
+        }
+    }
     function showDialog(message){
         if(detectDevice() === 'Phone'){
             Toast.info({
@@ -101,13 +130,20 @@ export  function Logs_Viewer(){
     function statistics_info(){
         const data = [
             { key: '日志数量', value: <Button theme={"borderless"} size={"small"}>{get_logs().length}</Button> },
-            { key: 'Info级别数量', value: <Button  type={"primary"} theme={"borderless"} size={"small"}>{get_successfully_logs().length}</Button> },
+            { key: 'Success级别数量', value: <Button  type={"primary"} theme={"borderless"} size={"small"}>{get_successfully_logs().length}</Button> },
             { key: 'Warning数量', value: <Button type={"warning"} theme={"borderless"} size={"small"}>{get_warning_logs().length}</Button>},
             { key: 'Error数量', value: <Button type={"danger"} theme={"borderless"} size={"small"}>{get_error_logs().length}</Button> },
         ];
         return (
             <>
-                <Card shadows='hover'>
+                <Card
+                    shadows='hover'
+                    title={'大致浏览'}
+                    onClick={showInfoDialog}
+                    headerExtraContent={
+                        <IconHelpCircle style={{ color: 'var(--semi-color-primary)' }} />
+                    }
+                >
                     <Descriptions data={data} />
                 </Card>
             </>
@@ -282,7 +318,7 @@ export  function Logs_Viewer(){
                                 快速查看UI在浏览器的运行情况
                             </article>
                         }
-                        position={'right'}
+                        position={"right"}
                     >
                         <IconInfoCircle style={{ color: 'var(--semi-color-primary)' }}/>
                     </Popover>

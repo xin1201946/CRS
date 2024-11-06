@@ -16,6 +16,7 @@ import {Title} from "@douyinfe/semi-ui/lib/es/skeleton/item.js";
 import {IconInfoCircle} from "@douyinfe/semi-icons";
 import {setDarkTheme,setLightTheme,setAutoTheme} from "../../code/theme_color.js";
 import {AdvancedSettingsPage} from "./AdvancedSettings.jsx";
+import {Logs_Viewer} from "./Logs_Viewer.jsx";
 
 export function NewBaseSettingsPage() {
     const { Text } = Typography;
@@ -23,6 +24,10 @@ export function NewBaseSettingsPage() {
     const [advanSvisible, setadvanSVisible] = useState(false);
     const advanSchange = () => {
         setadvanSVisible(!advanSvisible);
+    };
+    const [LogsPvisible, setLogsPVisible] = useState(false);
+    const LogsPchange = () => {
+        setLogsPVisible(!LogsPvisible);
     };
     const onswitchChange = checked => {
         setswitchChecked(checked);
@@ -183,11 +188,17 @@ export function NewBaseSettingsPage() {
                     }}>在查找其他设置吗？</Text>
                     <Text onClick={advanSchange} style={{color: 'var( --semi-color-link)',cursor:'pointer'}}>HTTPS服务</Text>
                     <Text onClick={advanSchange} style={{color: 'var( --semi-color-link)',cursor:'pointer'}}>API设置</Text>
+                    <Text onClick={LogsPchange}
+                          style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>日志查看器</Text>
                 </Space>
             </Card>
             <br/>
             <SideSheet style={{maxWidth:"100%"}}  closeOnEsc={true} title="高级设置" visible={advanSvisible} onCancel={advanSchange}>
                 <AdvancedSettingsPage></AdvancedSettingsPage>
+            </SideSheet>
+            <SideSheet style={{width: "100%"}} closeOnEsc={true} title="日志查看器" visible={LogsPvisible}
+                       onCancel={LogsPchange}>
+                <Logs_Viewer></Logs_Viewer>
             </SideSheet>
         </>
     )

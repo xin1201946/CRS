@@ -13,7 +13,7 @@ import {getSetTheme, setAutoTheme, setDarkTheme, setLightTheme} from "../code/th
 
 export function Header1 (){
     const [settingP_visible, set_settingP_Visible] = useState(false);
-    const [settingThemeIcon, set_ThemeIcon] = useState(getSettings('theme_color')==='auto'?<MdHdrAuto style={{width:'20px',height:'20px'}} />:getSettings('theme_color')==='light'?<MdOutlineLightMode style={{width:'20px',height:'20px'}}/>:<MdNightlight style={{width:'20px',height:'20px'}}/>);
+    const [settingThemeIcon, set_ThemeIcon] = useState(getSettings('theme_color')==='auto'?<MdHdrAuto />:getSettings('theme_color')==='light'?<MdOutlineLightMode />:<MdNightlight/>);
     const s_side_sheet_change = () => {
         set_settingP_Visible(!settingP_visible);
     };

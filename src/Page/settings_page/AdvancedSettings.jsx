@@ -15,6 +15,7 @@ import {IconInfoCircle} from "@douyinfe/semi-icons";
 import {useState} from "react";
 import {getAPI,  setAPIJ, setDefaultAPI} from "../../code/server_api_settings.js";
 import BaseSPage from "./BaseS.jsx";
+import {Logs_Viewer} from "./Logs_Viewer.jsx";
 
 export function AdvancedSettingsPage() {
     const [httpschecked, sethttpsChecked] = useState(getSettings('use_https')==='true');
@@ -23,6 +24,10 @@ export function AdvancedSettingsPage() {
     const [advanSvisible, setadvanSVisible] = useState(false);
     const advanSchange = () => {
         setadvanSVisible(!advanSvisible);
+    };
+    const [LogsPvisible, setLogsPVisible] = useState(false);
+    const LogsPchange = () => {
+        setLogsPVisible(!LogsPvisible);
     };
     const onhttpschange = (e) =>{
         sethttpsChecked(e)
@@ -98,10 +103,10 @@ export function AdvancedSettingsPage() {
             <Card
                 header={<Text>API 设置</Text>}
             >
-                <Banner fullMode={false} type="danger" bordered closeIcon={null}
+                <Banner fullMode={false} icon={null} type="danger" bordered closeIcon={null}
                         title={<div style={{fontWeight: 600, fontSize: '14px', lineHeight: '20px'}}>⚠ 注意</div>}
                         description={
-                            <div>请确保服务器的API与本页面提供的API端口不符，否则会导致无法连接服务器<br/> 请在切换完毕后<Text
+                            <div>请确保服务器的API与本页面填写的API相同，否则会导致无法连接服务器<br/> 请在切换完毕后<Text
                                 link={{href: window.location}}>刷新网页</Text>已更新连接状态</div>}
                 >
                     <div className="semi-modal-footer">
@@ -170,12 +175,18 @@ export function AdvancedSettingsPage() {
                           style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>主题色</Text>
                     <Text onClick={advanSchange}
                           style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>UI 设置</Text>
+                    <Text onClick={LogsPchange}
+                          style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>日志查看器</Text>
                 </Space>
             </Card>
             <br/>
             <SideSheet style={{maxWidth: "100%"}} closeOnEsc={true} title="基本设置" visible={advanSvisible}
                        onCancel={advanSchange}>
                 <BaseSPage></BaseSPage>
+            </SideSheet>
+            <SideSheet style={{width: "100%"}} closeOnEsc={true} title="日志查看器" visible={LogsPvisible}
+                       onCancel={LogsPchange}>
+                <Logs_Viewer></Logs_Viewer>
             </SideSheet>
             <br/>
         </>

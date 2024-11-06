@@ -9,12 +9,28 @@ import {check_browser} from "../../code/browserCheck.js"
 import Meta from "@douyinfe/semi-ui/lib/es/card/meta.js";
 import {IconChevronRight} from "@douyinfe/semi-icons";
 import {getServer} from "../../code/get_server.js";
+import {BetaFunctionalityPage} from "./BetaFunctionality.jsx";
 
 
 export  default  function AboutWE(){
     const { Text } = Typography;
     const [upvisible, setupVisible] = useState(false);
     const [logvisible, setlogVisible] = useState(false);
+    const [beta, setbeta] = useState(0);
+    const [betavisible, setbetaVisible] = useState('hidden');
+    const [betaPagevisible, setbetaPageVisible] = useState(false);
+    const clickbeta = ()=>{
+        if (beta >= 8){
+            setbetaVisible('visible');
+            setbeta(0)
+        }else{
+            setbeta(beta + 1);
+        }
+
+    }
+    const betaPchange=()=>{
+        setbetaPageVisible(!betaPagevisible)
+    }
     const upchange = () => {
         setupVisible(!upvisible);
     };
@@ -51,7 +67,7 @@ export  default  function AboutWE(){
     function appInfo(){
         return (
             <>
-                <Card>
+                <Card onClick={clickbeta}>
                     <Descriptions align="left">
                         <Descriptions.Item itemKey="应用名称">铸造字识别系统</Descriptions.Item>
                         <Descriptions.Item itemKey="构建日期">{getSettings('buile_time')}</Descriptions.Item>
@@ -93,12 +109,30 @@ export  default  function AboutWE(){
                     />
                     <IconChevronRight style={{color: 'var(--semi-color-primary)'}}/>
                 </Card>
-
+                <br/>
+                <Card
+                    onClick={betaPchange}
+                    shadows='hover'
+                    style={{cursor: "pointer",visibility:betavisible}}
+                    bodyStyle={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                    }}
+                >
+                    <Meta
+                        title="BetaFunctionality"
+                    />
+                    <IconChevronRight style={{color: 'var(--semi-color-primary)'}}/>
+                </Card>
 
                 <SideSheet style={{maxWidth: "100%"}} title="更新日志" visible={upvisible} onCancel={upchange}
                            footer={<p>{check_browser()} | Software Build
                                Time: {getSettings('buile_time').toString().slice(0, 10)}</p>}>
                     <UpdateLog></UpdateLog>
+                </SideSheet>
+                <SideSheet style={{maxWidth: "100%"}} title="BetaFunc" visible={betaPagevisible} onCancel={betaPchange}>
+                    <BetaFunctionalityPage></BetaFunctionalityPage>
                 </SideSheet>
                 <SideSheet  style={{
                     width: '100%'
