@@ -7,6 +7,9 @@ import './resultpage_css.css'
 import {Step1} from "./Step1.jsx";
 import {getServer} from "../../code/get_server.js";
 import {AdvancedSettingsPage} from "../settings_page/AdvancedSettings.jsx";
+import {HomePage} from "./HomePage.jsx";
+import {on,off} from "../../code/PageEventEmitter.js";
+
 export function ResultPage(){
     const [settingP_visible, set_settingP_Visible] = useState(false);
     const s_side_sheet_change = () => {
@@ -16,7 +19,7 @@ export function ResultPage(){
     const adv_side_sheet_change = () => {
         set_settingadv_Visible(!settingadv_visible);
     };
-
+    const [page, setPage] = useState('home');
     function MyComponent() {
     const [networkCheckResult, setNetworkCheckResult] = useState([null, null, null]);
 
@@ -25,7 +28,18 @@ export function ResultPage(){
            setNetworkCheckResult(result);
        });
     }, []); // 空依赖数组表示这个 effect 只在组件挂载时运行一次
+    useEffect(() => {
+            const handleChangePage = (newPage) => {
+                setPage(newPage);
+            };
 
+            on('changePage', handleChangePage);
+
+            return () => {
+                off('changePage', handleChangePage);
+            };
+
+    }, []);
     return (
        <div>
            {showBanner(networkCheckResult)}
@@ -61,6 +75,8 @@ export function ResultPage(){
     function showBanner(list) {
        return (
            <Banner
+               fullMode={false}
+               icon={null}
                style={{ fontFamily:"var(--Default-font)"}}
                type={list[1]}
                description={list[0]}>
@@ -70,21 +86,22 @@ export function ResultPage(){
     }
     return (
         <>
-            {MyComponent()}
-            <br/>
-            <div id={'container'}>
-                <div id={'returnpage'}>
-                    <Step1></Step1>
+            <div style={{margin:'2%'}} >
+                {MyComponent()}
+                <div  id={'container'}>
+                    <div id={'returnpage'}>
+                        {page==='home'?<HomePage />:<Step1/>}
+                    </div>
                 </div>
+                <SideSheet closeOnEsc={true} style={{ maxWidth:"100%",fontFamily:"var(--Default-font)"}} title="高级设置" visible={settingadv_visible} onCancel={adv_side_sheet_change}
+                           footer={<FooterPage></FooterPage>}>
+                    <AdvancedSettingsPage></AdvancedSettingsPage>
+                </SideSheet>
+                <SideSheet closeOnEsc={true} style={{ maxWidth:"100%",fontFamily:"var(--Default-font)"}} title="基本设置" visible={settingP_visible} onCancel={s_side_sheet_change}
+                           footer={<FooterPage></FooterPage>}>
+                    <BaseSPage></BaseSPage>
+                </SideSheet>
             </div>
-            <SideSheet closeOnEsc={true} style={{ maxWidth:"100%",fontFamily:"var(--Default-font)"}} title="高级设置" visible={settingadv_visible} onCancel={adv_side_sheet_change}
-                       footer={<FooterPage></FooterPage>}>
-                <AdvancedSettingsPage></AdvancedSettingsPage>
-            </SideSheet>
-            <SideSheet closeOnEsc={true} style={{ maxWidth:"100%",fontFamily:"var(--Default-font)"}} title="基本设置" visible={settingP_visible} onCancel={s_side_sheet_change}
-                       footer={<FooterPage></FooterPage>}>
-                <BaseSPage></BaseSPage>
-            </SideSheet>
         </>
     )
 }

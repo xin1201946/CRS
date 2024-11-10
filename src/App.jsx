@@ -8,9 +8,10 @@ import {getSettings} from "./code/Settings.js";
 import {setAutoTheme, queck_change_theme} from "./code/theme_color.js";
 import {add_log} from "./code/log.js";
 import register from "./code/registerServiceWorker.js";
-
+import { Layout } from '@douyinfe/semi-ui';
 function App()
 {
+    const { Header, Footer, Content } = Layout;
     register();
     add_log('UI Loading...','successfully','UI Loading(1/3)...');
     add_log('Check Settings...','successfully','UI Loading(2/3)...');
@@ -24,11 +25,14 @@ function App()
             queck_change_theme(theme_color)
         }
    }, []);
+
     add_log('UI was Start...','successfully','Start successfully');
     return (
         <>
-            <Header1></Header1>
-            <HomePage></HomePage>
+            <Layout className="components-layout-demo">
+                <Header  style={{position:'fixed',width:'100%',zIndex:1}} ><Header1 ></Header1></Header>
+                <Content style={{marginTop:'60px'}}><HomePage></HomePage></Content>
+            </Layout>
         </>
     );
 }

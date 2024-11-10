@@ -29,7 +29,14 @@ export function UpdateLog(){
         </Tag>
     }
     const raw_source=`
-## Build 2024/11/05 <ReleaseTag></ReleaseTag>  <LatestTag></LatestTag>
+## Build 2024/11/10 <ReleaseTag></ReleaseTag>  <LatestTag></LatestTag>
+### 🎁 新增
+* 新增 \`主页\` 页面
+### 🛠️ 变更
+* 更改Header布局
+### 🎉 优化
+* 手机端使用体验
+## Build 2024/11/05 <ReleaseTag></ReleaseTag>
 ### 🎁 新增
 * 网站已引入PWA技术，用户现在可以直接通过浏览器搜索栏将我们的前端应用一键安装到设备上，享受更加便捷的访问体验。
 ## Build 2024/11/05 <ReleaseTag></ReleaseTag>
