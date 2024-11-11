@@ -31,7 +31,7 @@ function App()
         <>
             <Layout className="components-layout-demo">
                 <Header  style={{position:'fixed',width:'100%',zIndex:1}} ><Header1 ></Header1></Header>
-                <Content style={{marginTop:'60px'}}><HomePage></HomePage></Content>
+                <Content  style={{marginTop:'60px'}}><HomePage></HomePage></Content>
             </Layout>
         </>
     );

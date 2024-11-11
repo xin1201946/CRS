@@ -19,7 +19,6 @@ import {Logs_Viewer} from "./Logs_Viewer.jsx";
 
 export function AdvancedSettingsPage() {
     const [httpschecked, sethttpsChecked] = useState(getSettings('use_https')==='true');
-
     const { Text } = Typography;
     const [advanSvisible, setadvanSVisible] = useState(false);
     const advanSchange = () => {

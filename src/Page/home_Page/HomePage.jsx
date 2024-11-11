@@ -2,7 +2,7 @@ import {SideSheet,Card, Carousel, Col, Row, Space} from "@douyinfe/semi-ui";
 import {IconArrowRight, IconFile, IconLink, IconScan, IconSetting} from "@douyinfe/semi-icons";
 import Meta from "@douyinfe/semi-ui/lib/es/card/meta.js";
 import {emit} from "../../code/PageEventEmitter.js";
-import React, {useState} from "react";
+import {useState} from "react";
 import {Settings} from "../Settings.jsx";
 import {Logs_Viewer} from "../settings_page/Logs_Viewer.jsx";
 import {detectDevice} from "../../code/check_platform.js";

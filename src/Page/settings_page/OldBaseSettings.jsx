@@ -7,8 +7,7 @@ import {
     Radio,
     RadioGroup,
     Space, Switch,
-    Tag,
-    Toast,
+    Tag, ToastFactory,
     Typography
 } from "@douyinfe/semi-ui";
 import {getSettings, setSettings} from "../../code/Settings.js";
@@ -19,6 +18,9 @@ export function  OldBaseSettingsPage() {
     const body = document.body;
     const { Text } = Typography;
     const [switchchecked, setswitchChecked] = useState(getSettings('new_settings_page') === 'true');
+    const ToastInCustomContainer = ToastFactory.create({
+        getPopupContainer: () => document.getElementById('HomePage'),
+    });
     const onswitchChange = checked => {
         setswitchChecked(checked);
         let opts = {
@@ -33,7 +35,7 @@ export function  OldBaseSettingsPage() {
             duration: 3,
             stack: true,
         };
-        Toast.info(opts);
+        ToastInCustomContainer.info(opts);
         setSettings('new_settings_page',checked.toString());
     };
     function set_light(){
@@ -68,14 +70,14 @@ export function  OldBaseSettingsPage() {
                 duration: 3,
                 stack: true,
             };
-            Toast.success(opts)
+            ToastInCustomContainer.success(opts)
         }else{
             let opts = {
                 content: '保存失败',
                 duration: 3,
                 stack: true,
             };
-            Toast.error(opts)
+            ToastInCustomContainer.error(opts)
         }
     }
     function color_int(){

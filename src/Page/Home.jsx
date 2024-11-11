@@ -10,7 +10,9 @@ export  function HomePage(){
     log.info('JOEY DREW STUDIOS', 'Every great story begins in mystery. Although things may be dark at the start, the truth will illuminate your way. Don\'t be afraid of who you are. Fear only what you may become, and banish it away.');
     return(
         <>
-            <ResultPage></ResultPage>
+            <div id={'HomePage'}>
+                <ResultPage></ResultPage>
+            </div>
         </>
     )
 }

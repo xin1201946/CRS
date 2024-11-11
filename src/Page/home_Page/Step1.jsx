@@ -1,7 +1,7 @@
 
 import {Toast, Col, Row, Upload, Button, Descriptions, Spin, SideSheet} from '@douyinfe/semi-ui';
 import {IconPlus, IconSetting} from "@douyinfe/semi-icons";
-import React, {useState} from "react";
+import  {useState} from "react";
 import {getServer} from "../../code/get_server.js";
 import {detectDevice} from "../../code/check_platform.js";
 import {Settings} from "../Settings.jsx";
