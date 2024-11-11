@@ -35,6 +35,7 @@ export function UpdateLog(){
 ### 🛠️ 变更
 * 更改Header布局
 ### 🎉 优化
+*修正 通知 的发送逻辑
 * 手机端使用体验
 ## Build 2024/11/05 <ReleaseTag></ReleaseTag>
 ### 🎁 新增
