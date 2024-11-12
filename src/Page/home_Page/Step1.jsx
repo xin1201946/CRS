@@ -1,5 +1,5 @@
 
-import {Toast, Col, Row, Upload, Button, Descriptions, Spin, SideSheet} from '@douyinfe/semi-ui';
+import { Col, Row, Upload, Button, Descriptions, Spin, SideSheet, ToastFactory} from '@douyinfe/semi-ui';
 import {IconPlus, IconSetting} from "@douyinfe/semi-icons";
 import  {useState} from "react";
 import {getServer} from "../../code/get_server.js";
@@ -15,6 +15,9 @@ export function Step1() {
     const setchange = () => {
         setPagechange(!setPagevisible);
     };
+    const ToastInCustomContainer = ToastFactory.create({
+        getPopupContainer: () => document.getElementById('HomePage'),
+    });
     let action = getServer()+'/upload';
     let clearfile = getServer()+'/clear';
     let imageOnly = '.png,.jpeg,.jpg';
@@ -39,6 +42,7 @@ export function Step1() {
     function update(data) {
         // 处理获取到的数据
         let desiderata=[]
+        console.log('data:'+data)
         if ( data[0] === ""){
             desiderata = [
                 { key: '未能识别到文本', value: data[0] },
@@ -61,7 +65,7 @@ export function Step1() {
             stack: true,
         };
         return(
-            Toast.info(opts)
+            ToastInCustomContainer.info(opts)
         )
     }
 
