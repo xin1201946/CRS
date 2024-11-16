@@ -30,7 +30,8 @@ function App()
     return (
         <>
             <Layout className="components-layout-demo">
-                <Header  style={{position:'fixed',width:'100%',zIndex:1}} ><Header1 ></Header1></Header>
+                <Header  style={{position:'fixed',width:'100%',zIndex:1,backdropFilter:" blur(5px)",
+                    backgroundColor: "rgba(255, 255, 255, 0)"}} ><Header1 ></Header1></Header>
                 <Content  style={{marginTop:'60px'}}><HomePage></HomePage></Content>
             </Layout>
         </>

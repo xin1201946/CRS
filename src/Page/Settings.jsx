@@ -1,6 +1,6 @@
 
 import {Card,SideSheet} from "@douyinfe/semi-ui";
-import {IconArrowRight} from "@douyinfe/semi-icons";
+import {IconArrowRight, IconBeaker, IconInfoCircle, IconSetting} from "@douyinfe/semi-icons";
 import {useState} from "react";
 import Meta from "@douyinfe/semi-ui/lib/es/card/meta.js";
 import BaseSPage from "./settings_page/BaseS.jsx";
@@ -33,6 +33,9 @@ export function Settings(){
                 onClick={baseSchange}
             >
                 <Meta
+                    avatar={
+                        <IconSetting style={{color: 'var(--semi-color-primary)'}}/>
+                    }
                     title="基本设置"
                     description="服务器IP"
                 />
@@ -50,6 +53,9 @@ export function Settings(){
                 onClick={advanSchange}
             >
                 <Meta
+                    avatar={
+                        <IconBeaker style={{color: 'var(--semi-color-primary)'}}/>
+                    }
                     title="高级设置"
                     description="API端口，HTTPS服务"
                 />
@@ -67,19 +73,22 @@ export function Settings(){
                 onClick={adchange}
             >
                 <Meta
+                    avatar={
+                        <IconInfoCircle style={{color: 'var(--semi-color-primary)'}}/>
+                    }
                     title="关于"
                     description="应用信息"
                 />
                 <IconArrowRight style={{ color: 'var(--semi-color-primary)' }}/>
             </Card>
 
-            <SideSheet style={{maxWidth:"100%"}} closeOnEsc={true} title="基本设置" visible={baseSvisible} onCancel={baseSchange}>
+            <SideSheet mask={false} disableScroll={false} style={{maxWidth:"100%"}} closeOnEsc={true} title="基本设置" visible={baseSvisible} onCancel={baseSchange}>
                 <BaseSPage></BaseSPage>
             </SideSheet>
-            <SideSheet style={{maxWidth:"100%"}}  closeOnEsc={true} title="高级设置" visible={advanSvisible} onCancel={advanSchange}>
+            <SideSheet mask={false} disableScroll={false} style={{maxWidth:"100%"}}  closeOnEsc={true} title="高级设置" visible={advanSvisible} onCancel={advanSchange}>
                 <AdvancedSettingsPage></AdvancedSettingsPage>
             </SideSheet>
-            <SideSheet style={{maxWidth:"100%"}} closeOnEsc={true} title="关于" visible={advisible} onCancel={adchange}>
+            <SideSheet mask={false} disableScroll={false} style={{maxWidth:"100%"}} closeOnEsc={true} title="关于" visible={advisible} onCancel={adchange}>
                 <AboutWE></AboutWE>
             </SideSheet>
         </>

@@ -7,7 +7,7 @@ import {UpdateLog} from "./UpdateLog.jsx"
 import {Logs_Viewer} from "./Logs_Viewer.jsx"
 import {check_browser} from "../../code/browserCheck.js"
 import Meta from "@douyinfe/semi-ui/lib/es/card/meta.js";
-import {IconChevronRight} from "@douyinfe/semi-icons";
+import {IconChevronRight, IconCloud, IconFile} from "@douyinfe/semi-icons";
 import {getServer} from "../../code/get_server.js";
 import {BetaFunctionalityPage} from "./BetaFunctionality.jsx";
 
@@ -89,7 +89,11 @@ export  default  function AboutWE(){
                     }}
                 >
                     <Meta
+                        avatar={
+                            <IconFile style={{color: 'var(--semi-color-primary)'}}/>
+                        }
                         title="日志查看器"
+                        description={"查看前端所有的日志信息"}
                     />
                     <IconChevronRight style={{color: 'var(--semi-color-primary)'}}/>
                 </Card>
@@ -105,7 +109,11 @@ export  default  function AboutWE(){
                     }}
                 >
                     <Meta
+                        avatar={
+                            <IconCloud style={{color: 'var(--semi-color-primary)'}}/>
+                        }
                         title="更新日志"
+                        description={"查看当前和往期版本更新信息"}
                     />
                     <IconChevronRight style={{color: 'var(--semi-color-primary)'}}/>
                 </Card>

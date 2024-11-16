@@ -62,7 +62,8 @@ export function Header1 (){
     }
     return(
         <>
-            <div style={{width: '100%',top:'0',zIndex:'1',height:'5%'}}>
+            <div className={'index-module_container__x1Eix'} style={{width: '100%',top:'0',zIndex:'1',height:'5%',backdropFilter:" blur(5px)",
+                backgroundColor:" rgba(112,110,109,0)"}}>
                 <Nav
                     selectedKeys={selectKey}
                     mode={'horizontal'}
