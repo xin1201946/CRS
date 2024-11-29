@@ -68,7 +68,7 @@ export function NewBaseSettingsPage() {
         if (server_ip.startsWith("https://")) {
             server_ip = server_ip.substring(8); // 去掉 https://
             setSettings('use_https','true')
-        } else if (server_ip.startsWith("http://")) {
+        } else {
             server_ip = server_ip.substring(7); // 去掉 http://
             setSettings('use_https','false')
         }

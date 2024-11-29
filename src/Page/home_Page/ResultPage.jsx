@@ -8,6 +8,7 @@ import {Step1} from "./Step1.jsx";
 import {getServer} from "../../code/get_server.js";
 import {AdvancedSettingsPage} from "../settings_page/AdvancedSettings.jsx";
 import {HomePage} from "./HomePage.jsx";
+import {Console} from "./console.jsx"
 import {on,off} from "../../code/PageEventEmitter.js";
 
 export function ResultPage(){
@@ -89,8 +90,8 @@ export function ResultPage(){
             <div style={{margin:'2%'}} >
                 {MyComponent()}
                 <div  id={'container'}>
-                    <div id={'returnpage'}>
-                        {page==='home'?<HomePage />:<Step1/>}
+                    <div id={'returnpage'} style={{height:'100%'}}>
+                        {page==='home'?<HomePage />:page==='console'?<Console/>:<Step1/>}
                     </div>
                 </div>
                 <SideSheet closeOnEsc={true} style={{ maxWidth:"100%",fontFamily:"var(--Default-font)"}} title="高级设置" visible={settingadv_visible} onCancel={adv_side_sheet_change}

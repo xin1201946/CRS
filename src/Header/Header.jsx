@@ -7,7 +7,7 @@ import {Settings} from "../Page/Settings.jsx";
 import {FooterPage} from "../Footer/Footer.jsx";
 import {MdHdrAuto, MdOutlineDarkMode, MdOutlineLightMode} from "react-icons/md";
 import {getSetTheme,  setAutoTheme, setDarkTheme, setLightTheme} from "../code/theme_color.js";
-import {IconHome, IconScan, IconSetting} from "@douyinfe/semi-icons";
+import {IconHome, IconScan, IconSetting, IconTerminal} from "@douyinfe/semi-icons";
 import {emit} from "../code/PageEventEmitter.js";
 import {on,off} from "../code/PageEventEmitter.js";
 import {detectDevice} from "../code/check_platform.js";
@@ -70,6 +70,7 @@ export function Header1 (){
                     items={[
                         {itemKey: 'home', text: '主页', icon: <IconHome />},
                         {itemKey: 'vision', text: '识别系统', icon:<IconScan />},
+                        {itemKey: 'console', text: '控制台', icon:<IconTerminal />},
                     ]}
                     onSelect={key => changeSelectKey(key)}
                     header={{

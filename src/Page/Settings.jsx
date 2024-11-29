@@ -82,13 +82,13 @@ export function Settings(){
                 <IconArrowRight style={{ color: 'var(--semi-color-primary)' }}/>
             </Card>
 
-            <SideSheet mask={false} disableScroll={false} style={{maxWidth:"100%"}} closeOnEsc={true} title="基本设置" visible={baseSvisible} onCancel={baseSchange}>
+            <SideSheet style={{maxWidth:"100%"}} closeOnEsc={true} title="基本设置" visible={baseSvisible} onCancel={baseSchange}>
                 <BaseSPage></BaseSPage>
             </SideSheet>
-            <SideSheet mask={false} disableScroll={false} style={{maxWidth:"100%"}}  closeOnEsc={true} title="高级设置" visible={advanSvisible} onCancel={advanSchange}>
+            <SideSheet style={{maxWidth:"100%"}}  closeOnEsc={true} title="高级设置" visible={advanSvisible} onCancel={advanSchange}>
                 <AdvancedSettingsPage></AdvancedSettingsPage>
             </SideSheet>
-            <SideSheet mask={false} disableScroll={false} style={{maxWidth:"100%"}} closeOnEsc={true} title="关于" visible={advisible} onCancel={adchange}>
+            <SideSheet style={{maxWidth:"100%"}} closeOnEsc={true} title="关于" visible={advisible} onCancel={adchange}>
                 <AboutWE></AboutWE>
             </SideSheet>
         </>

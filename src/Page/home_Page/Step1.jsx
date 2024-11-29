@@ -5,6 +5,7 @@ import  {useState} from "react";
 import {getServer} from "../../code/get_server.js";
 import {detectDevice} from "../../code/check_platform.js";
 import {Settings} from "../Settings.jsx";
+import {getAPI} from "../../code/server_api_settings.js";
 
 
 export function Step1() {
@@ -18,8 +19,8 @@ export function Step1() {
     const ToastInCustomContainer = ToastFactory.create({
         getPopupContainer: () => document.getElementById('HomePage'),
     });
-    let action = getServer()+'/upload';
-    let clearfile = getServer()+'/clear';
+    let action = getServer()+getAPI('upload');
+    let clearfile = getServer()+getAPI('clear');
     let imageOnly = '.png,.jpeg,.jpg';
     function setLoading(bool){
         toggleLoading(bool);
@@ -30,7 +31,7 @@ export function Step1() {
     async function get_result() {
         setLoading(true)
         try {
-            const response = await fetch(getServer() + '/start');
+            const response = await fetch(getServer() + getAPI('start'));
             const data = await response.json(); // 根据需要解析数据
             update(data); // 调用 update 函数处理数据
         } catch (error) {

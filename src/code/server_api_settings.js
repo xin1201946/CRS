@@ -35,7 +35,8 @@ export function setDefaultAPI(){
         "api_start":'/start',
         "api_upload":'/upload',
         "api_test":'/test',
-        "api_info":'/info'
+        "api_info":'/info',
+        "command":'/command'
     }
     setSettings('api_service',api_service,true);
 }

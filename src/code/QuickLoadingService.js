@@ -4,7 +4,7 @@ import {add_log} from "./log.js";
 import {api_map} from "./server_api_settings.js";
 
 export default function initializeSettings(){
-    let server_ip= "localhost.1201946.xyz"
+    let server_ip= "120.0.0.1:5000"
     let new_settings_page= "true"
     let use_https ='true'
     let theme_color= "auto" // theme_color 仅有三个值 light dark auto
@@ -15,7 +15,8 @@ export default function initializeSettings(){
         "api_start":'/start',
         "api_upload":'/upload',
         "api_test":'/test',
-        "api_info":'/info'
+        "api_info":'/info',
+        "api_command":'/command'
     }
     getSettings('server_ip')===null ? setSettings("server_ip",server_ip):"";
     getSettings('new_settings_page')===null ? setSettings("new_settings_page",new_settings_page):"";

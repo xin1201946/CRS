@@ -34,7 +34,6 @@ export function AdvancedSettingsPage() {
     }
     const onsave_api=()=>{
         const resultJson={
-            "api_isHTTPS":document.getElementById('isHTTPS').value,
             "api_upload":document.getElementById('upload').value,
             "api_clear":document.getElementById('clear').value,
             "api_getpicture":document.getElementById('getpicture').value,
@@ -79,7 +78,7 @@ export function AdvancedSettingsPage() {
                     >
                         <IconInfoCircle style={{color: 'var(--semi-color-primary)'}}></IconInfoCircle>
                     </Popover>
-                    <Switch checked={httpschecked} onChange={onhttpschange} aria-label="a switch for demo"></Switch>
+                    <Switch checked={httpschecked} onChange={onhttpschange} aria-label=""></Switch>
                 </Space>
                 <br/>
                 <br/>
@@ -130,10 +129,6 @@ export function AdvancedSettingsPage() {
                 </Banner>
                 <br/>
                 <Space id={'api_input_box'} vertical align={'left'}>
-                    <Space  spacing={'medium'} align={'baseline'}>
-                        <Text style={{width:'50%'}}>检测是否支持HTTPS</Text>
-                        <Input id={'isHTTPS'} style={{width:'50%'}} defaultValue={getAPI("isHTTPS")}></Input>
-                    </Space>
                     <Space  spacing={'medium'}>
                         <Text style={{width:'50%'}}>上传图片</Text>
                         <Input id={'upload'} style={{width:'50%'}} defaultValue={getAPI("upload")}></Input>
