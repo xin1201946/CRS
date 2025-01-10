@@ -1,17 +1,28 @@
 
-import {Toast, Col, Row, Upload, Button, Descriptions, Spin} from '@douyinfe/semi-ui';
-import {IconPlus} from "@douyinfe/semi-icons";
-import {useState} from "react";
+import { Col, Row, Upload, Button, Descriptions, Spin, SideSheet, ToastFactory} from '@douyinfe/semi-ui';
+import {IconPlus, IconSetting} from "@douyinfe/semi-icons";
+import  {useState} from "react";
 import {getServer} from "../../code/get_server.js";
-
+import {detectDevice} from "../../code/check_platform.js";
+import {Settings} from "../Settings.jsx";
+import {getAPI} from "../../code/server_api_settings.js";
+import { useTranslation } from 'react-i18next';
 
 export function Step1() {
+    const { t } = useTranslation();
     const [b1en,setb1en]=useState(true);
     const [datas,setdata]=useState([]);
     const [loading, toggleLoading] = useState(false);
-    let action = getServer()+'/upload';
-    let clearfile = getServer()+'/clear';
-    let imageOnly = '.png,.jpeg,.jpg,.bmp';
+    const [setPagevisible, setPagechange] = useState(false);
+    const setchange = () => {
+        setPagechange(!setPagevisible);
+    };
+    const ToastInCustomContainer = ToastFactory.create({
+        getPopupContainer: () => document.getElementById('HomePage'),
+    });
+    let action = getServer()+getAPI('upload');
+    let clearfile = getServer()+getAPI('clear');
+    let imageOnly = '.png,.jpeg,.jpg';
     function setLoading(bool){
         toggleLoading(bool);
     }
@@ -21,7 +32,7 @@ export function Step1() {
     async function get_result() {
         setLoading(true)
         try {
-            const response = await fetch(getServer() + '/start');
+            const response = await fetch(getServer() + getAPI('start'));
             const data = await response.json(); // 根据需要解析数据
             update(data); // 调用 update 函数处理数据
         } catch (error) {
@@ -33,16 +44,17 @@ export function Step1() {
     function update(data) {
         // 处理获取到的数据
         let desiderata=[]
+        console.log('data:'+data)
         if ( data[0] === ""){
             desiderata = [
-                { key: '未能识别到文本', value: data[0] },
+                { key: t('Failed_OCR'), value: data[0] },
             ];
-            showTotst('未能识别到文本 '+data[0])
+            showTotst(t('Failed_OCR')+data[0])
         }else{
             desiderata = [
-                { key: '识别到的文本', value: data[0] },
+                { key: t('Success_OCR_Text'), value: data[0] },
             ];
-            showTotst('识别到的文本 '+data[0])
+            showTotst(t('Success_OCR_Text')+data[0])
         }
         setdata(desiderata)
         setLoading(false)
@@ -55,13 +67,14 @@ export function Step1() {
             stack: true,
         };
         return(
-            Toast.info(opts)
+            ToastInCustomContainer.info(opts)
         )
     }
 
 
     return(
         <>
+            <br/>
             <div className="grid" style={{margin:"7px"}}>
                 <Row type="flex" justify="center">
                     <Col>
@@ -82,7 +95,7 @@ export function Step1() {
                 </Row>
                 <Row type="flex" justify="center">
                     <Spin delay={100} spinning={loading}>
-                                <Button   style={{marginTop:'20px'}}  onClick={get_result} disabled={b1en}>开始处理</Button>
+                                <Button   style={{marginTop:'20px'}}  onClick={get_result} disabled={b1en}>{t('Start_OCR')}</Button>
                     </Spin>
                 </Row>
                 <Row type="flex" justify="center">
@@ -90,8 +103,11 @@ export function Step1() {
                         <Descriptions style={{marginTop:'20px'}}  data={datas} />
                     </Col>
                 </Row>
-
+                <Button onClick={setchange} size='large' theme='outline' icon={<IconSetting />} style={{ marginRight: 10,borderRadius:'20px',position:'fixed',top:'80%',right:'2%',display: detectDevice()==='PC'?"none":'' }}></Button>
             </div>
+            <SideSheet style={{maxWidth:"100%"}} title={t('Settings')} visible={setPagevisible} onCancel={setchange} placement={'right'}>
+                <Settings/>
+            </SideSheet>
         </>
     )
 }

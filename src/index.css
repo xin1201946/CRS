@@ -5,6 +5,7 @@ html{
   --Theme-font: 'HalloweenCN', "HalloweenEN"; /* 默认字体 */
   -webkit-tap-highlight-color: transparent;
 }
+
 @font-face {
     font-family: "Inter";
     src: url('./Fonts/NotoSansSC-VariableFont_wght.ttf') format('truetype');

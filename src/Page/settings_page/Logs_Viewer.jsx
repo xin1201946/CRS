@@ -6,8 +6,11 @@ import { VChart } from "@visactor/react-vchart";
 import {  Row } from '@douyinfe/semi-ui';
 import {IconInfoCircle,IconHelpCircle} from "@douyinfe/semi-icons";
 import {detectDevice} from "../../code/check_platform.js";
+import {useTranslation} from "react-i18next";
+
 export  function Logs_Viewer(){
     const { Text } = Typography;
+    const { t } = useTranslation();
     const [filteredValue, setFilteredValue] = useState([]);
     const compositionRef = useRef({ isComposition: false });
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -29,25 +32,25 @@ export  function Logs_Viewer(){
     function showInfoDialog(){
         if(detectDevice() === 'Phone'){
             Toast.info({
-                content: <><Text>本选项所使用的组件不兼容你的设备，请切换到PC以查看</Text></>,
+                content: <><Text>{t('Tip_cannot_support_your_device')}</Text></>,
                 duration: 5,
                 stack: true,
             });
         }else{
             Modal.info({
-                title: '详细信息',
+                title: t('More_info'),
                 content: <>
                     <Card bordered={false} style={{backgroundColor:'var( --semi-color-bg-2)'}}>
-                        <Text style={{color:'var(--semi-color-info)'}}>日志数量</Text>： 当前已经监听到的已发生事件总数
+                        <Text style={{color:'var(--semi-color-info)'}}>{t('Logs_count')}</Text>： {t('Logs_count_text')}
                     </Card>
                     <Card bordered={false} style={{backgroundColor:'var( --semi-color-bg-2)'}}>
-                        <Text style={{color:'var(--semi-color-success)'}}>Success级别数量</Text>：代表存在这些数目的事件已经完成操作，且未发生错误
+                        <Text style={{color:'var(--semi-color-success)'}}>{t('Logs_success_count')}</Text>：{t('Logs_success_count_text')}
                     </Card>
                     <Card bordered={false} style={{backgroundColor:'var( --semi-color-bg-2)'}}>
-                        <Text style={{color:'var( --semi-color-warning)'}}>Warning级别数量</Text>：代表存在这些数目的事件已完成操作，但是发生错误。但并不影响程序运行。
+                        <Text style={{color:'var( --semi-color-warning)'}}>{t('Logs_warning_count')}</Text>：{t('Logs_warning_count_text')}
                     </Card>
                     <Card bordered={false} style={{backgroundColor:'var( --semi-color-bg-2)'}}>
-                        <Text style={{color:'var(--semi-color-danger)'}}>Error级别数量</Text>：代表存在这些数目的事件未完成操作且影响程序运行。你应重点观察此类事件的发生。通常在服务器未能联通便会触发。
+                        <Text style={{color:'var(--semi-color-danger)'}}>{t('Logs_error_count')}</Text>：{t('Logs_error_count_text')}
                     </Card>
                 </>,
                 cancelButtonProps: { theme: 'borderless' },
@@ -64,7 +67,7 @@ export  function Logs_Viewer(){
             });
         }else{
             Modal.info({
-                title: '详细信息',
+                title: t('More_info'),
                 content: <><Text>{message}</Text></>,
                 cancelButtonProps: { theme: 'borderless' },
                 okButtonProps: { theme: 'solid' },
@@ -129,16 +132,16 @@ export  function Logs_Viewer(){
     }
     function statistics_info(){
         const data = [
-            { key: '日志数量', value: <Button theme={"borderless"} size={"small"}>{get_logs().length}</Button> },
-            { key: 'Success级别数量', value: <Button  type={"primary"} theme={"borderless"} size={"small"}>{get_successfully_logs().length}</Button> },
-            { key: 'Warning数量', value: <Button type={"warning"} theme={"borderless"} size={"small"}>{get_warning_logs().length}</Button>},
-            { key: 'Error数量', value: <Button type={"danger"} theme={"borderless"} size={"small"}>{get_error_logs().length}</Button> },
+            { key: t('Logs_count'), value: <Button theme={"borderless"} size={"small"}>{get_logs().length}</Button> },
+            { key: t('Logs_success_count'), value: <Button  type={"primary"} theme={"borderless"} size={"small"}>{get_successfully_logs().length}</Button> },
+            { key: t('Logs_warning_count'), value: <Button type={"warning"} theme={"borderless"} size={"small"}>{get_warning_logs().length}</Button>},
+            { key: t('Logs_error_count'), value: <Button type={"danger"} theme={"borderless"} size={"small"}>{get_error_logs().length}</Button> },
         ];
         return (
             <>
                 <Card
                     shadows='hover'
-                    title={'大致浏览'}
+                    title={t('Roughly_browse')}
                     onClick={showInfoDialog}
                     headerExtraContent={
                         <IconHelpCircle style={{ color: 'var(--semi-color-primary)' }} />
@@ -176,7 +179,7 @@ export  function Logs_Viewer(){
 
         const rendercomment = (text) => {
             return (
-                <Button onClick={() => showDialog(text)}>查看</Button>
+                <Button onClick={() => showDialog(text)}>{t('View')}</Button>
             );
         };
         let pagination
@@ -225,9 +228,9 @@ export  function Logs_Viewer(){
             {
                 title: (
                     <Space>
-                        <span>事件</span>
+                        <span>{t('Event')}</span>
                         <Input
-                            placeholder="请输入筛选值"
+                            placeholder={t('Enter_filter_value')}
                             style={{ width: 200 }}
                             onCompositionStart={handleCompositionStart}
                             onCompositionEnd={handleCompositionEnd}
@@ -244,7 +247,7 @@ export  function Logs_Viewer(){
                 filteredValue: filteredValue,
             },
             {
-                title: "结果",
+                title: t('Result'),
                 dataIndex: "result",
                 key: "result",
                 render: renderResult,
@@ -261,14 +264,14 @@ export  function Logs_Viewer(){
                 },
             },
             {
-                title: "时间",
+                title: t('Time'),
                 dataIndex: "time",
                 key: "time",
                 sorter: (a, b) => (new Date(a.time) - new Date(b.time) > 0 ? 1 : -1),
                 render: rendertime,
             },
             {
-                title: "备注",
+                title: t('Comment'),
                 dataIndex: "comment",
                 key: "comment",
                 render: rendercomment,
@@ -279,13 +282,13 @@ export  function Logs_Viewer(){
             <>
                 <h3>
                     <Space>
-                        事件列表
+                        {t('Event_list')}
                         <Popover
                             showArrow
                             arrowPointAtCenter
                             content={
                                 <article>
-                                    通过筛选定位出错位置
+                                    {t('Find_E_by_filter')}
                                 </article>
                             }
                             position={'right'}
@@ -309,13 +312,13 @@ export  function Logs_Viewer(){
         <>
             <h3>
                 <Space >
-                    信息总览
+                    {t('View_all_info')}
                     <Popover
                         showArrow
                         arrowPointAtCenter
                         content={
                             <article>
-                                快速查看UI在浏览器的运行情况
+                                {t('Tip_Log_View_info')}
                             </article>
                         }
                         position={"right"}

@@ -1,9 +1,10 @@
 import {add_log} from "./log.js";
+import {getAPI} from "./server_api_settings.js";
 
 export default async function checkNetwork(serverIP) {
    let result;
    try {
-       const response = await fetch(serverIP+'/test');
+       const response = await fetch(serverIP+getAPI('test'));
        result = (response.status === 200);
        add_log('checkServerConnect','successfully',(response.status === 200).toString());
        // eslint-disable-next-line no-unused-vars

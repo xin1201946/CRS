@@ -7,7 +7,7 @@ import {
     Space,
     Switch,
     Tag,
-    Toast,
+    ToastFactory,
     Typography
 } from "@douyinfe/semi-ui";
 import {getSettings, setSettings} from "../../code/Settings.js";
@@ -17,8 +17,10 @@ import {IconInfoCircle} from "@douyinfe/semi-icons";
 import {setDarkTheme,setLightTheme,setAutoTheme} from "../../code/theme_color.js";
 import {AdvancedSettingsPage} from "./AdvancedSettings.jsx";
 import {Logs_Viewer} from "./Logs_Viewer.jsx";
+import {useTranslation} from "react-i18next";
 
 export function NewBaseSettingsPage() {
+    const { t } = useTranslation();
     const { Text } = Typography;
     const [switchchecked, setswitchChecked] = useState(true);
     const [advanSvisible, setadvanSVisible] = useState(false);
@@ -29,21 +31,24 @@ export function NewBaseSettingsPage() {
     const LogsPchange = () => {
         setLogsPVisible(!LogsPvisible);
     };
+    const ToastInCustomContainer = ToastFactory.create({
+        getPopupContainer: () => document.getElementById('HomePage'),
+    });
     const onswitchChange = checked => {
         setswitchChecked(checked);
         let opts = {
             content: (
                 <Space>
-                    <Text>UI 更改成功</Text>
+                    <Text>{t('Success_change_UI')}</Text>
                     <Text link={{ href: window.location.href }}>
-                        刷新页面
+                        {t('Refresh')}
                     </Text>
                 </Space>
             ),
             duration: 3,
             stack: true,
         };
-        Toast.info(opts);
+        ToastInCustomContainer.info(opts);
         setSettings('new_settings_page',checked.toString());
     };
 
@@ -65,7 +70,7 @@ export function NewBaseSettingsPage() {
         if (server_ip.startsWith("https://")) {
             server_ip = server_ip.substring(8); // 去掉 https://
             setSettings('use_https','true')
-        } else if (server_ip.startsWith("http://")) {
+        } else {
             server_ip = server_ip.substring(7); // 去掉 http://
             setSettings('use_https','false')
         }
@@ -76,21 +81,21 @@ export function NewBaseSettingsPage() {
             let opts = {
                 content: (
                     <Space>
-                        <Text>保存成功,刷新网页后生效</Text>
+                        <Text>{t('Success_save_set')}</Text>
                         <Text link={{ href: window.location.href }}>
-                            刷新
+                            {t('Refresh')}
                         </Text>
                     </Space>
                 ),
                 duration: 3,
             };
-            Toast.success(opts)
+            ToastInCustomContainer.success(opts)
         }else{
             let opts = {
-                content: '保存失败',
+                content: t('Failed_save'),
                 duration: 3,
             };
-            Toast.error(opts)
+            ToastInCustomContainer.error(opts)
         }
     }
     function color_int(){
@@ -107,91 +112,93 @@ export function NewBaseSettingsPage() {
     }
     return(
         <>
-            <Card
-                title='服务器地址'
-            >
-                <Space>
-                    <Input id={'server_ip_inputbox'} style={{width: '70%'}} defaultValue={getSettings('server_ip')}
-                           placeholder='一般是 IP:端口号 或者 域名' size='default'></Input>
-                    <Button theme='outline' onClick={save_data} type='primary' style={{marginRight: 8}}>保存</Button>
-                </Space>
-            </Card>
-            <br/>
-            <Card title='主题色'>
-                <Space>
-                    <RadioGroup
-                        type='pureCard'
-                        defaultValue={color_int()}
-                        direction='vertical'
-                        aria-label="主题色"
-                        name="demo-radio-group-pureCard"
-                    >
-                        <Radio value={0} extra='' style={{width: 280}}
-                               onChange={function () {
-                                   set_autocolor()
-                               }}
+            <div id={'newSettings'}>
+                <Card
+                    title={t('Server_IP')}
+                >
+                    <Space>
+                        <Input id={'server_ip_inputbox'} style={{width: '70%'}} defaultValue={getSettings('server_ip')}
+                               placeholder={t('Tip_server_ip')} size='default'></Input>
+                        <Button theme='outline' onClick={save_data} type='primary' style={{marginRight: 8}}>{t('Save_setting')}</Button>
+                    </Space>
+                </Card>
+                <br/>
+                <Card title={t('Theme_color')}>
+                    <Space>
+                        <RadioGroup
+                            type='pureCard'
+                            defaultValue={color_int()}
+                            direction='vertical'
+                            aria-label={'Theme_color'}
+                            name="demo-radio-group-pureCard"
                         >
-                            <Space>
-                                自动切换
-                                <Tag size="small" shape='circle' color='blue'> New </Tag>
-                            </Space>
-                        </Radio>
-
-                        <Radio value={1} extra='' style={{width: 280}}
-                               onChange={function () {
-                                   set_light()
-                               }}
-                        >
-                            亮色模式
-                        </Radio>
-                        <Radio value={2} extra='' style={{width: 280}}
-                               onChange={function () {
-                                   set_dark()
-                               }}
-                        >
-                            暗色模式
-                        </Radio>
-                    </RadioGroup>
-                </Space>
-            </Card>
-            <br/>
-            <Card title={'UI 设置'}>
-                <div style={{display: 'flex', alignItems: 'center'}}>
-                    <Title heading={6} style={{margin: 8,backgroundColor:'transparent',width:'90%'}}>
-                        <Space>
-                            新的设置页面
-                            <Tag size="small" shape='circle' color='blue'> New </Tag>
-                            <Popover
-                                showArrow
-                                arrowPointAtCenter
-                                content={
-                                    <article>
-                                        默认开启，打开后使用美化后的设置页.刷新网页后生效
-                                    </article>
-                                }
-                                position={'top'}
+                            <Radio value={0} extra='' style={{width: 280}}
+                                   onChange={function () {
+                                       set_autocolor()
+                                   }}
                             >
-                                <IconInfoCircle style={{ color: 'var(--semi-color-primary)' }}/>
-                            </Popover>
-                        </Space>
-                    </Title>
-                    <Switch checked={switchchecked} aria-label="a switch for demo" onChange={onswitchChange}/>
-                </div>
-            </Card>
-            <br/>
-            <Card  style={{backgroundColor:'var( --semi-color-fill-0)'}}>
-                <Space spacing={'medium'} vertical align='left'>
-                    <Text style={{
-                        fontSize: 'medium',
-                        fontWeight: "bold",
-                        color: "var( --semi-color-text-2)"
-                    }}>在查找其他设置吗？</Text>
-                    <Text onClick={advanSchange} style={{color: 'var( --semi-color-link)',cursor:'pointer'}}>HTTPS服务</Text>
-                    <Text onClick={advanSchange} style={{color: 'var( --semi-color-link)',cursor:'pointer'}}>API设置</Text>
-                    <Text onClick={LogsPchange}
-                          style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>日志查看器</Text>
-                </Space>
-            </Card>
+                                <Space>
+                                    {t('Theme_auto')}
+                                    <Tag size="small" shape='circle' color='blue'> New </Tag>
+                                </Space>
+                            </Radio>
+
+                            <Radio value={1} extra='' style={{width: 280}}
+                                   onChange={function () {
+                                       set_light()
+                                   }}
+                            >
+                                {t('Theme_light')}
+                            </Radio>
+                            <Radio value={2} extra='' style={{width: 280}}
+                                   onChange={function () {
+                                       set_dark()
+                                   }}
+                            >
+                                {t('Theme_dark')}
+                            </Radio>
+                        </RadioGroup>
+                    </Space>
+                </Card>
+                <br/>
+                <Card title={t('UI_set')}>
+                    <div style={{display: 'flex', alignItems: 'center'}}>
+                        <Title heading={6} style={{margin: 8,backgroundColor:'transparent',width:'90%'}}>
+                            <Space>
+                                {t('New_settings_page')}
+                                <Tag size="small" shape='circle' color='blue'> New </Tag>
+                                <Popover
+                                    showArrow
+                                    arrowPointAtCenter
+                                    content={
+                                        <article>
+                                            {t('Success_save_set')}
+                                        </article>
+                                    }
+                                    position={'top'}
+                                >
+                                    <IconInfoCircle style={{ color: 'var(--semi-color-primary)' }}/>
+                                </Popover>
+                            </Space>
+                        </Title>
+                        <Switch checked={switchchecked}  onChange={onswitchChange}/>
+                    </div>
+                </Card>
+                <br/>
+                <Card  style={{backgroundColor:'var( --semi-color-fill-0)'}}>
+                    <Space spacing={'medium'} vertical align='left'>
+                        <Text style={{
+                            fontSize: 'medium',
+                            fontWeight: "bold",
+                            color: "var( --semi-color-text-2)"
+                        }}>{t('Look_other_set')}</Text>
+                        <Text onClick={advanSchange} style={{color: 'var( --semi-color-link)',cursor:'pointer'}}>{t('HTTPS_Service')}</Text>
+                        <Text onClick={advanSchange} style={{color: 'var( --semi-color-link)',cursor:'pointer'}}>{t('API_Settings')}</Text>
+                        <Text onClick={LogsPchange}
+                              style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('Log_viewer')}</Text>
+                    </Space>
+                </Card>
+            </div>
             <br/>
             <SideSheet style={{maxWidth:"100%"}}  closeOnEsc={true} title="高级设置" visible={advanSvisible} onCancel={advanSchange}>
                 <AdvancedSettingsPage></AdvancedSettingsPage>

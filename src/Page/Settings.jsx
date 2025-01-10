@@ -1,13 +1,16 @@
 
 import {Card,SideSheet} from "@douyinfe/semi-ui";
-import {IconArrowRight} from "@douyinfe/semi-icons";
+import {IconArrowRight, IconBeaker, IconInfoCircle, IconLanguage, IconSetting} from "@douyinfe/semi-icons";
 import {useState} from "react";
 import Meta from "@douyinfe/semi-ui/lib/es/card/meta.js";
 import BaseSPage from "./settings_page/BaseS.jsx";
 import AboutWE from "./settings_page/About.jsx";
 import {AdvancedSettingsPage} from "./settings_page/AdvancedSettings.jsx";
+import { useTranslation } from 'react-i18next';
+import {LanguagePage} from "./settings_page/LanguagePage.jsx";
 
 export function Settings(){
+    const { t } = useTranslation();
     const [baseSvisible, setbaseSVisible] = useState(false);
     const baseSchange = () => {
         setbaseSVisible(!baseSvisible);
@@ -19,6 +22,10 @@ export function Settings(){
     const [advisible, setadVisible] = useState(false);
     const adchange = () => {
         setadVisible(!advisible);
+    };
+    const [lanvisible, setlanvisible] = useState(false);
+    const lanchange = () => {
+        setlanvisible(!lanvisible);
     };
     return(
         <>
@@ -33,8 +40,31 @@ export function Settings(){
                 onClick={baseSchange}
             >
                 <Meta
-                    title="基本设置"
-                    description="服务器IP"
+                    avatar={
+                        <IconSetting style={{color: 'var(--semi-color-primary)'}}/>
+                    }
+                    title={t('Base_Settings')}
+                    description={t('Server_IP')}
+                />
+                <IconArrowRight style={{ color: 'var(--semi-color-primary)' }}/>
+            </Card>
+            <br/>
+            <Card
+                shadows='hover'
+                style={{cursor:"pointer"}}
+                bodyStyle={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                }}
+                onClick={lanchange}
+            >
+                <Meta
+                    avatar={
+                        <IconLanguage style={{color: 'var(--semi-color-primary)'}}/>
+                    }
+                    title="语言/Language"
+                    description={t('Toggle_display_language')}
                 />
                 <IconArrowRight style={{ color: 'var(--semi-color-primary)' }}/>
             </Card>
@@ -50,8 +80,11 @@ export function Settings(){
                 onClick={advanSchange}
             >
                 <Meta
-                    title="高级设置"
-                    description="API端口，HTTPS服务"
+                    avatar={
+                        <IconBeaker style={{color: 'var(--semi-color-primary)'}}/>
+                    }
+                    title={t('Advanced_Settings')}
+                    description={t('API_port')+','+t('HTTPS_Service')}
                 />
                 <IconArrowRight style={{ color: 'var(--semi-color-primary)' }}/>
             </Card>
@@ -67,19 +100,25 @@ export function Settings(){
                 onClick={adchange}
             >
                 <Meta
-                    title="关于"
-                    description="应用信息"
+                    avatar={
+                        <IconInfoCircle style={{color: 'var(--semi-color-primary)'}}/>
+                    }
+                    title={t('About')}
+                    description={t('AppInfo')}
                 />
                 <IconArrowRight style={{ color: 'var(--semi-color-primary)' }}/>
             </Card>
 
-            <SideSheet style={{maxWidth:"100%"}} closeOnEsc={true} title="基本设置" visible={baseSvisible} onCancel={baseSchange}>
+            <SideSheet style={{maxWidth:"100%"}} closeOnEsc={true} title={t('Base_Settings')} visible={baseSvisible} onCancel={baseSchange}>
                 <BaseSPage></BaseSPage>
             </SideSheet>
-            <SideSheet style={{maxWidth:"100%"}}  closeOnEsc={true} title="高级设置" visible={advanSvisible} onCancel={advanSchange}>
+            <SideSheet style={{maxWidth:"100%"}}  closeOnEsc={true} title={t('Advanced_Settings')} visible={advanSvisible} onCancel={advanSchange}>
                 <AdvancedSettingsPage></AdvancedSettingsPage>
             </SideSheet>
-            <SideSheet style={{maxWidth:"100%"}} closeOnEsc={true} title="关于" visible={advisible} onCancel={adchange}>
+            <SideSheet style={{maxWidth:"100%"}}  closeOnEsc={true} title="语言/Language" visible={lanvisible} onCancel={lanchange}>
+                <LanguagePage></LanguagePage>
+            </SideSheet>
+            <SideSheet style={{maxWidth:"100%"}} closeOnEsc={true} title={t('About')} visible={advisible} onCancel={adchange}>
                 <AboutWE></AboutWE>
             </SideSheet>
         </>

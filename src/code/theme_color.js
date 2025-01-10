@@ -32,15 +32,14 @@ function setTheme(isDark) {
 }
 
 function matchMode() {
+    const body = document.body;
     if (mql.matches) {
         if (!body.hasAttribute('theme-mode')) {
             body.setAttribute('theme-mode', 'dark');
-            add_log('AutoTheme:Dark','successfully');
         }
     } else {
         if (body.hasAttribute('theme-mode')) {
             body.removeAttribute('theme-mode');
-            add_log('AutoTheme:Light','successfully');
         }
     }
 }
@@ -71,7 +70,11 @@ export function queck_change_theme(str){
     }
 }
 export function getTheme() {
-    return mql.matches;
+    if (!body.hasAttribute('theme-mode')) {
+        return 'light';
+    }else{
+        return 'dark';
+    }
 }
 
 export function getSetTheme() {

@@ -27,6 +27,7 @@ export default defineConfig({
       minify: false, // 是否压缩index.html文件，这里选择不压缩
       pages: [
         {
+
           template: 'index.html',
           filename: 'index.html',
           injectOptions: {

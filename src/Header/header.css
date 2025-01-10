@@ -1,5 +1,9 @@
-#header_h1 {
-    text-align: center;
-    font-weight: bold;
-    font-size: 20px;
+.semi-navigation .semi-navigation-inner{
+    backdrop-filter: blur(40px); /* 设置模糊半径 */
+}
+@supports ((-webkit-backdrop-filter:initial) or (backdrop-filter:initial)) or (-webkit-backdrop-filter:initial) {
+    .index-module_container__x1Eix {
+        -webkit-backdrop-filter: saturate(180%) blur(40px);
+        backdrop-filter: saturate(180%) blur(40px);
+    }
 }

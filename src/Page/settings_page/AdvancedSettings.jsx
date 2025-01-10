@@ -16,10 +16,11 @@ import {useState} from "react";
 import {getAPI,  setAPIJ, setDefaultAPI} from "../../code/server_api_settings.js";
 import BaseSPage from "./BaseS.jsx";
 import {Logs_Viewer} from "./Logs_Viewer.jsx";
+import {useTranslation} from "react-i18next";
 
 export function AdvancedSettingsPage() {
+    const { t } = useTranslation();
     const [httpschecked, sethttpsChecked] = useState(getSettings('use_https')==='true');
-
     const { Text } = Typography;
     const [advanSvisible, setadvanSVisible] = useState(false);
     const advanSchange = () => {
@@ -35,7 +36,6 @@ export function AdvancedSettingsPage() {
     }
     const onsave_api=()=>{
         const resultJson={
-            "api_isHTTPS":document.getElementById('isHTTPS').value,
             "api_upload":document.getElementById('upload').value,
             "api_clear":document.getElementById('clear').value,
             "api_getpicture":document.getElementById('getpicture').value,
@@ -55,43 +55,43 @@ export function AdvancedSettingsPage() {
     return (
         <>
             <Card
-                header={<Text>HTTPS服务设置</Text>}
+                header={<Text>{t('HTTPS_Service_Setting')}</Text>}
             >
                 <Banner fullMode={false} type="info" bordered icon={null} closeIcon={null}
                         title={<div style={{
                             fontWeight: 600,
                             fontSize: '14px',
                             lineHeight: '20px'
-                        }}>不知道服务器是否启用了HTTPS服务？</div>}
-                        description={<div>你可以先关闭HTTPS服务，如果可以网站可以正常使用则代表服务器不支持HTTPS，否则请打开它。<br/> 请在切换完毕后<Text
-                            link={{href: window.location}}>刷新网页</Text>已更新连接状态</div>}
+                        }}>{t('Tip_unknow_http_service')}</div>}
+                        description={<div>{t('Tip_try_off_https')}<br/> {t('Tip_please_turn_off')}<Text
+                            link={{href: window.location}}>{t('Refresh')}</Text>{t('Tip_update_state')}</div>}
                 />
                 <br/>
                 <Space>
-                    使用HTTPS
+                    {t('Use_https')}
                     <Popover
                         showArrow
                         position={'top'}
                         content={
                             <article>
-                                {getSettings('use_https') === 'true' ? '请确保链接指向的服务器支持HTTPS服务。如果不支持HTTPS，会导致无法与服务器通信' : '如果你提供的链接指向的服务器支持HTTPS，请开启该选项'}
+                                {getSettings('use_https') === 'true' ? t('Tip_you_open_https') : t('Tip_you_open_https')}
                             </article>
                         }
                     >
                         <IconInfoCircle style={{color: 'var(--semi-color-primary)'}}></IconInfoCircle>
                     </Popover>
-                    <Switch checked={httpschecked} onChange={onhttpschange} aria-label="a switch for demo"></Switch>
+                    <Switch checked={httpschecked} onChange={onhttpschange} aria-label=""></Switch>
                 </Space>
                 <br/>
                 <br/>
                 <Space>
-                    HTTPS状态 {getSettings('use_https')}
+                    {t('Https_state')} {getSettings('use_https')}
                     <Popover
                         showArrow
                         position={'top'}
                         content={
                             <article>
-                                {getSettings('use_https') === 'true' ? '发送的信息将通过HTTPS服务发送' : '发送的信息将通过HTTP服务发送'}
+                                {getSettings('use_https') === 'true' ? t('Tip_send_by_https') : t('Tip_send_by_http')}
                             </article>
                         }
                     >
@@ -101,62 +101,50 @@ export function AdvancedSettingsPage() {
             </Card>
             <br/>
             <Card
-                header={<Text>API 设置</Text>}
+                header={<Text>{t('API_Settings')}</Text>}
             >
                 <Banner fullMode={false} icon={null} type="danger" bordered closeIcon={null}
-                        title={<div style={{fontWeight: 600, fontSize: '14px', lineHeight: '20px'}}>⚠ 注意</div>}
+                        title={<div style={{fontWeight: 600, fontSize: '14px', lineHeight: '20px'}}>⚠ {t('Warning')}</div>}
                         description={
-                            <div>请确保服务器的API与本页面填写的API相同，否则会导致无法连接服务器<br/> 请在切换完毕后<Text
-                                link={{href: window.location}}>刷新网页</Text>已更新连接状态</div>}
+                            <div>{t('Tip_seem_api')}<br/> {t('Tip_please_turn_off')}<Text
+                                link={{href: window.location}}>{t('Refresh')}</Text>{t('Tip_update_state')}</div>}
                 >
                     <div className="semi-modal-footer">
                         <Popconfirm
-                            title="确定是否要保存此修改？"
-                            content="你可以随时恢复默认设置"
+                            title={t('Save_change')}
+                            content={t("Tip_can_recover_set")}
                             position={"bottomRight"}
                             onConfirm={onsave_api}
                         >
                             <Button className="semi-button semi-button-tertiary semi-button-light"
-                                    type="button">保存</Button>
+                                    type="button">{t("Save_setting")}</Button>
                         </Popconfirm>
                         <Popconfirm
-                            title="确定是否要保存此修改？"
-                            content="你将丢失所保存的设置"
+                            title={t('Save_change')}
+                            content={t('Tip_loss_all_set')}
                             position={"bottomRight"}
                             onConfirm={changeDefaultapi}
                         >
-                            <Button className="semi-button semi-button-warning" type="button">恢复默认设置</Button>
+                            <Button className="semi-button semi-button-warning" type="button">{t('Restore_default_settings')}</Button>
                         </Popconfirm>
                     </div>
                 </Banner>
                 <br/>
                 <Space id={'api_input_box'} vertical align={'left'}>
-                    <Space  spacing={'medium'} align={'baseline'}>
-                        <Text style={{width:'50%'}}>检测是否支持HTTPS</Text>
-                        <Input id={'isHTTPS'} style={{width:'50%'}} defaultValue={getAPI("isHTTPS")}></Input>
-                    </Space>
                     <Space  spacing={'medium'}>
-                        <Text style={{width:'50%'}}>上传图片</Text>
+                        <Text style={{width:'50%'}}>{t('Upload_pic')}</Text>
                         <Input id={'upload'} style={{width:'50%'}} defaultValue={getAPI("upload")}></Input>
                     </Space>
                     <Space  spacing={'medium'}>
-                        <Text style={{width:'50%'}}>清空图片</Text>
+                        <Text style={{width:'50%'}}>{t('Del_pic')}</Text>
                         <Input id={'clear'} style={{width:'50%'}} defaultValue={getAPI("clear")}></Input>
                     </Space>
                     <Space  spacing={'medium'}>
-                        <Text style={{width:'50%'}}>获取图片</Text>
-                        <Input id={'getpicture'} style={{width:'50%'}} defaultValue={getAPI("getpicture")}></Input>
-                    </Space>
-                    <Space  spacing={'medium'}>
-                        <Text style={{width:'50%'}}>已上传图片的信息</Text>
-                        <Input id={'info'} style={{width:'50%'}} defaultValue={getAPI("info")}></Input>
-                    </Space>
-                    <Space  spacing={'medium'}>
-                        <Text style={{width:'50%'}}>发送处理请求</Text>
+                        <Text style={{width:'50%'}}>{t('Send_start')}</Text>
                         <Input id={'start'} style={{width:'50%'}} defaultValue={getAPI("start")}></Input>
                     </Space>
                     <Space  spacing={'medium'}>
-                        <Text style={{width:'50%'}}>测试是否连通</Text>
+                        <Text style={{width:'50%'}}>{t('Test_can_use')}</Text>
                         <Input id={'test'} style={{width:'50%'}} defaultValue={getAPI("test")}></Input>
                     </Space>
                 </Space>
@@ -168,23 +156,23 @@ export function AdvancedSettingsPage() {
                         fontSize: 'medium',
                         fontWeight: "bold",
                         color: "var( --semi-color-text-2)"
-                    }}>在查找其他设置吗？</Text>
+                    }}>{t('Look_other_set')}</Text>
                     <Text onClick={advanSchange}
-                          style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>服务器IP</Text>
+                          style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('Server_IP')}</Text>
                     <Text onClick={advanSchange}
-                          style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>主题色</Text>
+                          style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('Theme_color')}</Text>
                     <Text onClick={advanSchange}
-                          style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>UI 设置</Text>
+                          style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('UI_set')}</Text>
                     <Text onClick={LogsPchange}
-                          style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>日志查看器</Text>
+                          style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('Log_viewer')}</Text>
                 </Space>
             </Card>
             <br/>
-            <SideSheet style={{maxWidth: "100%"}} closeOnEsc={true} title="基本设置" visible={advanSvisible}
+            <SideSheet style={{maxWidth: "100%"}} closeOnEsc={true} title={t('Base_Settings')} visible={advanSvisible}
                        onCancel={advanSchange}>
                 <BaseSPage></BaseSPage>
             </SideSheet>
-            <SideSheet style={{width: "100%"}} closeOnEsc={true} title="日志查看器" visible={LogsPvisible}
+            <SideSheet style={{width: "100%"}} closeOnEsc={true} title={t('Log_viewer')} visible={LogsPvisible}
                        onCancel={LogsPchange}>
                 <Logs_Viewer></Logs_Viewer>
             </SideSheet>
