@@ -1,7 +1,19 @@
-import {Button, Modal, Input, Card, Descriptions, Tag, Space, Popover, Typography, Toast} from "@douyinfe/semi-ui";
+import {
+    Button,
+    Modal,
+    Input,
+    Card,
+    Descriptions,
+    Tag,
+    Space,
+    Popover,
+    Typography,
+    Toast,
+    Collapse
+} from "@douyinfe/semi-ui";
 import {useEffect, useMemo, useRef, useState} from 'react';
 import { Table } from '@douyinfe/semi-ui';
-import {get_error_logs, get_logs, get_successfully_logs, get_warning_logs} from "../../code/log.js";
+import {get_error_logs, get_logs, get_successfully_logs, get_warning_logs, saveLogsToTxt} from "../../code/log.js";
 import { VChart } from "@visactor/react-vchart";
 import {  Row } from '@douyinfe/semi-ui';
 import {IconInfoCircle,IconHelpCircle} from "@douyinfe/semi-icons";
@@ -297,7 +309,13 @@ export  function Logs_Viewer(){
                         </Popover>
                     </Space>
                 </h3>
-
+                <Collapse>
+                    <Collapse.Panel header={t('Log_control')} itemKey="1" >
+                        <Space>
+                            <Button theme='outline' type='primary' style={{ marginRight: 8 }} onClick={saveLogsToTxt}>{t('Log_download')}</Button>
+                        </Space>
+                    </Collapse.Panel>
+                </Collapse>
                 <Table
                     style={{width:'100%'}}
                     pagination={pagination}

@@ -204,33 +204,35 @@ export function Console(){
 
     return (
         <>
-            <Content className={"semi-always-dark"}
-            >
-                <TextArea value={consoleValue} autosize={{ maxRows: 25}} readonly rows={10}  style={{backgroundColor: 'var(--semi-color-bg-1)'}}/>
-            </Content>
-            <br/>
-            <Space style={{width:'100%'}}>
-                <InputGroup style={{ width: "100%"}} >
-                    <AutoComplete
-                        data={['help','blacklist','sql']}
-                        style={{ width: "100%"}}
-                        value={inputValue}
-                        onChange={handleInputChange}
-                    >
-                        <Input placeholder={t('Run_command_shortcut')} onChange={(e) => handleInputChange(e.target.value)} />
-                    </AutoComplete>
-                </InputGroup>
-                <Button  onClick={function (){send_command()}}>{t('Send')}</Button>
-                <HotKeys hotKeys={hotKeys} onHotKey={function (){send_command()}} render={newHotKeys}></HotKeys>
-                <Modal
-                    title="Table_Visible"
-                    visible={Table_Visible}
-                    onOk={handleOk}
-                    onCancel={handleCancel}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <Content className={"semi-always-dark"}
                 >
-                    <Table columns={columns} dataSource={datas} pagination={pagination} />
-                </Modal>
-            </Space>
+                    <TextArea value={consoleValue} autosize={{ maxRows: 25}} readonly rows={10}  style={{backgroundColor: 'var(--semi-color-bg-1)'}}/>
+                </Content>
+                <br/>
+                <Space style={{width:'100%'}} >
+                    <InputGroup style={{ width: "100%",marginLeft:'1%'}} >
+                        <AutoComplete
+                            data={['help','blacklist','sql']}
+                            style={{ width: "100%"}}
+                            value={inputValue}
+                            onChange={handleInputChange}
+                        >
+                            <Input placeholder={t('Run_command_shortcut')} onChange={(e) => handleInputChange(e.target.value)} />
+                        </AutoComplete>
+                    </InputGroup>
+                    <Button  onClick={function (){send_command()}}>{t('Send')}</Button>
+                    <HotKeys hotKeys={hotKeys} onHotKey={function (){send_command()}} render={newHotKeys}></HotKeys>
+                    <Modal
+                        title="Table_Visible"
+                        visible={Table_Visible}
+                        onOk={handleOk}
+                        onCancel={handleCancel}
+                    >
+                        <Table columns={columns} dataSource={datas} pagination={pagination} />
+                    </Modal>
+                </Space>
+            </div>
         </>
     )
 }

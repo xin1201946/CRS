@@ -51,3 +51,16 @@ export function getSettings(name,isJson=false) {
         return null;
     }
 }
+export function getAllLocalStorage() {
+    if (localStorage.length === 0) return "No local storage data found";
+    let result = "";
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
+        result += `${key}: ${value}\n`;
+    }
+    return result.trim();
+}
+export function clearLocalStorage() {
+    localStorage.clear();
+}

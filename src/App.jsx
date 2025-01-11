@@ -9,6 +9,8 @@ import {setAutoTheme, queck_change_theme} from "./code/theme_color.js";
 import {add_log} from "./code/log.js";
 import register from "./code/registerServiceWorker.js";
 import { Layout } from '@douyinfe/semi-ui';
+import Sider from "@douyinfe/semi-ui/lib/es/layout/Sider.js";
+import {Nav_T} from "./Header/Nav_T.jsx";
 function App()
 {
     const { Header, Content } = Layout;
@@ -29,10 +31,13 @@ function App()
     add_log('UI was Start...','successfully','Start successfully');
     return (
         <>
-            <Layout className="components-layout-demo">
+            <Layout style={{ border: '1px solid var(--semi-color-border)' }}>
                 <Header  style={{position:'fixed',width:'100%',zIndex:1,backdropFilter:" blur(5px)",
                     backgroundColor: "rgba(255, 255, 255, 0)"}} ><Header1 ></Header1></Header>
-                <Content  style={{marginTop:'60px'}}><HomePage></HomePage></Content>
+                <Sider><Nav_T></Nav_T></Sider>
+                <Layout>
+                    <Content style={{ height: "100%",marginTop:'60px'}}><HomePage></HomePage></Content>
+                </Layout>
             </Layout>
         </>
     );
