@@ -20,7 +20,7 @@ i18n
             zh: { translation: zhCN }
         },
         lng: get_language() === 1 ? 'zh' : 'en', // 动态设置默认语言
-        fallbackLng: 'en', // 备用语言
+        fallbackLng: 'zh', // 备用语言
         interpolation: {
             escapeValue: false // React 格式不需要 HTML 转义
         }
