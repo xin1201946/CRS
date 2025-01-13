@@ -2,9 +2,8 @@
 import "./header.css"
 // eslint-disable-next-line no-unused-vars
 import React, {useEffect, useState} from 'react';
-import {Button, IconButton, Nav, SideSheet, Space} from '@douyinfe/semi-ui';
+import {Button, Nav, SideSheet} from '@douyinfe/semi-ui';
 import {
-    IconClose,
     IconHome, IconMailStroked1,
     IconScan, IconSidebar,
     IconTerminal
@@ -12,9 +11,7 @@ import {
 import {emit} from "../code/PageEventEmitter.js";
 import {on,off} from "../code/PageEventEmitter.js";
 import { useTranslation } from 'react-i18next';
-import {FooterPage} from "../Footer/Footer.jsx";
 import NotifyCenter from "../Page/NotifyCenter.jsx";
-import {clear_notify} from "../code/SystemToast.jsx";
 
 export function Nav_T (){
     const [collapsed, setCollapsed] = useState(false);
