@@ -134,7 +134,7 @@ export function Header1 (){
         // 触发通知函数
         function build_toast(lists) {
             if (!lists || lists.includes(null)) return; // 确保列表不为空或未定义
-            send_notify(t('Server Status Check'),lists[2],lists[0],lists[1])
+            send_notify(t('Server Status Check'), lists[2],null, lists[0],  lists[1]);
         }
 
         // 使用 useEffect 检测网络并显示通知
