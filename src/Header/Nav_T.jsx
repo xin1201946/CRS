@@ -75,14 +75,14 @@ export function Nav_T (){
                                 onClick={toggleCollapse}
                                 theme="borderless"
                             >
-                                {collapsed ? '' : t('Close navigation')}
+                                {collapsed ? null : t('Close navigation')}
                             </Button>
                         </>
                     ),
                 }}
             />
             <SideSheet closeOnEsc={true} placement='left' style={{maxWidth: "100%", fontFamily: "var(--Default-font)"}} title={t('NotifyCenter')}
-                       visible={NotifyCenter_visible} onCancel={NotifyCenter_change} footer={<Space style={{width:'100%'}} align={'center'}><Button onClick={clear_notify} icon={<IconClose />}>{t('close_all_notify')}</Button></Space>}>
+                       visible={NotifyCenter_visible} onCancel={NotifyCenter_change} >
                 <NotifyCenter></NotifyCenter>
             </SideSheet>
         </>

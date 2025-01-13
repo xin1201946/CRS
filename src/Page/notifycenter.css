@@ -1,0 +1,33 @@
+/* 滑动动画 */
+.slide-out {
+    transform: translateX(-100%);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+/* 清除按钮显示和隐藏动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.clear-all-button {
+    animation: fadeIn 0.3s ease;
+}
+
+.clear-all-button.hide {
+    animation: fadeOut 0.3s ease;
+}

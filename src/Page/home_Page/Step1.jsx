@@ -1,5 +1,5 @@
 
-import { Col, Row, Upload, Button, Descriptions, Spin, SideSheet, ToastFactory} from '@douyinfe/semi-ui';
+import { Col, Row, Upload, Button, Descriptions, Spin, SideSheet} from '@douyinfe/semi-ui';
 import {IconPlus, IconSetting} from "@douyinfe/semi-icons";
 import  {useState} from "react";
 import {getServer} from "../../code/get_server.js";
@@ -7,6 +7,7 @@ import {detectDevice} from "../../code/check_platform.js";
 import {Settings} from "../Settings.jsx";
 import {getAPI} from "../../code/server_api_settings.js";
 import { useTranslation } from 'react-i18next';
+import {send_notify} from "../../code/SystemToast.jsx";
 
 export function Step1() {
     const { t } = useTranslation();
@@ -17,9 +18,6 @@ export function Step1() {
     const setchange = () => {
         setPagechange(!setPagevisible);
     };
-    const ToastInCustomContainer = ToastFactory.create({
-        getPopupContainer: () => document.getElementById('HomePage'),
-    });
     let action = getServer()+getAPI('upload');
     let clearfile = getServer()+getAPI('clear');
     let imageOnly = '.png,.jpeg,.jpg';
@@ -61,14 +59,7 @@ export function Step1() {
         console.log(data);
     }
     function showTotst(message){
-        let opts = {
-            content:message,
-            duration: 3,
-            stack: true,
-        };
-        return(
-            ToastInCustomContainer.info(opts)
-        )
+        send_notify(t('New_Notify_Send'),message);
     }
 
 

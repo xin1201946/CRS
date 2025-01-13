@@ -19,6 +19,7 @@ import {  Row } from '@douyinfe/semi-ui';
 import {IconInfoCircle,IconHelpCircle} from "@douyinfe/semi-icons";
 import {detectDevice} from "../../code/check_platform.js";
 import {useTranslation} from "react-i18next";
+import {send_notify} from "../../code/SystemToast.jsx";
 
 export  function Logs_Viewer(){
     const { Text } = Typography;
@@ -43,11 +44,7 @@ export  function Logs_Viewer(){
     }, []);
     function showInfoDialog(){
         if(detectDevice() === 'Phone'){
-            Toast.info({
-                content: <><Text>{t('Tip_cannot_support_your_device')}</Text></>,
-                duration: 5,
-                stack: true,
-            });
+            send_notify(t('Warning'),t('Tip_cannot_support_your_device'),null,5,'warning')
         }else{
             Modal.info({
                 title: t('More_info'),
@@ -72,11 +69,7 @@ export  function Logs_Viewer(){
     }
     function showDialog(message){
         if(detectDevice() === 'Phone'){
-            Toast.info({
-                content: <><Text>{message}</Text></>,
-                duration: 5,
-                stack: true,
-            });
+            send_notify(t('Remarks'),message,null,5,'info');
         }else{
             Modal.info({
                 title: t('More_info'),
