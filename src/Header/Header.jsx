@@ -17,6 +17,8 @@ import checkNetwork from "../code/NetWorkConnect.js";
 import {getServer} from "../code/get_server.js";
 import {AdvancedSettingsPage} from "../Page/settings_page/AdvancedSettings.jsx";
 import BaseSPage from "../Page/settings_page/BaseS.jsx";
+import {send_notify} from "../code/SystemToast.jsx";
+import NotifyCenter from "../Page/NotifyCenter.jsx";
 
 export function Header1 (){
     const { Text } = Typography;
@@ -93,7 +95,7 @@ export function Header1 (){
                         );
                     } else {
                         duration = 0;
-                        type = 'danger';
+                        type = 'error';
                         children = (
                             <>
                                 <Text>{t('Server_connection_failed')}</Text>
@@ -132,13 +134,7 @@ export function Header1 (){
         // 触发通知函数
         function build_toast(lists) {
             if (!lists || lists.includes(null)) return; // 确保列表不为空或未定义
-            const opts = {
-                duration: lists[0],
-                position: 'top',
-                title: t('Server Status Check'), // 替换成你需要的标题
-                content: lists[2],
-            };
-            Notification.info(opts)
+            send_notify(t('Server Status Check'),lists[2],lists[0],lists[1])
         }
 
         // 使用 useEffect 检测网络并显示通知
@@ -194,6 +190,7 @@ export function Header1 (){
                        visible={LanguagePage_visible} onCancel={LanguagePage_change} footer={<FooterPage></FooterPage>}>
                 <LanguagePage></LanguagePage>
             </SideSheet>
+
         </>
     )
 }

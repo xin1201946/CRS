@@ -1,5 +1,5 @@
-import {Banner, Button, Card, Toast, Typography} from "@douyinfe/semi-ui";
-import {sendSystemToast} from "../../code/SystemToast.js";
+import {Banner, Button, Card, Space, Toast, Typography} from "@douyinfe/semi-ui";
+import {send_notify, sendSystemToast} from "../../code/SystemToast.jsx";
 import {clear_log} from "../../code/log.js";
 import {clearLocalStorage, getSettings, setSettings} from "../../code/Settings.js";
 import { v4 as uuidv4 } from 'uuid';
@@ -35,7 +35,11 @@ export function BetaFunctionalityPage() {
             />
             <br/>
             <Card title={"System Notify"}>
-                <Button onClick={testStoast}>Send System Notify</Button>
+               <Space vertical={true}>
+                   <Button onClick={()=>{send_notify('Hi','This is Nomal Notify Without color',3,'error')}}>Send Nomal Notify</Button>
+                   <Button onClick={()=>{send_notify('Hi','This is Notify With Light color',3,'error','light')}}>Send Light Notify</Button>
+                   <Button onClick={testStoast}>Send System Notify</Button>
+               </Space>
             </Card>
             <br/>
             <Card title={"log operation"}>
