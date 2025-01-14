@@ -57,6 +57,7 @@ export function send_notify(
     customIcon = null,
     sendtime = 3,
     type = 'info',
+    CountInHistory=true,
     theme = 'normal'
 ) {
     // 检查是否超过限制
@@ -101,8 +102,9 @@ export function send_notify(
             SemiNotification.error({ ...opts, icon: customIcon });
             break;
     }
-
-    message_list.push(new_notify);
+    if (CountInHistory){
+        message_list.push(new_notify);
+    }
 
     // 通知订阅者通知列表更新
     notifySubscribers();

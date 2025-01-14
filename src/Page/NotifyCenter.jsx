@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Banner, IconButton } from '@douyinfe/semi-ui';
+import {Banner, IconButton, Space} from '@douyinfe/semi-ui';
 import { get_notify_list, clear_notify } from "../code/SystemToast.jsx";
 import { useTranslation } from "react-i18next";
 import { IconClose } from "@douyinfe/semi-icons";
 import './notifycenter.css';
+import {detectDevice} from "../code/check_platform.js";
 
 export default function NotifyCenter() {
     const [notifys, setNotifys] = useState([]); // 通知列表
@@ -53,7 +54,7 @@ export default function NotifyCenter() {
                         key={id}
                         fullMode={false}
                         title={title}
-                        description={content}
+                        description={<Space vertical={true}>{content}</Space>}
                         type="info"
                         onClose={() => handleClose(id)}
                         className={removing.includes(id) ? 'slide-out' : ''} // 应用滑动动画
@@ -69,21 +70,22 @@ export default function NotifyCenter() {
             {/* 清除全部按钮 */}
             {notifys.length > 0 && (
                 <div
-                    className="clear-all-button"
+                    className="grid"
                     style={{
                         position: 'fixed',
-                        bottom: '10%',
-                        left: '15%',
-                        transform: 'translateX(-50%)',
-                        zIndex: 99999,
+                        bottom: '10%',                // 距离底部 10%
+                        width: detectDevice() === 'PC' ? '25%' : '50%',  // 根据设备类型动态设置宽度
+                        zIndex: 9999,                 // 确保按钮位于最上层
                     }}
                 >
-                    <IconButton
-                        theme="light"
-                        icon={<IconClose />}
-                        style={{ borderRadius: '20px' }}
-                        onClick={handleClearAll}
-                    />
+                    <Space style={{width:"100%"}} vertical={true} align={'center'}>
+                        <IconButton
+                            theme="light"
+                            icon={<IconClose />}
+                            style={{ borderRadius: '20px',backgroundColor:' --semi-color-bg-4' }}
+                            onClick={handleClearAll}
+                        />
+                    </Space>
                 </div>
             )}
         </div>

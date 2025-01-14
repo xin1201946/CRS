@@ -210,29 +210,47 @@ export function Console(){
                     <TextArea value={consoleValue} autosize={{ maxRows: 25}} readonly rows={10}  style={{backgroundColor: 'var(--semi-color-bg-1)'}}/>
                 </Content>
                 <br/>
-                <Space style={{width:'100%'}} >
-                    <InputGroup style={{ width: "100%",marginLeft:'1%'}} >
+                <Space
+                    style={{
+                        width: '40%',
+                        display: 'flex',
+                        position: 'fixed',
+                        bottom: '10%',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        zIndex: 99,
+                        alignItems: 'center',
+                    }}
+                >
+                    <InputGroup size='large' style={{ width: "100%", marginLeft: '1%' }}>
                         <AutoComplete
-                            data={['help','blacklist','sql']}
-                            style={{ width: "100%"}}
+                            data={['help', 'blacklist', 'sql', 'clear']}
+                            style={{ width: "100%" }}
+                            position="top"
                             value={inputValue}
                             onChange={handleInputChange}
                         >
-                            <Input placeholder={t('Run_command_shortcut')} onChange={(e) => handleInputChange(e.target.value)} />
+                            <Input
+                                placeholder={t('Run_command_shortcut')}
+                                onChange={(e) => handleInputChange(e.target.value)}
+                            />
                         </AutoComplete>
                     </InputGroup>
-                    <Button  onClick={function (){send_command()}}>{t('Send')}</Button>
-                    <HotKeys hotKeys={hotKeys} onHotKey={function (){send_command()}} render={newHotKeys}></HotKeys>
-                    <Modal
-                        title="Table_Visible"
-                        visible={Table_Visible}
-                        onOk={handleOk}
-                        onCancel={handleCancel}
-                    >
-                        <Table columns={columns} dataSource={datas} pagination={pagination} />
-                    </Modal>
+
+                    <Button onClick={send_command}>{t('Send')}</Button>
+
+                    <HotKeys hotKeys={hotKeys} onHotKey={send_command} render={newHotKeys} />
                 </Space>
+
             </div>
+            <Modal
+                title="Table_Visible"
+                visible={Table_Visible}
+                onOk={handleOk}
+                onCancel={handleCancel}
+            >
+                <Table columns={columns} dataSource={datas} pagination={pagination} />
+            </Modal>
         </>
     )
 }

@@ -36,8 +36,8 @@ export function BetaFunctionalityPage() {
             <br/>
             <Card title={"System Notify"}>
                <Space vertical={true}>
-                   <Button onClick={()=>{send_notify('Hi','This is Nomal Notify Without color',null,3,'error')}}>Send Nomal Notify</Button>
-                   <Button onClick={()=>{send_notify('Hi','This is Notify With Light color',null,3,'error','light')}}>Send Light Notify</Button>
+                   <Button onClick={()=>{send_notify('Hi','This is Nomal Notify Without color',null,3,'info')}}>Send Nomal Notify</Button>
+                   <Button onClick={()=>{send_notify('Hi','This is Notify With Light color',null,3,'info',true,'light')}}>Send Light Notify</Button>
                    <Button onClick={testStoast}>Send System Notify</Button>
                </Space>
             </Card>

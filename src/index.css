@@ -7,27 +7,13 @@ html{
 }
 
 @font-face {
-    font-family: "Inter";
-    src: url('./Fonts/NotoSansSC-VariableFont_wght.ttf') format('truetype');
-}
-@font-face {
+    font-display: swap;
     font-family: 'Noto Sans SC';
     src: url('./Fonts/NotoSansSC-VariableFont_wght.ttf') format('truetype');
     font-weight: 700; /* 可根据需要调整 */
     font-style: normal; /* 可根据需要调整 */
 }
-@font-face {
-    font-family: 'HalloweenCN';
-    src: url('./Fonts/HYH.ttf') format('truetype');
-    font-weight: 400; /* 可根据需要调整 */
-    font-style: normal; /* 可根据需要调整 */
-}
-@font-face {
-    font-family: 'HalloweenEN';
-    src: url('./Fonts/RubikWetPaint-Regular.ttf') format('truetype');
-    font-weight: 400; /* 可根据需要调整 */
-    font-style: normal; /* 可根据需要调整 */
-}
+
 :root {
   font-family: var(--Default-font), sans-serif;
   color-scheme: light dark;
