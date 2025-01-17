@@ -5,12 +5,12 @@ import {api_map} from "./server_api_settings.js";
 import {subscribeToServerNotifications} from './server _information_subscription_service.js'
 import { v4 as uuidv4 } from 'uuid';
 export default function initializeSettings(){
-    let server_ip= "120.0.0.1:5000"
-    let language= 1
-    let new_settings_page= "true"
-    let use_https ='true'
-    let theme_color= "auto" // theme_color 仅有三个值 light dark auto
-    let api_service = {
+    const server_ip= "120.0.0.1:5000"
+    const language= 1
+    const new_settings_page= "true"
+    const use_https ='true'
+    const theme_color= "auto" // theme_color 仅有三个值 light dark auto
+    const api_service = {
         "api_isHTTPS" : '/isHTTPS',
         "api_clear":'/clear',
         "api_getpicture":'/getpicture',
@@ -21,8 +21,10 @@ export default function initializeSettings(){
         "api_command":'/command'
     }
     const uuid = uuidv4()
+    const use_app_content_menu='true'
     subscribeToServerNotifications();
     getSettings('Language')===null ? setSettings("Language",language):"";
+    getSettings('use_app_content_menu')===null ? setSettings("use_app_content_menu",use_app_content_menu):"";
     getSettings('uuid')===null ? setSettings("uuid",uuid):"";
     getSettings('server_ip')===null ? setSettings("server_ip",server_ip):"";
     getSettings('new_settings_page')===null ? setSettings("new_settings_page",new_settings_page):"";

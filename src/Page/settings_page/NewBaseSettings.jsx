@@ -22,7 +22,8 @@ import {useTranslation} from "react-i18next";
 export function NewBaseSettingsPage() {
     const { t } = useTranslation();
     const { Text } = Typography;
-    const [switchchecked, setswitchChecked] = useState(true);
+    const [switchSetPchecked, setswitchSetPchecked] = useState('true'===getSettings('new_settings_page'));
+    const [switchMenuPchecked, setswitchMenuPchecked] = useState('true'===getSettings('use_app_content_menu'));
     const [advanSvisible, setadvanSVisible] = useState(false);
     const advanSchange = () => {
         setadvanSVisible(!advanSvisible);
@@ -35,7 +36,7 @@ export function NewBaseSettingsPage() {
         getPopupContainer: () => document.getElementById('HomePage'),
     });
     const onswitchChange = checked => {
-        setswitchChecked(checked);
+        setswitchSetPchecked(checked);
         let opts = {
             content: (
                 <Space>
@@ -50,6 +51,23 @@ export function NewBaseSettingsPage() {
         };
         ToastInCustomContainer.info(opts);
         setSettings('new_settings_page',checked.toString());
+    };
+    const onswitchMenuChange = checked => {
+        setswitchMenuPchecked(checked);
+        let opts = {
+            content: (
+                <Space>
+                    <Text>{t('Success_change_UI')}</Text>
+                    <Text link={{ href: window.location.href }}>
+                        {t('Refresh')}
+                    </Text>
+                </Space>
+            ),
+            duration: 3,
+            stack: true,
+        };
+        ToastInCustomContainer.info(opts);
+        setSettings('use_app_content_menu',checked.toString());
     };
 
     function set_autocolor(){
@@ -163,9 +181,29 @@ export function NewBaseSettingsPage() {
                 <br/>
                 <Card title={t('UI_set')}>
                     <div style={{display: 'flex', alignItems: 'center'}}>
-                        <Title heading={6} style={{margin: 8,backgroundColor:'transparent',width:'90%'}}>
+                        <Title heading={6} style={{margin: 8, backgroundColor: 'transparent', width: '90%'}}>
                             <Space>
                                 {t('New_settings_page')}
+                                <Popover
+                                    showArrow
+                                    arrowPointAtCenter
+                                    content={
+                                        <article>
+                                            {t('Success_save_set')}
+                                        </article>
+                                    }
+                                    position={'top'}
+                                >
+                                    <IconInfoCircle style={{color: 'var(--semi-color-primary)'}}/>
+                                </Popover>
+                            </Space>
+                        </Title>
+                        <Switch checked={switchSetPchecked} onChange={onswitchChange}/>
+                    </div>
+                    <div style={{display: 'flex', alignItems: 'center'}}>
+                        <Title heading={6} style={{margin: 8, backgroundColor: 'transparent', width: '90%'}}>
+                            <Space>
+                                {t('Use the built-in right-click menu')}
                                 <Tag size="small" shape='circle' color='blue'> New </Tag>
                                 <Popover
                                     showArrow
@@ -177,30 +215,33 @@ export function NewBaseSettingsPage() {
                                     }
                                     position={'top'}
                                 >
-                                    <IconInfoCircle style={{ color: 'var(--semi-color-primary)' }}/>
+                                    <IconInfoCircle style={{color: 'var(--semi-color-primary)'}}/>
                                 </Popover>
                             </Space>
                         </Title>
-                        <Switch checked={switchchecked}  onChange={onswitchChange}/>
+                        <Switch checked={switchMenuPchecked} onChange={onswitchMenuChange}/>
                     </div>
                 </Card>
                 <br/>
-                <Card  style={{backgroundColor:'var( --semi-color-fill-0)'}}>
+                <Card style={{backgroundColor: 'var( --semi-color-fill-0)'}}>
                     <Space spacing={'medium'} vertical align='left'>
                         <Text style={{
                             fontSize: 'medium',
                             fontWeight: "bold",
                             color: "var( --semi-color-text-2)"
                         }}>{t('Look_other_set')}</Text>
-                        <Text onClick={advanSchange} style={{color: 'var( --semi-color-link)',cursor:'pointer'}}>{t('HTTPS_Service')}</Text>
-                        <Text onClick={advanSchange} style={{color: 'var( --semi-color-link)',cursor:'pointer'}}>{t('API_Settings')}</Text>
+                        <Text onClick={advanSchange}
+                              style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('HTTPS_Service')}</Text>
+                        <Text onClick={advanSchange}
+                              style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('API_Settings')}</Text>
                         <Text onClick={LogsPchange}
                               style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('Log_viewer')}</Text>
                     </Space>
                 </Card>
             </div>
             <br/>
-            <SideSheet style={{maxWidth:"100%"}}  closeOnEsc={true} title="高级设置" visible={advanSvisible} onCancel={advanSchange}>
+            <SideSheet style={{maxWidth: "100%"}} closeOnEsc={true} title="高级设置" visible={advanSvisible}
+                       onCancel={advanSchange}>
                 <AdvancedSettingsPage></AdvancedSettingsPage>
             </SideSheet>
             <SideSheet style={{width: "100%"}} closeOnEsc={true} title="日志查看器" visible={LogsPvisible}

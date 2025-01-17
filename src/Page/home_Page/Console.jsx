@@ -231,6 +231,7 @@ export function Console(){
                             onChange={handleInputChange}
                         >
                             <Input
+                                data-target="inputConsole"
                                 placeholder={t('Run_command_shortcut')}
                                 onChange={(e) => handleInputChange(e.target.value)}
                             />

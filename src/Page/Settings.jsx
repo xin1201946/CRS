@@ -31,7 +31,7 @@ export function Settings(){
         <>
             <Card
                 shadows='hover'
-                style={{cursor:"pointer"}}
+                style={{cursor: "pointer"}}
                 bodyStyle={{
                     display: 'flex',
                     alignItems: 'center',
@@ -46,12 +46,32 @@ export function Settings(){
                     title={t('Base_Settings')}
                     description={t('Server_IP')}
                 />
-                <IconArrowRight style={{ color: 'var(--semi-color-primary)' }}/>
+                <IconArrowRight style={{color: 'var(--semi-color-primary)'}}/>
             </Card>
             <br/>
             <Card
                 shadows='hover'
-                style={{cursor:"pointer"}}
+                style={{cursor: "pointer"}}
+                bodyStyle={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                }}
+                onClick={advanSchange}
+            >
+                <Meta
+                    avatar={
+                        <IconBeaker style={{color: 'var(--semi-color-primary)'}}/>
+                    }
+                    title={t('Advanced_Settings')}
+                    description={t('API_port') + ',' + t('HTTPS_Service')}
+                />
+                <IconArrowRight style={{color: 'var(--semi-color-primary)'}}/>
+            </Card>
+            <br/>
+            <Card
+                shadows='hover'
+                style={{cursor: "pointer"}}
                 bodyStyle={{
                     display: 'flex',
                     alignItems: 'center',
@@ -66,32 +86,12 @@ export function Settings(){
                     title="语言/Language"
                     description={t('Toggle_display_language')}
                 />
-                <IconArrowRight style={{ color: 'var(--semi-color-primary)' }}/>
+                <IconArrowRight style={{color: 'var(--semi-color-primary)'}}/>
             </Card>
             <br/>
             <Card
                 shadows='hover'
-                style={{cursor:"pointer"}}
-                bodyStyle={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                }}
-                onClick={advanSchange}
-            >
-                <Meta
-                    avatar={
-                        <IconBeaker style={{color: 'var(--semi-color-primary)'}}/>
-                    }
-                    title={t('Advanced_Settings')}
-                    description={t('API_port')+','+t('HTTPS_Service')}
-                />
-                <IconArrowRight style={{ color: 'var(--semi-color-primary)' }}/>
-            </Card>
-            <br/>
-            <Card
-                shadows='hover'
-                style={{ cursor:"pointer"}}
+                style={{cursor: "pointer"}}
                 bodyStyle={{
                     display: 'flex',
                     alignItems: 'center',
@@ -106,19 +106,23 @@ export function Settings(){
                     title={t('About')}
                     description={t('AppInfo')}
                 />
-                <IconArrowRight style={{ color: 'var(--semi-color-primary)' }}/>
+                <IconArrowRight style={{color: 'var(--semi-color-primary)'}}/>
             </Card>
 
-            <SideSheet style={{maxWidth:"100%"}} closeOnEsc={true} title={t('Base_Settings')} visible={baseSvisible} onCancel={baseSchange}>
+            <SideSheet style={{maxWidth: "100%"}} closeOnEsc={true} title={t('Base_Settings')} visible={baseSvisible}
+                       onCancel={baseSchange}>
                 <BaseSPage></BaseSPage>
             </SideSheet>
-            <SideSheet style={{maxWidth:"100%"}}  closeOnEsc={true} title={t('Advanced_Settings')} visible={advanSvisible} onCancel={advanSchange}>
+            <SideSheet style={{maxWidth: "100%"}} closeOnEsc={true} title={t('Advanced_Settings')}
+                       visible={advanSvisible} onCancel={advanSchange}>
                 <AdvancedSettingsPage></AdvancedSettingsPage>
             </SideSheet>
-            <SideSheet style={{maxWidth:"100%"}}  closeOnEsc={true} title="语言/Language" visible={lanvisible} onCancel={lanchange}>
+            <SideSheet style={{maxWidth: "100%"}} closeOnEsc={true} title="语言/Language" visible={lanvisible}
+                       onCancel={lanchange}>
                 <LanguagePage></LanguagePage>
             </SideSheet>
-            <SideSheet style={{maxWidth:"100%"}} closeOnEsc={true} title={t('About')} visible={advisible} onCancel={adchange}>
+            <SideSheet style={{maxWidth: "100%"}} closeOnEsc={true} title={t('About')} visible={advisible}
+                       onCancel={adchange}>
                 <AboutWE></AboutWE>
             </SideSheet>
         </>

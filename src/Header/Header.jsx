@@ -2,7 +2,7 @@
 import "./header.css"
 // eslint-disable-next-line no-unused-vars
 import React, {useEffect, useState} from 'react';
-import {Button, SideSheet, Space, Nav, Notification, Typography} from '@douyinfe/semi-ui';
+import {Button, SideSheet, Space, Nav, Typography, Dropdown} from '@douyinfe/semi-ui';
 import {Settings} from "../Page/Settings.jsx";
 import {FooterPage} from "../Footer/Footer.jsx";
 import {MdHdrAuto, MdOutlineDarkMode, MdOutlineLightMode} from "react-icons/md";
@@ -11,37 +11,39 @@ import {IconLanguage, IconSetting} from "@douyinfe/semi-icons";
 import {emit} from "../code/PageEventEmitter.js";
 import {on,off} from "../code/PageEventEmitter.js";
 import {detectDevice} from "../code/check_platform.js";
-import {LanguagePage} from "../Page/settings_page/LanguagePage.jsx";
 import { useTranslation } from 'react-i18next';
 import checkNetwork from "../code/NetWorkConnect.js";
 import {getServer} from "../code/get_server.js";
 import {AdvancedSettingsPage} from "../Page/settings_page/AdvancedSettings.jsx";
-import BaseSPage from "../Page/settings_page/BaseS.jsx";
 import {send_notify} from "../code/SystemToast.jsx";
-import NotifyCenter from "../Page/NotifyCenter.jsx";
+import {get_language, set_language} from "../code/language.js";
+import {getSettings} from "../code/Settings.js";
 
 export function Header1 (){
     const { Text } = Typography;
     const { t } = useTranslation();
-    const set_icon=()=>{
-        if (getSetTheme() === 'light'){
-            return <MdOutlineLightMode style={{width:'20px',height:'20px'}} />
-        } else if(getSetTheme() === 'dark'){
-            return <MdOutlineDarkMode style={{width:'20px',height:'20px'}} />
-        }else{
-            return <MdHdrAuto style={{width:'20px',height:'20px'}} />
+    const langmenu = [
+        { node: 'item', name: '中文', type: 'primary',active: get_language() === 1 , onClick: () => set_language(1) },
+        { node: 'item', name: 'English', type: 'primary',active: get_language() === 2 , onClick: () => set_language(2)},
+    ];
+    const initialThemeIcon = () => {
+        if (getSettings('theme_color') === 'light') {
+            set_ThemeIcon(<MdOutlineLightMode style={{ width: '20px', height: '20px' }} />)
+            return(<MdOutlineLightMode style={{ width: '20px', height: '20px' }} />)
+        } else if (getSettings('theme_color') === 'dark') {
+            set_ThemeIcon(<MdOutlineDarkMode style={{ width: '20px', height: '20px' }} />)
+            return(<MdOutlineDarkMode style={{ width: '20px', height: '20px' }} />)
+        } else if (getSettings('theme_color') === 'auto'){
+            set_ThemeIcon(<MdHdrAuto style={{ width: '20px', height: '20px' }} />)
+            return(<MdHdrAuto style={{ width: '20px', height: '20px' }} />)
         }
-    }
+    };
     const [selectKey,setSelectKey]=useState('home');
     const [settingP_visible, set_settingP_Visible] = useState(false);
     const s_side_sheet_change = () => {
         set_settingP_Visible(!settingP_visible);
     };
-    const [LanguagePage_visible, set_LanguagePage_visible] = useState(false);
-    const LanguagePage_change = () => {
-        set_LanguagePage_visible(!LanguagePage_visible);
-    };
-    const [settingThemeIcon, set_ThemeIcon] = useState(set_icon());
+    const [settingThemeIcon, set_ThemeIcon] = useState(<MdHdrAuto style={{ width: '20px', height: '20px' }} />);
     function changeSelectKey(key){
         setSelectKey(key.itemKey)
         emit('changePage', key.itemKey)
@@ -50,15 +52,18 @@ export function Header1 (){
     const adv_side_sheet_change = () => {
         set_settingadv_Visible(!settingadv_visible);
     };
+
     useEffect(() => {
         const handleChangePage = (newPage) => {
             setSelectKey(newPage);
         };
 
         on('changePage', handleChangePage);
-
+        window.addEventListener('themeChange', initialThemeIcon);
+        // 清理事件监听器
         return () => {
             off('changePage', handleChangePage);
+            window.removeEventListener('themeChange', initialThemeIcon);
         };
 
     }, []);
@@ -102,6 +107,7 @@ export function Header1 (){
                                 <br/>
                                 <Button
                                     onClick={() => {
+                                        // eslint-disable-next-line no-self-assign
                                         window.location.href = window.location.href;
                                     }}
                                 >
@@ -166,9 +172,12 @@ export function Header1 (){
                             <Space>
                                 <Button style={{margin: "10px"}} theme='borderless' icon={settingThemeIcon} onClick={switchDarkMode}
                                                        aria-label="切换颜色"/>
-                                <Button onClick={LanguagePage_change} style={{color:'var(--semi-color-text-0)',display: detectDevice()==='Phone'?"none":''}} theme='borderless'>
-                                    <IconLanguage />
-                                </Button>
+                                {/*onClick={LanguagePage_change}*/}
+                                <Dropdown trigger={'click'} showTick position={'bottomLeft'} menu={langmenu}>
+                                    <Button  style={{color:'var(--semi-color-text-0)',display: detectDevice()==='Phone'?"none":''}} theme='borderless'>
+                                        <IconLanguage />
+                                    </Button>
+                                </Dropdown>
                                 <Button onClick={s_side_sheet_change} style={{color:'var(--semi-color-text-0)',display: detectDevice()==='Phone'?"none":''}} theme='borderless'>
                                     <IconSetting/>
                                 </Button>
@@ -185,10 +194,6 @@ export function Header1 (){
                        visible={settingadv_visible} onCancel={adv_side_sheet_change}
                        footer={<FooterPage></FooterPage>}>
                 <AdvancedSettingsPage></AdvancedSettingsPage>
-            </SideSheet>
-            <SideSheet closeOnEsc={true} style={{maxWidth: "100%", fontFamily: "var(--Default-font)"}} title="语言/language"
-                       visible={LanguagePage_visible} onCancel={LanguagePage_change} footer={<FooterPage></FooterPage>}>
-                <LanguagePage></LanguagePage>
             </SideSheet>
 
         </>

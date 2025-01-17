@@ -14,6 +14,7 @@
     "@douyinfe/semi-icons": "^2.67.1",
     "@douyinfe/semi-icons-lab": "^2.68.4",
     "@douyinfe/semi-ui": "^2.67.1",
+    "@iconify/react": "^5.2.0",
     "@visactor/react-vchart": "^1.12.10",
     "@visactor/vchart": "^1.12.10",
     "@visactor/vchart-semi-theme": "^1.12.2",
