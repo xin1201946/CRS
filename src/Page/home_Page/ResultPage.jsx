@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import './resultpage_css.css'
 import {Step1} from "./Step1.jsx";
 import {HomePage} from "./HomePage.jsx";
-import {Console} from "./console.jsx"
+import {Console} from "./Console.jsx"
 import {on,off} from "../../code/PageEventEmitter.js";
 
 export function ResultPage(){
