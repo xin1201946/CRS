@@ -38,19 +38,15 @@ export function AdvancedSettingsPage() {
         const resultJson={
             "api_upload":document.getElementById('upload').value,
             "api_clear":document.getElementById('clear').value,
-            "api_getpicture":document.getElementById('getpicture').value,
-            "api_info":document.getElementById('info').value,
             "api_start":document.getElementById('start').value,
             "api_test":document.getElementById('test').value,
         }
         setAPIJ(resultJson);
-        // eslint-disable-next-line no-self-assign
-        window.location.href = window.location.href
+        window.location.reload()
     }
     const changeDefaultapi=()=>{
         setDefaultAPI()
-        // eslint-disable-next-line no-self-assign
-        window.location.href = window.location.href
+        window.location.reload()
     }
     return (
         <>

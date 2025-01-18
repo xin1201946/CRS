@@ -31,7 +31,6 @@ export function Console(){
     // 处理输入值变化的回调函数
     // 设置批量更新延迟（可以调整这个时间来平衡流畅度与性能）
     const batchUpdateDelay = 10; // 100ms 以内的多次调用会合并为一次更新
-
     function processQueue() {
         if (queue.length === 0 || isLocked) {
             return; // 如果没有待处理的任务或锁被占用，退出
@@ -185,7 +184,7 @@ export function Console(){
             setInputValue('')
             return
         }
-        command= command===''?inputValue:command
+        command = command===''?inputValue:command
         consol_insert_command(command);
         console.log(command);
         const api= getServer()+'/command'+'?command='+command
@@ -233,14 +232,17 @@ export function Console(){
                             <Input
                                 data-target="inputConsole"
                                 placeholder={t('Run_command_shortcut')}
-                                onChange={(e) => handleInputChange(e.target.value)}
                             />
                         </AutoComplete>
                     </InputGroup>
 
-                    <Button onClick={send_command}>{t('Send')}</Button>
+                    <Button onClick={()=> {
+                        send_command(inputValue)
+                    }}>{t('Send')}</Button>
 
-                    <HotKeys hotKeys={hotKeys} onHotKey={send_command} render={newHotKeys} />
+                    <HotKeys hotKeys={hotKeys} onHotKey={()=> {
+                        send_command(inputValue)
+                    }} render={newHotKeys} />
                 </Space>
 
             </div>

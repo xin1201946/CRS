@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Button, Col, Dropdown,  Row, SideSheet } from '@douyinfe/semi-ui';
-import { IconCopy, IconRefresh } from '@douyinfe/semi-icons';
+import { Button, Col, Dropdown, Row, SideSheet } from '@douyinfe/semi-ui';
+import { IconCopy, IconRefresh, IconEdit, IconDelete } from '@douyinfe/semi-icons';
 import { send_notify } from '../code/SystemToast.jsx';
 import { FooterPage } from '../Footer/Footer.jsx';
 import { Settings } from './Settings.jsx';
@@ -10,17 +10,16 @@ import { getSetTheme, setAutoTheme, setDarkTheme, setLightTheme } from "../code/
 import { MdHdrAuto, MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 import { getSettings } from "../code/Settings.js";
 import { useTranslation } from 'react-i18next';
+import { useContextMenu } from '../contexts/ContextMenuContext';
 
-// eslint-disable-next-line react/prop-types
-export default function CustomContextMenu({ x, y, visible }) {
+export default function CustomContextMenu() {
+    const { contextMenu, hideContextMenu } = useContextMenu();
     const [settingP_visible, set_settingP_Visible] = useState(false);
     const [settingThemeIcon, set_ThemeIcon] = useState(<MdHdrAuto style={{ width: '20px', height: '20px' }} />);
-    const [menuPosition, setMenuPosition] = useState({ x, y }); // 右键菜单的初始位置
     const { t } = useTranslation();
-    // 初始化主题图标
+
     useEffect(() => {
         window.addEventListener('themeChange', initialThemeIcon);
-        // 清理事件监听器
         return () => {
             window.removeEventListener('themeChange', initialThemeIcon);
         };
@@ -54,39 +53,7 @@ export default function CustomContextMenu({ x, y, visible }) {
         }
     }
 
-    useEffect(() => {
-        // 计算菜单位置，确保菜单不显示在视窗外
-        const updateMenuPosition = () => {
-            const windowWidth = window.innerWidth;
-            const windowHeight = window.innerHeight;
-            const menuWidth = 200; // 菜单宽度，根据实际菜单宽度调整
-            const menuHeight = 150; // 菜单高度，根据实际菜单高度调整
-
-            // 检查菜单是否超出右侧边界
-            let newX = x;
-            if (x + menuWidth > windowWidth) {
-                newX = windowWidth - menuWidth - 10; // 10是边距，确保不紧贴边界
-            }
-
-            // 检查菜单是否超出下侧边界
-            let newY = y;
-            if (y + menuHeight > windowHeight) {
-                newY = windowHeight - menuHeight - 10;
-            }
-
-            setMenuPosition({ x: newX, y: newY });
-        };
-
-        updateMenuPosition(); // 初始化时计算位置
-
-        // 在窗口大小变化时重新计算位置
-        window.addEventListener('resize', updateMenuPosition);
-        return () => {
-            window.removeEventListener('resize', updateMenuPosition);
-        };
-    }, [x, y]);
-
-    if (!visible) {
+    if (!contextMenu.visible) {
         return null;
     }
 
@@ -102,37 +69,81 @@ export default function CustomContextMenu({ x, y, visible }) {
     ];
 
     const handleCopy = () => {
-        const selectedText = window.getSelection().toString();
+        const selectedText = window.getSelection()?.toString();
         if (selectedText) {
             navigator.clipboard.writeText(selectedText)
                 .then(() => {
                     send_notify(t('New_Notify_Send'), t('Copy successful'));
                 })
                 .catch(err => {
-                    console.error('复制失败', err);
-                    send_notify(t('New_Notify_Send'), t('Copy failed'));
+                    send_notify(t('Copy failed'), err);
                 });
         }
+    };
+
+    const handleCut = () => {
+        const selectedText = window.getSelection()?.toString();
+        if (selectedText && contextMenu.target instanceof HTMLInputElement) {
+            navigator.clipboard.writeText(selectedText)
+                .then(() => {
+                    const start = contextMenu.target.selectionStart || 0;
+                    const end = contextMenu.target.selectionEnd || 0;
+                    contextMenu.target.setRangeText('', start, end, 'end');
+                    send_notify(t('New_Notify_Send'), t('Cut successful'));
+                })
+                .catch(err => {
+                    send_notify(t('Cut failed'),err);
+                });
+        }
+    };
+
+    const handlePaste = () => {
+        if (contextMenu.target instanceof HTMLInputElement) {
+            navigator.clipboard.readText()
+                .then(text => {
+                    const start = contextMenu.target.selectionStart || 0;
+                    const end = contextMenu.target.selectionEnd || 0;
+                    contextMenu.target.setRangeText(text, start, end, 'end');
+                    send_notify(t('New_Notify_Send'), t('Paste successful'));
+                })
+                .catch(err => {
+                    send_notify(t('Paste failed'), err);
+                });
+        }
+    };
+
+    const getDynamicMenuItems = () => {
+        if (contextMenu.target instanceof HTMLInputElement || contextMenu.target instanceof HTMLTextAreaElement) {
+            return [
+                { node: 'item', name: t('Cut'), icon: <IconDelete />, onClick: handleCut },
+                { node: 'item', name: t('Copy'), icon: <IconCopy />, onClick: handleCopy },
+                { node: 'item', name: t('Paste'), icon: <IconEdit />, onClick: handlePaste },
+            ];
+        }
+        return [
+
+        ];
     };
 
     return (
         <div
             className="grid"
             style={{
-                position: 'absolute',
-                top: menuPosition.y,
-                left: menuPosition.x,
+                position: 'fixed',
+                top: `${contextMenu.y}px`,
+                left: `${contextMenu.x}px`,
                 backgroundColor: 'var(--semi-color-bg-1)',
                 padding: '10px',
                 borderRadius: '10px',
                 boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                display: 'inline-block',
+                display: contextMenu.visible ? 'inline-block' : 'none',
                 minWidth: '100px',
                 zIndex: 1001,
             }}
             onClick={(e) => {
-                e.stopPropagation(); // 阻止事件冒泡，避免触发 onClose
+                e.stopPropagation();
             }}
+
         >
             <Row>
                 <Col span={8}>
@@ -148,6 +159,11 @@ export default function CustomContextMenu({ x, y, visible }) {
 
             <br />
             <Dropdown.Menu tabIndex={-1}>
+                {getDynamicMenuItems().map((item, index) => (
+                    <Dropdown.Item key={index} style={{ borderRadius: '10px' }} icon={item.icon} onClick={item.onClick}>
+                        {item.name}
+                    </Dropdown.Item>
+                ))}
                 <Dropdown.Item style={{ borderRadius: '10px' }}>
                     <Dropdown trigger={'hover'} showTick position={'right'} menu={uimenu}>
                         <div style={{ cursor: 'pointer' }}>{t('Switch page')}</div>

@@ -42,7 +42,7 @@ export function clear_log(){
     add_Server_log(get_Time(),'Clear_ALL_Logs','successfully');
 }
 function get_server_logs() {
-    fetch(getServer() + '/get_logs')
+    fetch(getServer() + '/getlogs')
         .then(res => res.json())  // 解析响应为 JSON 数据
         .then(logs => {
             logs.forEach(log => {

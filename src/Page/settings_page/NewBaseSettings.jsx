@@ -18,6 +18,7 @@ import {setDarkTheme,setLightTheme,setAutoTheme} from "../../code/theme_color.js
 import {AdvancedSettingsPage} from "./AdvancedSettings.jsx";
 import {Logs_Viewer} from "./Logs_Viewer.jsx";
 import {useTranslation} from "react-i18next";
+import {send_notify} from "../../code/SystemToast.jsx";
 
 export function NewBaseSettingsPage() {
     const { t } = useTranslation();
@@ -49,7 +50,7 @@ export function NewBaseSettingsPage() {
             duration: 3,
             stack: true,
         };
-        ToastInCustomContainer.info(opts);
+        send_notify(t('New_Notify_Send'),opts['content'],null,opts['duration']);
         setSettings('new_settings_page',checked.toString());
     };
     const onswitchMenuChange = checked => {
@@ -66,7 +67,7 @@ export function NewBaseSettingsPage() {
             duration: 3,
             stack: true,
         };
-        ToastInCustomContainer.info(opts);
+        send_notify(t('New_Notify_Send'),opts['content'],null,opts['duration']);
         setSettings('use_app_content_menu',checked.toString());
     };
 
@@ -107,13 +108,13 @@ export function NewBaseSettingsPage() {
                 ),
                 duration: 3,
             };
-            ToastInCustomContainer.success(opts)
+            send_notify(t('New_Notify_Send'),opts['content'],null,opts['duration'],'success');
         }else{
             let opts = {
                 content: t('Failed_save'),
                 duration: 3,
             };
-            ToastInCustomContainer.error(opts)
+            send_notify(t('New_Notify_Send'),opts['content'],null,opts['duration'],'error');
         }
     }
     function color_int(){
