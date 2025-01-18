@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Col, Dropdown, List, Row, SideSheet } from '@douyinfe/semi-ui';
+import { Button, Col, Dropdown,  Row, SideSheet } from '@douyinfe/semi-ui';
 import { IconCopy, IconRefresh } from '@douyinfe/semi-icons';
 import { send_notify } from '../code/SystemToast.jsx';
 import { FooterPage } from '../Footer/Footer.jsx';

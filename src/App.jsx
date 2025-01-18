@@ -1,6 +1,6 @@
 import './App.css';
 import initializeSettings from './code/QuickLoadingService.js';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Header1 } from './Header/Header.jsx';
 import { HomePage } from './Page/Home.jsx';
 import { getSettings } from './code/Settings.js';
