@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { useContextMenu } from '../contexts/ContextMenuContext';
 
 export default function CustomContextMenu() {
-    const { contextMenu, hideContextMenu } = useContextMenu();
+    const { contextMenu} = useContextMenu();
     const [settingP_visible, set_settingP_Visible] = useState(false);
     const [settingThemeIcon, set_ThemeIcon] = useState(<MdHdrAuto style={{ width: '20px', height: '20px' }} />);
     const { t } = useTranslation();

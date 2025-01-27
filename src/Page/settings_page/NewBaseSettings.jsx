@@ -7,7 +7,6 @@ import {
     Space,
     Switch,
     Tag,
-    ToastFactory,
     Typography
 } from "@douyinfe/semi-ui";
 import {getSettings, setSettings} from "../../code/Settings.js";
@@ -33,9 +32,6 @@ export function NewBaseSettingsPage() {
     const LogsPchange = () => {
         setLogsPVisible(!LogsPvisible);
     };
-    const ToastInCustomContainer = ToastFactory.create({
-        getPopupContainer: () => document.getElementById('HomePage'),
-    });
     const onswitchChange = checked => {
         setswitchSetPchecked(checked);
         let opts = {
