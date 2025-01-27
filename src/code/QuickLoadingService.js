@@ -5,8 +5,8 @@ import {api_map} from "./server_api_settings.js";
 import {subscribeToServerNotifications} from './server _information_subscription_service.js'
 import { v4 as uuidv4 } from 'uuid';
 export default function initializeSettings(){
-    const server_ip= "120.0.0.1:5000"
-    const language= 1
+    const server_ip= "127.0.0.1:5000"
+    const language= 2
     const new_settings_page= "true"
     const use_https ='true'
     const theme_color= "auto" // theme_color 仅有三个值 light dark auto

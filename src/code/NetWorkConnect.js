@@ -1,7 +1,8 @@
 import {add_log} from "./log.js";
 import {getAPI} from "./server_api_settings.js";
+import {getSettings} from "./Settings.js";
 
-export default async function checkNetwork(serverIP) {
+export default async function checkNetwork(serverIP=getSettings('server_ip')) {
    let result;
    try {
        const response = await fetch(serverIP+getAPI('test'));

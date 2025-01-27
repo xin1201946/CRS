@@ -4,12 +4,16 @@ import {Step1} from "./Step1.jsx";
 import {HomePage} from "./HomePage.jsx";
 import {Console} from "./Console.jsx"
 import {on,off} from "../../code/PageEventEmitter.js";
+import {getSettings, setSettings} from "../../code/Settings.js";
 
 export function ResultPage(){
 
     const [page, setPage] = useState('home');
 
     useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        setSettings('server_ip',urlParams.get('serverip') || getSettings('server_ip'));
+
         const handleChangePage = (newPage) => {
             setPage(newPage);
         };

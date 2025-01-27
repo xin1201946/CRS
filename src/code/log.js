@@ -123,3 +123,10 @@ export function saveLogsToTxt() {
     link.click();
     document.body.removeChild(link);
 }
+export function get_SystemStatus(){
+    if (get_error_logs.length === 0) {
+        return '系统正常运行';
+    } else {
+        return '检测到存在'+ get_error_logs.length + '条错误信息';
+    }
+}

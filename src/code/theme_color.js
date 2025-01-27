@@ -30,8 +30,6 @@ function setTheme(isDark) {
         body.removeAttribute('theme-mode');
         setSettings('theme_color','light');
         add_log('setTheme:Light','successfully');
-
-
     }
 }
 

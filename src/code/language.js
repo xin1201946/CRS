@@ -11,6 +11,11 @@ export function get_T_language() {
     return getSettings('Language')==="1" ? "zh-CN" : "en-US";
 }
 export function set_language(language=1) {
-    window.location.reload()
     setSettings('Language',language);
+    window.location.reload()
+}
+export function set_languageT(language='en-US') {
+    setSettings('Language',language === 'en-US' ? '2' : '1');
+    window.location.reload()
+    return "Done"
 }

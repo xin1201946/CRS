@@ -63,4 +63,5 @@ export function getAllLocalStorage() {
 }
 export function clearLocalStorage() {
     localStorage.clear();
+    return 'Done'
 }

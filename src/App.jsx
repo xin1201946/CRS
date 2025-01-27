@@ -12,6 +12,7 @@ import Sider from '@douyinfe/semi-ui/lib/es/layout/Sider.js';
 import { Nav_T } from './Header/Nav_T.jsx';
 import CustomContextMenu from './Page/RightClickMenu.jsx';
 import { ContextMenuProvider, useContextMenu } from "./contexts/ContextMenuContext.jsx";
+import {detectDevice} from "./code/check_platform.js";
 
 function AppContent() {
     const { Header, Content } = Layout;
@@ -28,7 +29,7 @@ function AppContent() {
     }, []);
 
     const handleContextMenu = (event) => {
-        if (getSettings('use_app_content_menu') === 'true') {
+        if (getSettings('use_app_content_menu') === 'true' && detectDevice()==='PC') {
             showContextMenu(event);
         }
     };
@@ -57,7 +58,6 @@ function AppContent() {
             </Sider>
             <Layout>
                 <Content
-                    onContextMenu={handleContextMenu}
                     style={{ height: '100%', marginTop: '60px' }}
                 >
                     <HomePage />
