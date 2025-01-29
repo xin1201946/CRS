@@ -1,5 +1,5 @@
 import {useCallback, useState} from "react";
-import {Card, Chat, Space} from "@douyinfe/semi-ui";
+import { Chat, Space} from "@douyinfe/semi-ui";
 import {clearAiHistory, tryAskAI} from "../code/chrome_gemini_support.js";
 
 const defaultMessage = [
@@ -34,7 +34,7 @@ function getId() {
 
 export default function Chrome_ai_page() {
     const [message, setMessage] = useState(defaultMessage);
-    const onMessageSend = useCallback(async(content, attachment) => {
+    const onMessageSend = useCallback(async(content) => {
         tryAskAI(content).then(result => {
             const newAssistantMessage = {
                 role: 'assistant',
@@ -56,7 +56,7 @@ export default function Chrome_ai_page() {
         textAlign: "left",
         width: window.innerWidth,
     }
-    const onMessageReset = useCallback(async (e) => {
+    const onMessageReset = useCallback(async () => {
         const currentMessage = [...message];
         const lastMessage = currentMessage[currentMessage.length - 1];
         try {
@@ -89,9 +89,6 @@ export default function Chrome_ai_page() {
                 clearContext={clearAIhistory}
                 showClearContext
             />
-            <Card>
-                ABC
-            </Card>
         </Space>
     );
 }

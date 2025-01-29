@@ -8,7 +8,6 @@ import {checkAPIAvailability} from "./chrome_gemini_support.js";
 export default function initializeSettings(){
     const server_ip= "127.0.0.1:5000"
     const language= 2
-    const new_settings_page= "true"
     const use_https ='true'
     const use_ai_page='false'
     const theme_color= "auto" // theme_color 仅有三个值 light dark auto
@@ -31,7 +30,6 @@ export default function initializeSettings(){
     getSettings('use_app_content_menu')===null ? setSettings("use_app_content_menu",use_app_content_menu):"";
     getSettings('uuid')===null ? setSettings("uuid",uuid):"";
     getSettings('server_ip')===null ? setSettings("server_ip",server_ip):"";
-    getSettings('new_settings_page')===null ? setSettings("new_settings_page",new_settings_page):"";
     getSettings('theme_color')===null ? setSettings("theme_color",theme_color):"";
     getSettings('use_https')===null ? setSettings("use_https",use_https):"";
     getSettings('api_service')===null ? setSettings("api_service",api_service,true):"";
