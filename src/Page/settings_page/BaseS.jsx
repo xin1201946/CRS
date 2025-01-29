@@ -24,7 +24,7 @@ export default function BaseSPage(){
     const { t } = useTranslation();
     const { Text } = Typography;
     const [switchMenuPchecked, setswitchMenuPchecked] = useState('true'===getSettings('use_app_content_menu'));
-    const [use_ai_page_checked, set_use_ai_pagechecked] = useState('true'===getSettings('use_ai_page'));
+    const [use_ai_page_checked, set_use_ai_pagechecked] = useState('true'===getSettings('use_ai_page'))
     const [advanSvisible, setadvanSVisible] = useState(false);
     const advanSchange = () => {
         setadvanSVisible(!advanSvisible);
@@ -219,7 +219,7 @@ export default function BaseSPage(){
                             <Title heading={6} style={{margin: 8, backgroundColor: 'transparent', width: '90%'}}>
                                 使用生成式AI
                             </Title>
-                            <Switch checked={use_ai_page_checked} onChange={onchange_ai_page} aria-label={'使用生成式AI'}/>
+                            <Switch disabled={getSettings('ai_support')==='False'} checked={use_ai_page_checked} onChange={onchange_ai_page} aria-label={'使用生成式AI'}/>
                         </Space>
                     </Space>
                 </Card>
