@@ -36,7 +36,6 @@ export default function initializeSettings(){
     add_log('QuickLoadingService:language Loading','successfully',getSettings('Language'));
     add_log('QuickLoadingService:Server_ip','successfully',getSettings('server_ip'));
     add_log('QuickLoadingService:api_service','successfully',api_map().toString());
-    add_log('QuickLoadingService:new_settings_page','successfully',getSettings('new_settings_page'));
     add_log('QuickLoadingService:use_https','successfully',getSettings('use_https'));
     add_log('QuickLoadingService:theme_color','successfully',getSettings('theme_color'));
     add_log('QuickLoadingService:尝试订阅服务器通知','successfully');
