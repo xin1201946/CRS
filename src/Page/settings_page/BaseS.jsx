@@ -1,7 +1,7 @@
 import {
     Banner,
     Button,
-    Card,
+    Card, Divider,
     Input, Popover,
     Radio,
     RadioGroup, SideSheet,
@@ -211,6 +211,11 @@ export default function BaseSPage(){
                                         </Text>
                                         <Text>
                                             {t('Tip_AI_Page_4_1')} <Text link={{href:'https://policies.google.com/terms/generative-ai/use-policy'}}>{t('Tip_AI_Page_4_2')}</Text>
+                                        </Text>
+                                        <Divider/>
+                                        <Text style={{fontWeight:'bold'}}>{t('Refer also to Built_AI')}:</Text>
+                                        <Text link={{href:'https://docs.google.com/document/d/1VG8HIyz361zGduWgNG7R_R8Xkv0OOJ8b5C9QKeCjU0c/edit?tab=t.0#heading=h.witohboigk0o',target:'_blank'}}>
+                                            Built-in AI Early Preview Program
                                         </Text>
                                     </Space>
                                 }

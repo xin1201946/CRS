@@ -5,7 +5,7 @@ import {
     Typography,
     Space,
     SideSheet,
-    Popover
+    Popover, Modal, Table, Button, Banner
 } from "@douyinfe/semi-ui";
 import {getSettings} from "../../code/Settings.js";
 import {useState} from "react";
@@ -15,6 +15,7 @@ import {IconChevronRight, IconFile, IconInfoCircle} from "@douyinfe/semi-icons";
 import {getServer} from "../../code/get_server.js";
 import {BetaFunctionalityPage} from "./BetaFunctionality.jsx";
 import {useTranslation} from "react-i18next";
+import Column from "@douyinfe/semi-ui/lib/es/table/Column.js";
 
 
 export  default  function AboutWE(){
@@ -24,6 +25,13 @@ export  default  function AboutWE(){
     const [beta, setbeta] = useState(0);
     const [betavisible, setbetaVisible] = useState('hidden');
     const [betaPagevisible, setbetaPageVisible] = useState(false);
+    const [visible, setVisible] = useState(false);
+    const showDialog = () => {
+        setVisible(true);
+    };
+    const handleOk = () => {
+        setVisible(false);
+    };
     const clickbeta = ()=>{
         if (beta >= 8){
             setbetaVisible('visible');
@@ -33,12 +41,46 @@ export  default  function AboutWE(){
         }
 
     }
+
     const betaPchange=()=>{
         setbetaPageVisible(!betaPagevisible)
     }
     const logchange = () => {
         setlogVisible(!logvisible);
     };
+
+    const data = [
+        {
+            class: t('OS version'),
+            value: 'Windows ≥ 10, MacOS ≥ 13(Ventura),Linux',
+        },
+        {
+            class: t('Browser Support'),
+            value: 'Chrome Canary | Chrome Dev',
+        },
+        {
+            class: t('minChromeVersion'),
+            value: '128.0.6545.0',
+        },
+        {
+            class: t('Storage'),
+            value: t('Tip_AI_require_Disk'),
+        },
+        {
+            class: 'GPU',
+            value: t('Tip_AI_require_GPU'),
+        },
+        {
+            class: t('Video RAM'),
+            value: t('Tip_AI_require_GPU_M'),
+        },
+        {
+            class: t('Network connection'),
+            value: t('Tip_AI_require_Network'),
+        },
+    ];
+
+
     function appInfo(){
         return (
             <>
@@ -63,7 +105,7 @@ export  default  function AboutWE(){
                                     arrowPointAtCenter
                                     position={'top'}
                                 >
-                                    <IconInfoCircle onClick={()=>{window.open('https://docs.google.com/document/d/1VG8HIyz361zGduWgNG7R_R8Xkv0OOJ8b5C9QKeCjU0c/edit?tab=t.0')}} style={{color: 'var(--semi-color-primary)'}}/>
+                                    <IconInfoCircle onClick={showDialog} style={{color: 'var(--semi-color-primary)'}}/>
                                 </Popover>
                             </Space>
                         </Descriptions.Item>
@@ -122,6 +164,35 @@ export  default  function AboutWE(){
         <>
             <h2 style={{fontFamily: "var(--Default-font)"}}>{t('AppInfo')}</h2>
             {appInfo()}
+            <Modal
+                title={t('Generative AI operational requirements')}
+                visible={visible}
+                closeOnEsc={true}
+                fullScreen
+                onCancel={handleOk}
+                footer={
+                <Button type={'primary'} onClick={handleOk}>{t('Done')}</Button>
+                }
+            >
+                <div style={{height:'100%',overflowY:'auto'}}>
+                    {t('data source')}: <Text link={{target:'_blank',href:'https://docs.google.com/document/d/1VG8HIyz361zGduWgNG7R_R8Xkv0OOJ8b5C9QKeCjU0c/edit?tab=t.0#heading=h.cwc2ewfrtynq'}}>Google Built-in AI Early Preview Program - Update 1</Text>
+                    <br />
+                    <Table dataSource={data} pagination={false}>
+                        <Column title={t('Type')} dataIndex="class" key="class" />
+                        <Column title={t('content')} dataIndex="value" key="value" />
+                    </Table>
+                    <br/>
+                    <Banner fullMode={false} type="warning" bordered icon={null} closeIcon={null}
+                            title={<div style={{ fontWeight: 600, fontSize: '14px', lineHeight: '20px' }}>{t('Warning')}</div>}
+                            description={
+                        <Space vertical align={'start'}>
+                            <div>{t('Tip_AI_require_1')}</div>
+                            <div>{t('Tip_AI_require_2')}</div>
+                        </Space>
+                    }
+                    />
+                </div>
+            </Modal>
         </>
     )
 }
