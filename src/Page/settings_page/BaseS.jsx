@@ -195,29 +195,29 @@ export default function BaseSPage(){
                                 title={<div style={{ fontWeight: 600, fontSize: '14px', lineHeight: '20px' }}>{t('Increase productivity with Gemini built into Chrome')}</div>}
                                 description={
                                     <Space vertical align={'left'}>
-                                        <Text>注意事项</Text>
+                                        <Text>{t('Warning')}</Text>
                                         <Text>
-                                            这些功能依赖于 Google Chrome 内置的 Gemini nano AI，且该功能处于实验性阶段。使用 AI 时，可能会得到不正确或令人反感的信息。这些信息不受 Google 以及 CCRS 控制，也不代表 Google 以及 CCRS 的观点。
+                                            {t('Tip_AI_Page_1')}
                                         </Text>
                                         <Text>
-                                            请确保在设备满足
+                                            {t('Tip_AI_Page_2_1')}
                                             <Text link={{href:'https://docs.google.com/document/d/1VG8HIyz361zGduWgNG7R_R8Xkv0OOJ8b5C9QKeCjU0c/edit?tab=t.0#heading=h.cwc2ewfrtynq'}}>
-                                                配置要求
+                                                {t('Tip_AI_Page_2_2')}
                                             </Text>
-                                            时再启用 AI，否则不会出现相应入口。
+                                            {t('Tip_AI_Page_2_3')}
                                         </Text>
                                         <Text>
-                                            这些数据不会发送给 Google 或其他服务器，所有计算均在您的设备上完成。
+                                            {t('Tip_AI_Page_3')}
                                         </Text>
                                         <Text>
-                                            使用这些功能请遵守 <Text link={{href:'https://policies.google.com/terms/generative-ai/use-policy'}}>《生成式 AI 使用限制政策》</Text>
+                                            {t('Tip_AI_Page_4_1')} <Text link={{href:'https://policies.google.com/terms/generative-ai/use-policy'}}>{t('Tip_AI_Page_4_2')}</Text>
                                         </Text>
                                     </Space>
                                 }
                         />
                         <Space width={'100%'}>
                             <Title heading={6} style={{margin: 8, backgroundColor: 'transparent', width: '90%'}}>
-                                使用生成式AI
+                                {t('Using Generative AI')}
                             </Title>
                             <Switch disabled={getSettings('ai_support')==='False'} checked={use_ai_page_checked} onChange={onchange_ai_page} aria-label={'使用生成式AI'}/>
                         </Space>
@@ -242,11 +242,11 @@ export default function BaseSPage(){
 
             </div>
             <br/>
-            <SideSheet style={{maxWidth: "100%"}} closeOnEsc={true} title="高级设置" visible={advanSvisible}
+            <SideSheet style={{maxWidth: "100%"}} closeOnEsc={true} title={t('Advanced_Settings')} visible={advanSvisible}
                        onCancel={advanSchange}>
                 <AdvancedSettingsPage></AdvancedSettingsPage>
             </SideSheet>
-            <SideSheet style={{width: "100%"}} closeOnEsc={true} title="日志查看器" visible={LogsPvisible}
+            <SideSheet style={{width: "100%"}} closeOnEsc={true} title={t('Log_viewer')} visible={LogsPvisible}
                        onCancel={LogsPchange}>
                 <Logs_Viewer></Logs_Viewer>
             </SideSheet>
