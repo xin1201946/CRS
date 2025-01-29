@@ -13,11 +13,14 @@
 
 import {add_log} from "./log.js";
 import {setSettings} from "./Settings.js";
+let session = null; // 先定义全局变量
 
-let session = await ai.languageModel.create({
-    systemPrompt: "You are a Google Gemini named Canf, used to assist users in solving program problems.."
-});
-
+export async function initAI() {
+    session = await ai.languageModel.create({
+        systemPrompt: "You are a Google Gemini named Canf, used to assist users in solving program problems.."
+    });
+    console.log("AI session initialized:", session);
+}
 export async function clearAiHistory() {
     session = await session.clone();
 }
@@ -26,6 +29,7 @@ export async function checkAPIAvailability() {
     try {
         const capabilities = await ai.languageModel.capabilities();
         if (capabilities.available === "readily") {
+            await initAI()
             setSettings('ai_support','True')
             add_log('Chrome_AI_Support','successfully','The browser environment meets the requirements')
         } else if (capabilities.available === "no") {
