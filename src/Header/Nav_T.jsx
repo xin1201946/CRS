@@ -4,6 +4,7 @@ import "./header.css"
 import React, {useEffect, useState} from 'react';
 import {Button, Nav, SideSheet} from '@douyinfe/semi-ui';
 import {
+    IconCode,
     IconHome, IconMailStroked1,
     IconScan, IconSidebar,
     IconTerminal
@@ -12,6 +13,7 @@ import {emit} from "../code/PageEventEmitter.js";
 import {on,off} from "../code/PageEventEmitter.js";
 import { useTranslation } from 'react-i18next';
 import NotifyCenter from "../Page/NotifyCenter.jsx";
+import {getSettings} from "../code/Settings.js";
 
 export function Nav_T (){
     const [collapsed, setCollapsed] = useState(false);
@@ -34,6 +36,18 @@ export function Nav_T (){
             NotifyCenter_change()
         }
     }
+    function getItem(){
+        const items=[
+            {itemKey: 'home', text: t('Home'), icon: <IconHome />},
+            {itemKey: 'vision', text: t('Vision'), icon:<IconScan />},
+            {itemKey: 'console', text: t('Console'), icon:<IconTerminal />},
+            {itemKey: 'message', text: t('NotifyCenter'), icon:<IconMailStroked1 />},
+        ]
+        if ('true'===getSettings('use_ai_page')){
+            items.push({itemKey: 'ai', text: t('AI'), icon:<IconCode />})
+        }
+        return items;
+    }
     useEffect(() => {
         const handleChangePage = (newPage) => {
             setSelectKey(newPage);
@@ -46,7 +60,6 @@ export function Nav_T (){
         };
 
     }, []);
-
     return(
         <>
             <Nav
@@ -54,12 +67,7 @@ export function Nav_T (){
                 style={{height:"100%"}}
                 selectedKeys={selectKey}
                 mode={'vertical'}
-                items={[
-                    {itemKey: 'home', text: t('Home'), icon: <IconHome />},
-                    {itemKey: 'vision', text: t('Vision'), icon:<IconScan />},
-                    {itemKey: 'console', text: t('Console'), icon:<IconTerminal />},
-                    {itemKey: 'message', text: t('NotifyCenter'), icon:<IconMailStroked1 />},
-                ]}
+                items={getItem()}
                 onSelect={key => changeSelectKey(key)}
                 header={{
                     text: 'CCRS'

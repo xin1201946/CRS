@@ -4,11 +4,13 @@ import {add_log} from "./log.js";
 import {api_map} from "./server_api_settings.js";
 import {subscribeToServerNotifications} from './server _information_subscription_service.js'
 import { v4 as uuidv4 } from 'uuid';
+import {checkAPIAvailability} from "./chrome_gemini_support.js";
 export default function initializeSettings(){
     const server_ip= "127.0.0.1:5000"
     const language= 2
     const new_settings_page= "true"
     const use_https ='true'
+    const use_ai_page='false'
     const theme_color= "auto" // theme_color 仅有三个值 light dark auto
     const api_service = {
         "api_isHTTPS" : '/isHTTPS',
@@ -23,7 +25,9 @@ export default function initializeSettings(){
     const uuid = uuidv4()
     const use_app_content_menu='true'
     subscribeToServerNotifications();
+    checkAPIAvailability().then();
     getSettings('Language')===null ? setSettings("Language",language):"";
+    getSettings('use_ai_page')===null ? setSettings("use_ai_page",use_ai_page):"";
     getSettings('use_app_content_menu')===null ? setSettings("use_app_content_menu",use_app_content_menu):"";
     getSettings('uuid')===null ? setSettings("uuid",uuid):"";
     getSettings('server_ip')===null ? setSettings("server_ip",server_ip):"";

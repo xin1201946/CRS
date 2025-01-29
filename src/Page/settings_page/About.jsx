@@ -1,11 +1,17 @@
-// eslint-disable-next-line no-unused-vars
-import {Avatar, Card, Descriptions, Toast, Typography, Space, Button, SideSheet} from "@douyinfe/semi-ui";
-// import Meta from "@douyinfe/semi-ui/lib/es/card/meta.js";
+
+import {
+    Card,
+    Descriptions,
+    Typography,
+    Space,
+    SideSheet,
+    Popover
+} from "@douyinfe/semi-ui";
 import {getSettings} from "../../code/Settings.js";
 import {useState} from "react";
 import {Logs_Viewer} from "./Logs_Viewer.jsx"
 import Meta from "@douyinfe/semi-ui/lib/es/card/meta.js";
-import {IconChevronRight, IconFile} from "@douyinfe/semi-icons";
+import {IconChevronRight, IconFile, IconInfoCircle} from "@douyinfe/semi-icons";
 import {getServer} from "../../code/get_server.js";
 import {BetaFunctionalityPage} from "./BetaFunctionality.jsx";
 import {useTranslation} from "react-i18next";
@@ -44,6 +50,23 @@ export  default  function AboutWE(){
                             href: getServer(),
                             target: '_blank'
                         }}>{getSettings('server_ip')}</Text></Descriptions.Item>
+                        <Descriptions.Item itemKey={t('AI_Support')}>
+                            <Space>
+                                <Text>{getSettings('ai_support')}</Text>
+                                <Popover
+                                    content={
+                                        <article>
+                                            <Text>{t('Click to see more information about AI')}</Text>
+                                        </article>
+                                    }
+                                    showArrow
+                                    arrowPointAtCenter
+                                    position={'top'}
+                                >
+                                    <IconInfoCircle onClick={()=>{window.open('https://docs.google.com/document/d/1VG8HIyz361zGduWgNG7R_R8Xkv0OOJ8b5C9QKeCjU0c/edit?tab=t.0')}} style={{color: 'var(--semi-color-primary)'}}/>
+                                </Popover>
+                            </Space>
+                        </Descriptions.Item>
                     </Descriptions>
                 </Card>
                 <br/>

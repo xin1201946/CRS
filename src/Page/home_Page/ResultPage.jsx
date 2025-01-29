@@ -5,6 +5,7 @@ import {HomePage} from "./HomePage.jsx";
 import {Console} from "./Console.jsx"
 import {on,off} from "../../code/PageEventEmitter.js";
 import {getSettings, setSettings} from "../../code/Settings.js";
+import Chrome_ai_page from "../Chrome_ai_page.jsx";
 
 export function ResultPage(){
 
@@ -29,8 +30,8 @@ export function ResultPage(){
     return (
         <>
             <div id={'container'}>
-                <div id={'returnpage'}>
-                    {page === 'home' ? <HomePage/> : page === 'console' ? <Console/> : <Step1/>}
+                <div id={'returnpage'} style={{height:'100%'}}>
+                    {page === 'home' ? <HomePage/> : page === 'console' ? <Console/> : page === 'vision'? <Step1/>:<Chrome_ai_page/>}
                 </div>
             </div>
         </>

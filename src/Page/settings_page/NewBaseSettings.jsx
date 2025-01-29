@@ -1,4 +1,5 @@
 import {
+    Banner,
     Button,
     Card,
     Input, Popover,
@@ -24,6 +25,7 @@ export function NewBaseSettingsPage() {
     const { Text } = Typography;
     const [switchSetPchecked, setswitchSetPchecked] = useState('true'===getSettings('new_settings_page'));
     const [switchMenuPchecked, setswitchMenuPchecked] = useState('true'===getSettings('use_app_content_menu'));
+    const [use_ai_page_checked, set_use_ai_pagechecked] = useState('true'===getSettings('use_ai_page'));
     const [advanSvisible, setadvanSVisible] = useState(false);
     const advanSchange = () => {
         setadvanSVisible(!advanSvisible);
@@ -66,7 +68,11 @@ export function NewBaseSettingsPage() {
         send_notify(t('New_Notify_Send'),opts['content'],null,opts['duration']);
         setSettings('use_app_content_menu',checked.toString());
     };
-
+    const onchange_ai_page = checked => {
+        set_use_ai_pagechecked(checked);
+        setSettings('use_ai_page',checked.toString());
+        window.location.reload();
+    }
     function set_autocolor(){
         setAutoTheme();
         setSettings('theme_color','auto')
@@ -134,7 +140,8 @@ export function NewBaseSettingsPage() {
                     <Space>
                         <Input id={'server_ip_inputbox'} style={{width: '70%'}} defaultValue={getSettings('server_ip')}
                                placeholder={t('Tip_server_ip')} size='default'></Input>
-                        <Button theme='outline' onClick={save_data} type='primary' style={{marginRight: 8}}>{t('Save_setting')}</Button>
+                        <Button theme='outline' onClick={save_data} type='primary'
+                                style={{marginRight: 8}}>{t('Save_setting')}</Button>
                     </Space>
                 </Card>
                 <br/>
@@ -220,6 +227,41 @@ export function NewBaseSettingsPage() {
                     </div>
                 </Card>
                 <br/>
+                <Card title={t('AI Setting')}>
+                    <Space vertical align={'left'}>
+                        <Banner fullMode={false} type="success" bordered icon={null} closeIcon={null}
+                                title={<div style={{ fontWeight: 600, fontSize: '14px', lineHeight: '20px' }}>{t('Increase productivity with Gemini built into Chrome')}</div>}
+                                description={
+                                    <Space vertical align={'left'}>
+                                        <Text>注意事项</Text>
+                                        <Text>
+                                            这些功能依赖于 Google Chrome 内置的 Gemini nano AI，且该功能处于实验性阶段。使用 AI 时，可能会得到不正确或令人反感的信息。这些信息不受 Google 以及 CCRS 控制，也不代表 Google 以及 CCRS 的观点。
+                                        </Text>
+                                        <Text>
+                                            请确保在设备满足
+                                            <Text link={{href:'https://docs.google.com/document/d/1VG8HIyz361zGduWgNG7R_R8Xkv0OOJ8b5C9QKeCjU0c/edit?tab=t.0#heading=h.cwc2ewfrtynq'}}>
+                                            配置要求
+                                            </Text>
+                                            时再启用 AI，否则不会出现相应入口。
+                                        </Text>
+                                        <Text>
+                                            这些数据不会发送给 Google 或其他服务器，所有计算均在您的设备上完成。
+                                        </Text>
+                                        <Text>
+                                            使用这些功能请遵守 <Text link={{href:'https://policies.google.com/terms/generative-ai/use-policy'}}>《生成式 AI 使用限制政策》</Text>
+                                        </Text>
+                                    </Space>
+                            }
+                        />
+                        <Space width={'100%'}>
+                            <Title heading={6} style={{margin: 8, backgroundColor: 'transparent', width: '90%'}}>
+                                使用生成式AI
+                            </Title>
+                            <Switch checked={use_ai_page_checked} onChange={onchange_ai_page} aria-label={'使用生成式AI'}/>
+                        </Space>
+                    </Space>
+                </Card>
+                <br/>
                 <Card style={{backgroundColor: 'var( --semi-color-fill-0)'}}>
                     <Space spacing={'medium'} vertical align='left'>
                         <Text style={{
@@ -235,6 +277,7 @@ export function NewBaseSettingsPage() {
                               style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('Log_viewer')}</Text>
                     </Space>
                 </Card>
+
             </div>
             <br/>
             <SideSheet style={{maxWidth: "100%"}} closeOnEsc={true} title="高级设置" visible={advanSvisible}
