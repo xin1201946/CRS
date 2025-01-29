@@ -5,7 +5,7 @@ import {
     Typography,
     Space,
     SideSheet,
-    Popover, Modal, Table, Button, Banner, Tabs, TabPane
+    Popover, Modal, Table,  Banner, Tabs, TabPane
 } from "@douyinfe/semi-ui";
 import {getSettings} from "../../code/Settings.js";
 import {useState} from "react";
