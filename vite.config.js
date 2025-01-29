@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import { createHtmlPlugin } from 'vite-plugin-html';
 // https://vitejs.dev/config/
 export default defineConfig({
+  allowAsynchronousTasks: false,
   baseUrl: './',
   outputDir: './../flask-dist',
   // 生产环境是否生成 sourceMap 文件
