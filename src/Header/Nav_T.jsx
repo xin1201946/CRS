@@ -14,6 +14,7 @@ import {on,off} from "../code/PageEventEmitter.js";
 import { useTranslation } from 'react-i18next';
 import NotifyCenter from "../Page/NotifyCenter.jsx";
 import {getSettings} from "../code/Settings.js";
+import {detectDevice} from "../code/check_platform.js";
 
 export function Nav_T (){
     const [collapsed, setCollapsed] = useState(false);
@@ -63,7 +64,7 @@ export function Nav_T (){
     return(
         <>
             <Nav
-                isCollapsed={collapsed}
+                isCollapsed={detectDevice()==='PC'?collapsed:true}
                 style={{height:"100%"}}
                 selectedKeys={selectKey}
                 mode={'vertical'}
@@ -75,13 +76,15 @@ export function Nav_T (){
                 footer={{
                     children: (
                         <>
-                            <Button
-                                icon={collapsed ?<IconSidebar style={{ color: '--semi-color-tertiary-active' }} /> : <IconSidebar style={{ color: '--semi-color-text-0' }} />}
-                                onClick={toggleCollapse}
-                                theme="borderless"
-                            >
-                                {collapsed ? null : t('Close navigation')}
-                            </Button>
+                            {
+                                detectDevice()==='PC'? <Button
+                                    icon={collapsed ?<IconSidebar style={{ color: '--semi-color-tertiary-active' }} /> : <IconSidebar style={{ color: '--semi-color-text-0' }} />}
+                                    onClick={toggleCollapse}
+                                    theme="borderless"
+                                >
+                                    {collapsed ? null : t('Close navigation')}
+                                </Button> : null
+                            }
                         </>
                     ),
                 }}

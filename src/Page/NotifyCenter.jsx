@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
-import {Banner, IconButton, Space} from '@douyinfe/semi-ui';
+import {Banner, Collapse, IconButton, Space, Tag} from '@douyinfe/semi-ui';
 import { get_notify_list, clear_notify } from "../code/SystemToast.jsx";
 import { useTranslation } from "react-i18next";
-import { IconClose } from "@douyinfe/semi-icons";
+import {IconClock, IconClose} from "@douyinfe/semi-icons";
 import './notifycenter.css';
-import {detectDevice} from "../code/check_platform.js";
 
 export default function NotifyCenter() {
     const [notifys, setNotifys] = useState([]); // 通知列表
     const [removing, setRemoving] = useState([]); // 正在移除的通知 ID 列表
     const { t } = useTranslation();
-
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     // 加载通知列表
     const fetchNotifyList = () => {
         const updatedNotifys = get_notify_list();
@@ -20,6 +19,17 @@ export default function NotifyCenter() {
     // 初始化加载通知列表
     useEffect(() => {
         fetchNotifyList();
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        // 监听窗口大小变化事件
+        window.addEventListener('resize', handleResize);
+
+        // 在组件卸载时移除事件监听器，避免内存泄漏
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
     }, []);
 
     // 关闭单个通知
@@ -48,45 +58,55 @@ export default function NotifyCenter() {
 
     return (
         <div style={{ padding: '16px', position: 'relative' }}>
-            {notifys.length > 0 ? (
-                notifys.map(({ id, title, content }) => (
-                    <Banner
-                        key={id}
-                        fullMode={false}
-                        title={title}
-                        description={<Space vertical={true}>{content}</Space>}
-                        type="info"
-                        onClose={() => handleClose(id)}
-                        className={removing.includes(id) ? 'slide-out' : ''} // 应用滑动动画
-                        style={{ marginBottom: '12px', transition: 'all 0.3s ease' }}
-                    />
-                ))
-            ) : (
-                <p style={{ textAlign: 'center', color: 'var(--semi-color-text-2)' }}>
-                    {t('No_notifications_available')}
-                </p>
-            )}
+            <Collapse accordion>
+                {notifys.length > 0 ? (
+                    notifys.map(({ id, title, content,type,time }) => (
+                        <Collapse.Panel  header={title} itemKey={id} key={id} showArrow={false}
+                                         className={removing.includes(id) ? 'slide-out' : ''} // 应用滑动动画
+                                         extra={
+                                             <Space>
+                                                 <Tag color="violet" type={'ghost'} style={{ margin: 0 }}>
+                                                     {' '}
+                                                     {type}
+                                                     {' '}
+                                                 </Tag>
+                                                 <Tag color="cyan" prefixIcon={<IconClock style={{color:'cyan'}} />} type={'ghost'} style={{ margin: 0 }}>
+                                                     {' '}
+                                                     {time}
+                                                     {' '}
+                                                 </Tag>
+                                             </Space>
+                                         }
+                        >
+                            <Banner
+                                key={id}
+                                fullMode={false}
+                                title={title}
+                                description={<Space vertical={true}>{content}</Space>}
+                                type={type}
+                                onClose={() => handleClose(id)}
+                                className={removing.includes(id) ? 'slide-out' : ''} // 应用滑动动画
+                                style={{ marginBottom: '12px', transition: 'all 0.3s ease' }}
+                            />
+                        </Collapse.Panel>
+
+                    ))
+                ) : (
+                    <p style={{ textAlign: 'center', color: 'var(--semi-color-text-2)' }}>
+                        {t('No_notifications_available')}
+                    </p>
+                )}
+            </Collapse>
+
 
             {/* 清除全部按钮 */}
             {notifys.length > 0 && (
-                <div
-                    className="grid"
-                    style={{
-                        position: 'fixed',
-                        bottom: '10%',                // 距离底部 10%
-                        width: detectDevice() === 'PC' ? '25%' : '50%',  // 根据设备类型动态设置宽度
-                        zIndex: 9999,                 // 确保按钮位于最上层
-                    }}
-                >
-                    <Space style={{width:"100%"}} vertical={true} align={'center'}>
-                        <IconButton
-                            theme="light"
-                            icon={<IconClose />}
-                            style={{ borderRadius: '20px',backgroundColor:' --semi-color-bg-4' }}
-                            onClick={handleClearAll}
-                        />
-                    </Space>
-                </div>
+                <IconButton
+                    theme="light"
+                    icon={<IconClose />}
+                    style={{left:windowWidth/2-20,bottom: '10%',zIndex: 9999, position: 'fixed',borderRadius: '20px',backgroundColor:'var(--semi-color-bg-4)' }}
+                    onClick={handleClearAll}
+                />
             )}
         </div>
     );

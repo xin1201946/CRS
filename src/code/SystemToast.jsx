@@ -1,40 +1,40 @@
 // 尝试获取权限，返回布尔值
-import {add_log} from "./log.js";
-import {Notification as SemiNotification} from '@douyinfe/semi-ui'; // 给 semi-ui 的 Notification 添加别名
-import {get_Time} from "./times.js";
+import { add_log } from "./log.js";
+import { Notification as SemiNotification } from '@douyinfe/semi-ui'; // 给 semi-ui 的 Notification 添加别名
+import { get_Time } from "./times.js";
 
 let message_list = [];
-let message_queue = [];  // 存储发送时间的队列，用于限制发送频率
+// 存储每种通知内容的上一次发送时间，用于限制发送频率
+const lastSendTimeMap = {};
 
-const MAX_MESSAGES_PER_MINUTE = 15;
-const MESSAGE_TIMEOUT = 60000; // 1分钟内最多5条消息
+const FIVE_MINUTES_IN_MS = 5 * 60 * 1000; // 5 分钟的毫秒数
 // message_list=[{id=length+1,time=get_Time(),title="",content:widget}]
 function getSystemToastPermissions() {
     if (!("Notification" in window)) {
-        add_log('getSystemToastPermissions','warning','您的浏览器不支持系统通知')
+        add_log('getSystemToastPermissions', 'warning', '您的浏览器不支持系统通知');
         console.log("您的浏览器不支持系统通知。");
         return false;
     }
 
     if (Notification.permission === "granted") {
         // 用户已经授权
-        add_log('getSystemToastPermissions','successfully','用户已授权系统通知权限')
+        add_log('getSystemToastPermissions', 'successfully', '用户已授权系统通知权限');
         return true;
     } else if (Notification.permission !== 'denied') {
         // 用户尚未授权，请求权限
         Notification.requestPermission().then(permission => {
             if (permission === "granted") {
                 console.log("通知权限已获得。");
-                add_log('getSystemToastPermissions','successfully','用户已授权系统通知权限')
+                add_log('getSystemToastPermissions', 'successfully', '用户已授权系统通知权限');
             } else {
                 console.log("通知权限被拒绝。");
-                add_log('getSystemToastPermissions','warning','通知权限被拒绝')
+                add_log('getSystemToastPermissions', 'warning', '通知权限被拒绝');
             }
         });
         return false; // 由于权限请求是异步的，这里返回false
     } else {
         console.log("通知权限已被拒绝。");
-        add_log('getSystemToastPermissions','warning','通知权限被拒绝')
+        add_log('getSystemToastPermissions', 'warning', '通知权限被拒绝');
         return false;
     }
 }
@@ -57,15 +57,16 @@ export function send_notify(
     customIcon = null,
     sendtime = 3,
     type = 'info',
-    CountInHistory=true,
+    CountInHistory = true,
     theme = 'normal'
 ) {
-    // 检查是否超过限制
     const now = Date.now();
-    message_queue = message_queue.filter(timestamp => now - timestamp <= MESSAGE_TIMEOUT);
+    // 获取该内容上一次的发送时间
+    const lastSendTime = lastSendTimeMap[content];
 
-    if (message_queue.length >= MAX_MESSAGES_PER_MINUTE) {
-        console.log('通知发送频率过快，稍后再试。');
+    // 检查是否距离上一次发送时间超过 5 分钟
+    if (lastSendTime && now - lastSendTime < FIVE_MINUTES_IN_MS) {
+        console.log(`内容为 "${content}" 的通知发送频率过快，需等待 ${Math.ceil((FIVE_MINUTES_IN_MS - (now - lastSendTime)) / 1000)} 秒后再试。`);
         return false;
     }
 
@@ -75,9 +76,11 @@ export function send_notify(
         time: get_Time(),
         title: title,
         content: content,
+        type: type === 'error' ? 'danger' : type
     };
 
-    message_queue.push(now); // 将当前时间戳加入队列
+    // 更新该内容的上一次发送时间
+    lastSendTimeMap[content] = now;
     console.log(new_notify);
 
     let opts = {
@@ -102,7 +105,7 @@ export function send_notify(
             SemiNotification.error({ ...opts, icon: customIcon });
             break;
     }
-    if (CountInHistory){
+    if (CountInHistory) {
         message_list.push(new_notify);
     }
 
