@@ -6,9 +6,9 @@ import { get_Time } from "./times.js";
 let message_list = [];
 // 存储每种通知内容的上一次发送时间，用于限制发送频率
 const lastSendTimeMap = {};
-
-const FIVE_MINUTES_IN_MS = 5 * 60 * 1000; // 5 分钟的毫秒数
-// message_list=[{id=length+1,time=get_Time(),title="",content:widget}]
+let id=1
+const FIVE_MINUTES_IN_MS = 15 * 1000;
+// message_list=[{id=id+1,time=get_Time(),title="",content:widget}]
 function getSystemToastPermissions() {
     if (!("Notification" in window)) {
         add_log('getSystemToastPermissions', 'warning', '您的浏览器不支持系统通知');
@@ -69,10 +69,10 @@ export function send_notify(
         console.log(`内容为 "${content}" 的通知发送频率过快，需等待 ${Math.ceil((FIVE_MINUTES_IN_MS - (now - lastSendTime)) / 1000)} 秒后再试。`);
         return false;
     }
-
+    id=id+1
     // 如果没有超过限制，继续发送通知
     const new_notify = {
-        id: message_list.length + 1,
+        id: id,
         time: get_Time(),
         title: title,
         content: content,
@@ -127,6 +127,7 @@ export function clear_notify(id = 0) {
     } else {
         message_list = message_list.filter(notify => notify.id !== id);
     }
+    console.log(id)
     notifySubscribers(); // 清除后通知所有订阅者
     return true;
 }

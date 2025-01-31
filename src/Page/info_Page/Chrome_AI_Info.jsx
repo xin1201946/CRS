@@ -62,7 +62,7 @@ export  default  function Chrome_AI_Info({visible,handleOk}){
         onCancel={handleOk}
     >
         <Tabs
-            more={detectDevice()==='PC'?10:3}
+            more={detectDevice()==='PC'?0:3}
             tabPosition={detectDevice()==='PC'?"left":"top"}
             lazyRender={true}
         >

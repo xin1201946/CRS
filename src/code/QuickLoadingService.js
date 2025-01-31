@@ -22,10 +22,12 @@ export default function initializeSettings(){
         "api_command":'/command'
     }
     const uuid = uuidv4()
+    const notify_card=2
     const use_app_content_menu='true'
     subscribeToServerNotifications();
     checkAPIAvailability().then();
     getSettings('Language')===null ? setSettings("Language",language):"";
+    getSettings('notify_card')===null ? setSettings("notify_card",notify_card):"";
     getSettings('use_ai_page')===null ? setSettings("use_ai_page",use_ai_page):"";
     getSettings('use_app_content_menu')===null ? setSettings("use_app_content_menu",use_app_content_menu):"";
     getSettings('uuid')===null ? setSettings("uuid",uuid):"";

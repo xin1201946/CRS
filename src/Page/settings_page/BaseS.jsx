@@ -1,26 +1,26 @@
 import {
     Banner,
     Button,
-    Card, Divider,
-    Input, Modal, Popover,
+    Card, Collapse, Divider,
+    Input, Popover,
     Radio,
     RadioGroup, SideSheet,
     Space,
-    Switch, Table, TabPane, Tabs,
+    Switch,
     Tag,
     Typography
 } from "@douyinfe/semi-ui";
 import {getSettings, setSettings} from "../../code/Settings.js";
 import {useState} from "react";
 import {Title} from "@douyinfe/semi-ui/lib/es/skeleton/item.js";
-import {IconFile, IconGlobe, IconHelpCircle, IconInfoCircle} from "@douyinfe/semi-icons";
+import {IconClock,IconInfoCircle} from "@douyinfe/semi-icons";
 import {setDarkTheme,setLightTheme,setAutoTheme} from "../../code/theme_color.js";
 import {AdvancedSettingsPage} from "./AdvancedSettings.jsx";
 import {Logs_Viewer} from "./Logs_Viewer.jsx";
 import {useTranslation} from "react-i18next";
 import {send_notify} from "../../code/SystemToast.jsx";
-import Column from "@douyinfe/semi-ui/lib/es/table/Column.js";
 import Chrome_AI_Info from "../info_Page/Chrome_AI_Info.jsx";
+import CustomNotifyPanel from "../widget/CustomNotifyPanel.jsx";
 
 export default function BaseSPage(){
     const { t } = useTranslation();
@@ -28,13 +28,6 @@ export default function BaseSPage(){
     const [switchMenuPchecked, setswitchMenuPchecked] = useState('true'===getSettings('use_app_content_menu'));
     const [use_ai_page_checked, set_use_ai_pagechecked] = useState('true'===getSettings('use_ai_page'))
     const [advanSvisible, setadvanSVisible] = useState(false);
-    const [visible, setVisible] = useState(false);
-    const showDialog = () => {
-        setVisible(true);
-    };
-    const handleOk = () => {
-        setVisible(false);
-    };
     const advanSchange = () => {
         setadvanSVisible(!advanSvisible);
     };
@@ -204,6 +197,53 @@ export default function BaseSPage(){
                     </div>
                 </Card>
                 <br/>
+                <Card title={t('Notify Settings')}>
+                    <h3>{t('Notify Style')}</h3>
+                    <div
+                        style={{
+                            padding: 20,
+                            width:'100%'
+                        }}
+                    >
+                        <RadioGroup type='pureCard' defaultValue={getSettings('notify_card')==='1'?1:2} onChange={(e)=>{setSettings('notify_card',e.target.value)}} direction='vertical' style={{width: '100%'}}>
+                            <Radio value={1} extra={t('Native style')} style={{width: '100%'}}>
+                                <Collapse accordion style={{width: '100%'}}>
+                                    <Collapse.Panel header={t('Native style')} itemKey={1} key={1} showArrow={false}
+                                                    style={{width: '100%'}}
+                                                    extra={
+                                                        <Space>
+                                                            <Tag color="violet" type={'ghost'} style={{ margin: 0 }}>
+                                                                {' '}
+                                                                warnning
+                                                                {' '}
+                                                            </Tag>
+                                                            <Tag color="cyan" prefixIcon={<IconClock style={{color:'cyan'}} />} type={'ghost'} style={{ margin: 0 }}>
+                                                                {' '}
+                                                                18:50:10
+                                                                {' '}
+                                                            </Tag>
+                                                        </Space>
+                                                    }
+                                    >
+                                        <Banner
+                                            key={1}
+                                            fullMode={false}
+                                            onClose={()=>{}}
+                                            title={t('New_Notify_Send')}
+                                            description={<Space vertical={true}>{t('Native style')}</Space>}
+                                            type={"warning"}
+                                            style={{ marginBottom: '12px', transition: 'all 0.3s ease' }}
+                                        />
+                                    </Collapse.Panel>
+                                </Collapse>
+                            </Radio>
+                            <Radio value={2} extra={t('Notify refactoring style') } style={{width: '100%'}}>
+                                <CustomNotifyPanel title={t('New_Notify_Send')} message={t('Notify refactoring style')} showTime={'18:00:00'} type={'success'} onClose={()=>{}}/>
+                            </Radio>
+                        </RadioGroup>
+                    </div>
+                </Card>
+                <br/>
                 <Card title={t('AI Setting')}>
                     <Space vertical align={'left'}>
                         <Banner fullMode={false} type="success" bordered icon={null} closeIcon={null}
@@ -245,7 +285,7 @@ export default function BaseSPage(){
                 </Card>
                 <br/>
                 <Card style={{backgroundColor: 'var( --semi-color-fill-0)'}}>
-                    <Space spacing={'medium'} vertical align='left'>
+                    <Space spacing={'medium'} vertical align='start'>
                         <Text style={{
                             fontSize: 'medium',
                             fontWeight: "bold",
@@ -259,7 +299,6 @@ export default function BaseSPage(){
                               style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('Log_viewer')}</Text>
                     </Space>
                 </Card>
-
             </div>
             <br/>
             <Chrome_AI_Info visible={showChromeAIInfo} handleOk={()=>{setShowChromeAIInfo(false)}} />

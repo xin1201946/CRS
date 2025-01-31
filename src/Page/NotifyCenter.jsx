@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import {Banner, Collapse, IconButton, Space, Tag} from '@douyinfe/semi-ui';
-import { get_notify_list, clear_notify } from "../code/SystemToast.jsx";
+import {get_notify_list, clear_notify, subscribeToNotifications} from "../code/SystemToast.jsx";
 import { useTranslation } from "react-i18next";
 import {IconClock, IconClose} from "@douyinfe/semi-icons";
 import './notifycenter.css';
+import {getSettings} from "../code/Settings.js";
+import CustomNotifyPanel from "./widget/CustomNotifyPanel.jsx";
 
 export default function NotifyCenter() {
     const [notifys, setNotifys] = useState([]); // 通知列表
@@ -11,7 +13,11 @@ export default function NotifyCenter() {
     const { t } = useTranslation();
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     // 加载通知列表
-    const fetchNotifyList = () => {
+    const fetchNotifyList = (list) => {
+        if (list) {
+            const updatedNotifys = get_notify_list();
+            setNotifys(updatedNotifys);
+        }
         const updatedNotifys = get_notify_list();
         setNotifys(updatedNotifys);
     };
@@ -19,6 +25,7 @@ export default function NotifyCenter() {
     // 初始化加载通知列表
     useEffect(() => {
         fetchNotifyList();
+        subscribeToNotifications(fetchNotifyList)
         const handleResize = () => {
             setWindowWidth(window.innerWidth);
         };
@@ -35,6 +42,7 @@ export default function NotifyCenter() {
     // 关闭单个通知
     const handleClose = (id) => {
         setRemoving((prev) => [...prev, id]); // 将通知标记为移除状态
+        console.log(id)
         setTimeout(() => {
             const isCleared = clear_notify(id); // 清除通知
             if (isCleared) {
@@ -61,35 +69,37 @@ export default function NotifyCenter() {
             <Collapse accordion>
                 {notifys.length > 0 ? (
                     notifys.map(({ id, title, content,type,time }) => (
-                        <Collapse.Panel  header={title} itemKey={id} key={id} showArrow={false}
-                                         className={removing.includes(id) ? 'slide-out' : ''} // 应用滑动动画
-                                         extra={
-                                             <Space>
-                                                 <Tag color="violet" type={'ghost'} style={{ margin: 0 }}>
-                                                     {' '}
-                                                     {type}
-                                                     {' '}
-                                                 </Tag>
-                                                 <Tag color="cyan" prefixIcon={<IconClock style={{color:'cyan'}} />} type={'ghost'} style={{ margin: 0 }}>
-                                                     {' '}
-                                                     {time}
-                                                     {' '}
-                                                 </Tag>
-                                             </Space>
-                                         }
-                        >
-                            <Banner
-                                key={id}
-                                fullMode={false}
-                                title={title}
-                                description={<Space vertical={true}>{content}</Space>}
-                                type={type}
-                                onClose={() => handleClose(id)}
-                                className={removing.includes(id) ? 'slide-out' : ''} // 应用滑动动画
-                                style={{ marginBottom: '12px', transition: 'all 0.3s ease' }}
-                            />
-                        </Collapse.Panel>
-
+                        getSettings('notify_card')==='1'?
+                            <Collapse.Panel  header={title} itemKey={id} key={id} showArrow={false}
+                                             className={removing.includes(id) ? 'slide-out' : ''} // 应用滑动动画
+                                             extra={
+                                                 <Space>
+                                                     <Tag color="violet" type={'ghost'} style={{ margin: 0 }}>
+                                                         {' '}
+                                                         {type}
+                                                         {' '}
+                                                     </Tag>
+                                                     <Tag color="cyan" prefixIcon={<IconClock style={{color:'cyan'}} />} type={'ghost'} style={{ margin: 0 }}>
+                                                         {' '}
+                                                         {time}
+                                                         {' '}
+                                                     </Tag>
+                                                 </Space>
+                                             }
+                            >
+                                <Banner
+                                    key={id}
+                                    fullMode={false}
+                                    title={title}
+                                    description={<Space vertical={true}>{content}</Space>}
+                                    type={type}
+                                    onClose={() => handleClose(id)}
+                                    className={removing.includes(id) ? 'slide-out' : ''} // 应用滑动动画
+                                    style={{ marginBottom: '12px', transition: 'all 0.3s ease' }}
+                                />
+                            </Collapse.Panel>:
+                            // eslint-disable-next-line react/jsx-key
+                            <CustomNotifyPanel  className={removing.includes(id) ? 'slide-out' : ''} title={title} message={content} showTime={time} type={type} id={id} onClose={(id) => handleClose(id)} />
                     ))
                 ) : (
                     <p style={{ textAlign: 'center', color: 'var(--semi-color-text-2)' }}>
