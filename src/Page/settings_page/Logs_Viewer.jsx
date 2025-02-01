@@ -27,15 +27,13 @@ export  function Logs_Viewer(){
     const compositionRef = useRef({ isComposition: false });
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [dataSource, setData] = useState([]);
+    let Notify_id='';
     useEffect(() => {
         const data = get_logs();
         setData(data);
-    }, []);
-    useEffect(() => {
         function handleResize() {
             setWindowWidth(window.innerWidth);
         }
-
         window.addEventListener('resize', handleResize);
         return () => {
             window.removeEventListener('resize', handleResize);
@@ -68,7 +66,12 @@ export  function Logs_Viewer(){
     }
     function showDialog(message){
         if(detectDevice() === 'Phone'){
-            send_notify(t('Remarks'),message,null,5,'info');
+            console.log(Notify_id)
+            if (Notify_id === ''){
+                Notify_id = send_notify(t('Remarks'),message,null,0,'info',false,'light');
+            }else{
+                send_notify(t('Remarks'),message,null,0,'info',false,'light',Notify_id);
+            }
         }else{
             Modal.info({
                 title: t('More_info'),

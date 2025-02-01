@@ -76,10 +76,10 @@ export default function CustomNotifyPanel({
                     dragConstraints={{ left: 0, right: 0 }}
                     dragElastic={0.2}
                     onPanEnd={(e, info) => {
-                        if (info.offset.x > 100) {
+                        if (info.offset.x > 300) {
                             // 向右滑动，移出屏幕
                             controls.start({ x: window.innerWidth, opacity: 0 }).then(() => onClose(notify_id));
-                        } else if (info.offset.x < -100) {
+                        } else if (info.offset.x < -300) {
                             // 向左滑动，移出屏幕
                             controls.start({ x: -window.innerWidth, opacity: 0 }).then(() => onClose(notify_id));
                         } else {

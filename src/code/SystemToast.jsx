@@ -58,14 +58,15 @@ export function send_notify(
     sendtime = 3,
     type = 'info',
     CountInHistory = true,
-    theme = 'normal'
+    theme = 'normal',
+    notify_id=null
 ) {
     const now = Date.now();
     // 获取该内容上一次的发送时间
     const lastSendTime = lastSendTimeMap[content];
-
+    let Notify_id;
     // 检查是否距离上一次发送时间超过 5 分钟
-    if (lastSendTime && now - lastSendTime < FIVE_MINUTES_IN_MS) {
+    if (lastSendTime && now - lastSendTime < FIVE_MINUTES_IN_MS && notify_id===null) {
         console.log(`内容为 "${content}" 的通知发送频率过快，需等待 ${Math.ceil((FIVE_MINUTES_IN_MS - (now - lastSendTime)) / 1000)} 秒后再试。`);
         return false;
     }
@@ -89,20 +90,21 @@ export function send_notify(
         content: content,
         duration: sendtime,
         theme: theme,
+        id:notify_id
     };
 
     switch (type) {
         case 'success':
-            SemiNotification.success({ ...opts, icon: customIcon });
+            Notify_id=SemiNotification.success({ ...opts, icon: customIcon });
             break;
         case 'info':
-            SemiNotification.info({ ...opts, icon: customIcon });
+            Notify_id=SemiNotification.info({ ...opts, icon: customIcon});
             break;
         case 'warning':
-            SemiNotification.warning({ ...opts, icon: customIcon });
+            Notify_id=SemiNotification.warning({ ...opts, icon: customIcon});
             break;
         case 'error':
-            SemiNotification.error({ ...opts, icon: customIcon });
+            Notify_id=SemiNotification.error({ ...opts, icon: customIcon});
             break;
     }
     if (CountInHistory) {
@@ -112,7 +114,7 @@ export function send_notify(
     // 通知订阅者通知列表更新
     notifySubscribers();
 
-    return true;
+    return Notify_id;
 }
 
 export function get_notify_list() {

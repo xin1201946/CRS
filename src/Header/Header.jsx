@@ -105,30 +105,33 @@ export function Header1 (){
                             <>
                                 <Text>{t('Server_connection_failed')}</Text>
                                 <br/>
-                                <Button
-                                    onClick={() => {
-                                        // eslint-disable-next-line no-self-assign
-                                        window.location.href = window.location.href;
-                                    }}
-                                >
-                                    {t('Refresh')}
-                                </Button>
-                                <Button
-                                    style={{ marginLeft: '5px' }}
-                                    className="semi-button semi-button-warning"
-                                    onClick={s_side_sheet_change}
-                                    type="button"
-                                >
-                                    {t('Server_IP')}
-                                </Button>
-                                <Button
-                                    style={{ marginLeft: '5px' }}
-                                    className="semi-button semi-button-warning"
-                                    onClick={adv_side_sheet_change}
-                                    type="button"
-                                >
-                                    {t('HTTPS_settings_API_settings')}
-                                </Button>
+                                <br/>
+                                <Space wrap={true} vertical={false}>
+                                    <Button
+                                        onClick={() => {
+                                            // eslint-disable-next-line no-self-assign
+                                            window.location.href = window.location.href;
+                                        }}
+                                    >
+                                        {t('Refresh')}
+                                    </Button>
+                                    <Button
+                                        style={{ marginLeft: '5px' }}
+                                        className="semi-button semi-button-warning"
+                                        onClick={s_side_sheet_change}
+                                        type="button"
+                                    >
+                                        {t('Server_IP')}
+                                    </Button>
+                                    <Button
+                                        style={{ marginLeft: '5px' }}
+                                        className="semi-button semi-button-warning"
+                                        onClick={adv_side_sheet_change}
+                                        type="button"
+                                    >
+                                        {t('HTTPS_settings_API_settings')}
+                                    </Button>
+                                </Space>
                             </>
                         );
                     }
