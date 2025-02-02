@@ -13,7 +13,7 @@ import {
 import {getSettings, setSettings} from "../../code/Settings.js";
 import {useState} from "react";
 import {Title} from "@douyinfe/semi-ui/lib/es/skeleton/item.js";
-import {IconClock,IconInfoCircle} from "@douyinfe/semi-icons";
+import {IconClock, IconDelete, IconInfoCircle} from "@douyinfe/semi-icons";
 import {setDarkTheme,setLightTheme,setAutoTheme} from "../../code/theme_color.js";
 import {AdvancedSettingsPage} from "./AdvancedSettings.jsx";
 import {Logs_Viewer} from "./Logs_Viewer.jsx";
@@ -37,19 +37,6 @@ export default function BaseSPage(){
     };
     const onswitchMenuChange = checked => {
         setswitchMenuPchecked(checked);
-        let opts = {
-            content: (
-                <Space>
-                    <Text>{t('Success_change_UI')}</Text>
-                    <Text link={{ href: window.location.href }}>
-                        {t('Refresh')}
-                    </Text>
-                </Space>
-            ),
-            duration: 3,
-            stack: true,
-        };
-        send_notify(t('New_Notify_Send'),opts['content'],null,opts['duration']);
         setSettings('use_app_content_menu',checked.toString());
     };
     const onchange_ai_page = checked => {
@@ -121,6 +108,9 @@ export default function BaseSPage(){
             return 0
         }
     }
+    const close_newNotify = () => {
+        send_notify('Notification','You successfully deleted a notification.',null,3,'info',false,'light');
+    }
     return(
         <>
             <div id={'newSettings'}>
@@ -179,18 +169,6 @@ export default function BaseSPage(){
                             <Space>
                                 {t('Use the built-in right-click menu')}
                                 <Tag size="small" shape='circle' color='blue'> New </Tag>
-                                <Popover
-                                    showArrow
-                                    arrowPointAtCenter
-                                    content={
-                                        <article>
-                                            {t('Success_save_set')}
-                                        </article>
-                                    }
-                                    position={'top'}
-                                >
-                                    <IconInfoCircle style={{color: 'var(--semi-color-primary)'}}/>
-                                </Popover>
                             </Space>
                         </Title>
                         <Switch checked={switchMenuPchecked} onChange={onswitchMenuChange}/>
@@ -238,7 +216,15 @@ export default function BaseSPage(){
                                 </Collapse>
                             </Radio>
                             <Radio value={2} extra={t('Notify refactoring style') } style={{width: '100%'}}>
-                                <CustomNotifyPanel title={t('New_Notify_Send')} message={t('Notify refactoring style')} showTime={'18:00:00'} type={'success'} onClose={()=>{}}/>
+                                <CustomNotifyPanel
+                                    title={t('New_Notify_Send')}
+                                    message={t('Notify refactoring style')}
+                                    showTime={'18:00:00'}
+                                    type={'success'}
+                                    onClose={close_newNotify}
+                                    newTagList={[{msg:'Slide to delete',icon:<IconDelete/>,color:'red',type:'ghost'}]}
+                                    noOffsetScreen
+                                />
                             </Radio>
                         </RadioGroup>
                     </div>

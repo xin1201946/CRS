@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import {Card, IconButton, Space, Tag} from "@douyinfe/semi-ui";
 import {IconClock, IconClose} from "@douyinfe/semi-icons";
 import PropTypes from 'prop-types';
@@ -6,18 +6,26 @@ import './customNotifyPanel.css';
 import {AnimatePresence, motion, useAnimation} from "framer-motion";
 
 export default function CustomNotifyPanel({
-                               title,
-                               message,
-                               showTime,
-                               type,
-                               extra = null,
-                               onClose, id,
-                           }) {
+                                              title,
+                                              message,
+                                              showTime,
+                                              type,
+                                              extra = null,
+                                              onClose=null, id, newTagList=[],noOffsetScreen=false
+                                          }) {
     const notify_id=id
     const controls = useAnimation()
+    const [iconButtonColor, setIconButtonColor] = useState('gray');
+    const [isDragging, setIsDragging] = useState(false);  // 新增拖拽状态
+    const closeNotify = () => {
+        if (onClose !== null){
+            setIsDragging(true)
+            onClose(notify_id)
+        }
+    }
     const result = extra === null || typeof extra === 'undefined' ? (
-        <Space style={{width: '100%'}}>
-            <Space style={{width: '90%'}}>
+        <Space className={'CustomNotify_Footer_Space'} style={{width: '100%'}} >
+            <Space style={{width: '90%'}} wrap={true}>
                 <Tag color={type==='warning'?"yellow":type==='danger'?'red':type==='success'?'green':"violet"} type="ghost" style={{ margin: 0 }}>
                     {' '}
                     {type}
@@ -33,8 +41,34 @@ export default function CustomNotifyPanel({
                     {showTime}
                     {' '}
                 </Tag>
+                {
+                    newTagList.length > 0 ? (
+                        newTagList.map(({ msg, icon, color, type }) => (
+                            // eslint-disable-next-line react/jsx-key
+                            <Tag
+                                color={color===null||color===undefined?'green':color}
+                                prefixIcon={icon===null||icon===undefined?null:icon}
+                                type={type===null||type===undefined?'ghost':type}
+                                style={{ margin: 0 }}
+                            >
+                                {''}
+                                {msg}
+                                {''}
+                            </Tag>
+                        ))
+                    ) : (
+                        <></>
+                    )
+                }
             </Space>
-            <IconButton theme={'borderless'} icon={<IconClose style={{ color: 'orangered' }} />} onClick={() => onClose(notify_id)}></IconButton>
+            <IconButton
+                onMouseEnter={() => setIconButtonColor('orangered')}
+                onMouseLeave={() => setIconButtonColor('gray')}
+                className="CustomNotify_Footer_Space_IconButton"
+                theme="borderless"
+                icon={<IconClose style={{ color: iconButtonColor }} />}
+                onClick={closeNotify}
+            />
         </Space>
 
     ) : extra;
@@ -50,13 +84,17 @@ export default function CustomNotifyPanel({
         await controls.start({ opacity: 1, transition: { duration: 0.3 } })
     }
     const showMessageP = async () => {
-        await animationSequenceout()
-        setShowMessage(prevShowMessage => {
-            const newShowMessage = !prevShowMessage;
-            updateMessage(newShowMessage);
-            return newShowMessage;
-        })
-        await animationSequencein()
+        if (!isDragging){
+            await animationSequenceout()
+            setShowMessage(prevShowMessage => {
+                const newShowMessage = !prevShowMessage;
+                updateMessage(newShowMessage);
+                return newShowMessage;
+            })
+            await animationSequencein()
+        }else{
+            setIsDragging(false);
+        }
     };
 
     const updateMessage = (newShowMessage) => {
@@ -64,7 +102,6 @@ export default function CustomNotifyPanel({
             {message===null || message===undefined || message===<></> || typeof(message)==='object'?title:message} {result}
         </>);
     };
-
     return (
         <>
             <AnimatePresence>
@@ -75,13 +112,19 @@ export default function CustomNotifyPanel({
                     drag="x"
                     dragConstraints={{ left: 0, right: 0 }}
                     dragElastic={0.2}
+                    onPanStart={() => {setIsDragging(true)}}
                     onPanEnd={(e, info) => {
-                        if (info.offset.x > 300) {
+                        setIsDragging(false)
+                        if (onClose===null){
+                            controls.start({ x: 0 });
+                        } else if (noOffsetScreen){
+                            controls.start({ x: 0 }).then(closeNotify);
+                        }  else if (info.offset.x > 200) {
                             // 向右滑动，移出屏幕
-                            controls.start({ x: window.innerWidth, opacity: 0 }).then(() => onClose(notify_id));
-                        } else if (info.offset.x < -300) {
+                            controls.start({ x: window.innerWidth, opacity: 0 }).then(closeNotify);
+                        } else if (info.offset.x < -200) {
                             // 向左滑动，移出屏幕
-                            controls.start({ x: -window.innerWidth, opacity: 0 }).then(() => onClose(notify_id));
+                            controls.start({ x: -window.innerWidth, opacity: 0 }).then(closeNotify);
                         } else {
                             // 回弹回原位
                             controls.start({ x: 0 });
@@ -89,10 +132,10 @@ export default function CustomNotifyPanel({
                     }}
                 >
 
-                <Card
+                    <Card
                         bordered={true}
                         style={{ margin: '10px' }}
-                        shadows={true}
+                        shadows={"hover"}
                         title={showMessage ? title : null}
                         footerLine={false}
                         footer={showMessage ? result : null}
@@ -116,10 +159,15 @@ CustomNotifyPanel.propTypes = {
     type: PropTypes.string.isRequired,
     extra: PropTypes.node,
     id:PropTypes.string,
-    onClose: PropTypes.func
+    onClose: PropTypes.func,
+    newTagList:PropTypes.array,
+    noOffsetScreen:PropTypes.bool
 };
 
 CustomNotifyPanel.defaultProps = {
-    extra: null
+    extra: null,
+    newTagList:[],
+    onClose:null,
+    noOffsetScreen:false,
 };
 

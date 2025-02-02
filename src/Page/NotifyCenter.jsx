@@ -6,7 +6,7 @@ import { IconClock, IconClose } from "@douyinfe/semi-icons";
 import './notifycenter.css';
 import { getSettings } from "../code/Settings.js";
 import CustomNotifyPanel from "./widget/CustomNotifyPanel.jsx";
-
+import { motion } from 'framer-motion';
 export default function NotifyCenter() {
     const [notifys, setNotifys] = useState([]);
     const [removing, setRemoving] = useState([]);
@@ -17,6 +17,7 @@ export default function NotifyCenter() {
     const fetchNotifyList = () => {
         const updatedNotifys = get_notify_list();
         setNotifys(updatedNotifys);
+        renderNotifications();
     };
 
     // 初始化加载通知列表
@@ -44,6 +45,7 @@ export default function NotifyCenter() {
                 fetchNotifyList(); // 更新通知列表
             }
             setRemoving((prev) => prev.filter((removingId) => removingId !== id));
+            renderNotifications();
         }, 300);
     };
 
@@ -57,36 +59,55 @@ export default function NotifyCenter() {
     };
 
     const renderNotifications = () => (
-        <Collapse accordion>
+        <Collapse className={'Notify_center_Conner'} accordion>
+            <motion.div
+                initial={{ opacity: 0, y: 20 }} // 初始位置和透明度
+                animate={{ opacity: 1, y: 0 }} // 动画结束时的位置
+                exit={{ opacity: 0, y: 20 }}  // 退出时的动画
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+            >
             {notifys.length > 0 ? (
                 notifys.map(({ id, title, content, type, time }) => (
                     getSettings('notify_card') === '1' ? (
-                        <Collapse.Panel header={title} itemKey={id} key={id} showArrow={false}
-                                        className={removing.includes(id) ? 'slide-out' : ''}
-                                        extra={
-                                            <Space>
-                                                <Tag color="violet" type={'ghost'} style={{ margin: 0 }}>
-                                                    {type}
-                                                </Tag>
-                                                <Tag color="cyan" prefixIcon={<IconClock style={{ color: 'cyan' }} />} type={'ghost'} style={{ margin: 0 }}>
-                                                    {time}
-                                                </Tag>
-                                            </Space>
-                                        }
-                        >
-                            <Banner
-                                key={id}
-                                fullMode={false}
-                                title={title}
-                                description={<Space vertical={true}>{content}</Space>}
-                                type={type}
-                                onClose={() => handleClose(id)}
+                        // eslint-disable-next-line react/jsx-key
+                            <Collapse.Panel
+                                header={title}
+                                itemKey={id}
+                                showArrow={false}
                                 className={removing.includes(id) ? 'slide-out' : ''}
-                                style={{ marginBottom: '12px', transition: 'all 0.3s ease' }}
-                            />
-                        </Collapse.Panel>
+                                extra={
+                                    <Space>
+                                        <Tag color="violet" type={'ghost'} style={{ margin: 0 }}>
+                                            {type}
+                                        </Tag>
+                                        <Tag color="cyan" prefixIcon={<IconClock style={{ color: 'cyan' }} />} type={'ghost'} style={{ margin: 0 }}>
+                                            {time}
+                                        </Tag>
+                                    </Space>
+                                }
+                            >
+                                <Banner
+                                    key={id}
+                                    fullMode={false}
+                                    title={title}
+                                    description={<Space vertical={true}>{content}</Space>}
+                                    type={type}
+                                    onClose={() => handleClose(id)}
+                                    className={removing.includes(id) ? 'slide-out' : ''}
+                                    style={{ marginBottom: '12px', transition: 'all 0.3s ease' }}
+                                />
+                            </Collapse.Panel>
+
                     ) : (
-                        <CustomNotifyPanel key={id} title={title} message={content} showTime={time} type={type} id={id} onClose={() => handleClose(id)} />
+                        // eslint-disable-next-line react/jsx-key
+                        <CustomNotifyPanel
+                            title={title}
+                            message={content}
+                            showTime={time}
+                            type={type}
+                            id={id}
+                            onClose={() => handleClose(id)}
+                        />
                     )
                 ))
             ) : (
@@ -94,6 +115,7 @@ export default function NotifyCenter() {
                     {t('No_notifications_available')}
                 </p>
             )}
+            </motion.div>
         </Collapse>
     );
 
