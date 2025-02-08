@@ -16,6 +16,8 @@ import {getServer} from "../../code/get_server.js";
 import {BetaFunctionalityPage} from "./BetaFunctionality.jsx";
 import {useTranslation} from "react-i18next";
 import Chrome_AI_Info from "../info_Page/Chrome_AI_Info.jsx";
+import {detectDevice} from "../../code/check_platform.js";
+import {send_notify} from "../../code/SystemToast.jsx";
 
 
 export  default  function AboutWE(){
@@ -28,7 +30,11 @@ export  default  function AboutWE(){
     const [showChromeAIInfo, setShowChromeAIInfo] = useState(false);
 
     const handleIconClick = () => {
-        setShowChromeAIInfo(true);
+        if (detectDevice()==='PC'){
+            setShowChromeAIInfo(true);
+        }else{
+            send_notify(t('Warning'),t('Tip_AI_Devices_NS'))
+        }
     };
     const clickbeta = ()=>{
         if (beta >= 8){

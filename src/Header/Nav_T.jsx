@@ -25,6 +25,7 @@ export function Nav_T (){
     const { t } = useTranslation();
     const [selectKey,setSelectKey]=useState('home');
     const [NotifyCenter_visible, set_NotifyCenter_visible] = useState(false);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const NotifyCenter_change = () => {
         set_NotifyCenter_visible(!NotifyCenter_visible);
     };
@@ -55,16 +56,23 @@ export function Nav_T (){
         };
 
         on('changePage', handleChangePage);
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        // 监听窗口大小变化事件
+        window.addEventListener('resize', handleResize);
 
         return () => {
             off('changePage', handleChangePage);
+            window.removeEventListener('resize', handleResize);
         };
 
     }, []);
     return(
         <>
             <Nav
-                isCollapsed={detectDevice()==='PC'?collapsed:true}
+                isCollapsed={detectDevice()==='PC' && windowWidth >= 1000?collapsed:true}
                 style={{height:"100%"}}
                 selectedKeys={selectKey}
                 mode={'vertical'}
@@ -77,7 +85,7 @@ export function Nav_T (){
                     children: (
                         <>
                             {
-                                detectDevice()==='PC'? <Button
+                                detectDevice()==='PC' && windowWidth >= 1000? <Button
                                     icon={collapsed ?<IconSidebar style={{ color: '--semi-color-tertiary-active' }} /> : <IconSidebar style={{ color: '--semi-color-text-0' }} />}
                                     onClick={toggleCollapse}
                                     theme="borderless"

@@ -7,7 +7,7 @@ import {
     RadioGroup, SideSheet,
     Space,
     Switch,
-    Tag,
+    Tag, Tooltip,
     Typography
 } from "@douyinfe/semi-ui";
 import {getSettings, setSettings} from "../../code/Settings.js";
@@ -21,6 +21,7 @@ import {useTranslation} from "react-i18next";
 import {send_notify} from "../../code/SystemToast.jsx";
 import Chrome_AI_Info from "../info_Page/Chrome_AI_Info.jsx";
 import CustomNotifyPanel from "../widget/CustomNotifyPanel.jsx";
+import {getServer} from "../../code/get_server.js";
 
 export default function BaseSPage(){
     const { t } = useTranslation();
@@ -118,8 +119,19 @@ export default function BaseSPage(){
                     title={t('Server_IP')}
                 >
                     <Space>
-                        <Input id={'server_ip_inputbox'} style={{width: '70%'}} defaultValue={getSettings('server_ip')}
-                               placeholder={t('Tip_server_ip')} size='default'></Input>
+                        <Tooltip
+                            trigger="click"
+                            content={
+                                <article>
+                                    {t('Warning')}
+                                    <br /> {t('Tip_Server_IP')}
+                                </article>
+                            }
+                        >
+                            <Input id={'server_ip_inputbox'} style={{width: '70%'}} defaultValue={getServer()}
+                                   placeholder={t('Tip_server_ip')} size='default'></Input>
+                        </Tooltip>
+
                         <Button theme='outline' onClick={save_data} type='primary'
                                 style={{marginRight: 8}}>{t('Save_setting')}</Button>
                     </Space>

@@ -9,12 +9,13 @@ import {
     Space,
     TextArea,
     Modal,
-    Table
+    Table, Card, Divider
 } from "@douyinfe/semi-ui";
 import {getServer} from "../../code/get_server.js";
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {get_Time} from "../../code/times.js";
 import { useTranslation } from 'react-i18next';
+import {IconSearch} from "@douyinfe/semi-icons";
 
 export function Console(){
     const { t } = useTranslation();
@@ -25,6 +26,8 @@ export function Console(){
     const [isLocked, setIsLocked] = useState(false); // 锁机制
     const [queue, setQueue] = useState([]); // 队列
     const [buffer, setBuffer] = useState(''); // 缓冲区，用于缓存文本更新
+    const [Table_Visible, setTable_Visible] = useState(false);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [consoleValue, setConsoleValue] = useState('Server Console 1.0 \n');
     const hotKeys = [HotKeys.Keys.Control,"Enter"];
     const newHotKeys = <p></p>;
@@ -46,10 +49,7 @@ export function Console(){
         setIsLocked(false); // 释放锁
         processQueue(); // 处理下一个命令
     }
-    const handleInputChange = (value) => {
-        setInputValue(value);
-    };
-    const [Table_Visible, setTable_Visible] = useState(false);
+
     const showDialog = (data) => {
         // 第一行数据作为列名
         const columns_cahce = data[0].map((col, index) => ({
@@ -79,9 +79,6 @@ export function Console(){
     const handleOk = () => {
         setTable_Visible(false);
     };
-    const handleCancel = () => {
-        setTable_Visible(false);
-    };
     let pagination = useMemo(
         () => ({
             pageSize: 5,
@@ -91,7 +88,17 @@ export function Console(){
         []
     );
     useEffect(() => {
-        send_command('exit');
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        // 监听窗口大小变化事件
+        window.addEventListener('resize', handleResize);
+
+        send_command('exit').then();
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
     }, []);
     function formatAndSetConsoleValue(data) {
         let newTextToAppend = '';
@@ -178,28 +185,99 @@ export function Console(){
             setQueue(prevQueue => [...prevQueue, { type: 'command', data: code }]);
         }
     }
-    function send_command(command = ''){
-        if (inputValue==='clear'){
-            setConsoleValue('')
-            setInputValue('')
-            return
+    function view_table(){
+        send_command('sql').then(result => {
+            send_command('--query_all_hub_info').then(result => {
+                send_command('exit');
+            })
+        })
+    }
+
+    const Search_history_Lungu =()=>{
+        let value=""
+        Modal.info({
+            title: 'Quick Search',
+            content: (
+                <Input
+                    onChange={(e) => {
+                        value = e; // 更新局部状态
+                    }}
+                />
+            ),
+            icon: <IconSearch />,
+            cancelButtonProps: { theme: 'borderless' },
+            okButtonProps: { theme: 'solid' },
+            onOk: () => {
+                // 在这里使用局部状态的值
+                send_command('sql').then((result) => {
+                    send_command('--lun-gu-info-model ' + value).then((result) => {
+                        send_command('exit');
+                    });
+                });
+            },
+        });
+    }
+
+    const Search_moju_Lungu = () =>{
+        let value=""
+        Modal.info({
+            title: 'Quick Search',
+            content: (
+                <Input
+                    onChange={(e) => {
+                        value = e; // 更新局部状态
+                    }}
+                />
+            ),
+            icon: <IconSearch />,
+            cancelButtonProps: { theme: 'borderless' },
+            okButtonProps: { theme: 'solid' },
+            onOk: () => {
+                // 在这里使用局部状态的值
+
+                send_command('sql').then((result) => {
+                    send_command('--mo-ju-jinfo-model ' + value).then((result) => {
+                        send_command('exit');
+                    });
+                });
+            },
+        });
+
+    }
+
+    async function send_command(command = '') {
+        if (inputValue === 'clear' || command === 'clear') {
+            setConsoleValue('');
+            setInputValue('');
+            return;
         }
-        command = command===''?inputValue:command
+
+        // 如果没有传递command参数，使用inputValue
+        command = command === '' ? inputValue : command;
         consol_insert_command(command);
         console.log(command);
-        const api= getServer()+'/command'+'?command='+command
-        fetch(api)
-            .then(response => response.json())
-            .then(data => {
-                console.log('请求成功，返回数据：', data);
-                consol_insert_result(data);
-                setInputValue('');
-            })
-            .catch(error => {
-                console.error('请求出错：', error);
-                consol_insert_result('>'+'Failed：'+error);
-            });
+
+        const api = getServer() + '/command' + '?command=' + command;
+
+        try {
+            // 使用 await 处理 fetch 请求
+            const response = await fetch(api);
+
+            // 如果响应状态不是 2xx，抛出错误
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();  // 解析 JSON 数据
+            console.log('请求成功，返回数据：', data);
+            consol_insert_result(data);
+            setInputValue('');  // 清空输入框
+        } catch (error) {
+            console.error('请求出错：', error);
+            consol_insert_result('>' + 'Failed：' + error);
+        }
     }
+
 
     return (
         <>
@@ -208,49 +286,52 @@ export function Console(){
                 >
                     <TextArea value={consoleValue} autosize={{ maxRows: 25}} readonly rows={10}  style={{backgroundColor: 'var(--semi-color-bg-1)'}}/>
                 </Content>
-                <br/>
-                <Space
+                <Card
+                    bordered={false}
                     style={{
-                        width: '40%',
+                        width: '100%',
                         display: 'flex',
                         position: 'fixed',
-                        bottom: '10%',
+                        bottom: '5%',
                         left: '50%',
                         transform: 'translateX(-50%)',
                         zIndex: 99,
                         alignItems: 'center',
-                    }}
-                >
-                    <InputGroup size='large' style={{ width: "100%", marginLeft: '1%' }}>
-                        <AutoComplete
-                            data={['help', 'blacklist', 'sql', 'clear']}
-                            style={{ width: "100%" }}
-                            position="top"
+                    }}>
+                    <Space wrap={true}>
+                        <Input
+                            onChange={(e)=>{setInputValue(e)}}
                             value={inputValue}
-                            onChange={handleInputChange}
-                        >
-                            <Input
-                                data-target="inputConsole"
-                                placeholder={t('Run_command_shortcut')}
-                            />
-                        </AutoComplete>
-                    </InputGroup>
+                            style={{width:windowWidth*0.3   }}
+                            data-target="inputConsole"
+                            placeholder={t('Run_command_shortcut')}
+                            onEnterPress={()=>{send_command(inputValue)}}
+                        />
 
-                    <Button onClick={()=> {
-                        send_command(inputValue)
-                    }}>{t('Send')}</Button>
+                        <Button onClick={()=> {
+                            send_command(inputValue)
+                        }}>{t('Send')}</Button>
+                        <Button onClick={()=>{send_command('help')}}>{t('Help')}</Button>
 
-                    <HotKeys hotKeys={hotKeys} onHotKey={()=> {
-                        send_command(inputValue)
-                    }} render={newHotKeys} />
-                </Space>
+                        <Button onClick={()=>{send_command('clear')}}>{t('Clear Console')}</Button>
+
+                        <Divider layout="vertical" margin='12px'/>
+                        <Button onClick={Search_history_Lungu}>{t('Search_history_Lungu')}</Button>
+                        <Button onClick={Search_moju_Lungu}>{t('Search_moju_lungu')}</Button>
+
+                        <Button onClick={()=>{view_table()}}>{t('History')}</Button>
+                        <HotKeys hotKeys={hotKeys} onHotKey={()=> {
+                            send_command(inputValue)
+                        }} render={newHotKeys} />
+                    </Space>
+                </Card>
 
             </div>
             <Modal
-                title="Table_Visible"
+                title="Table"
                 visible={Table_Visible}
                 onOk={handleOk}
-                onCancel={handleCancel}
+                onCancel={handleOk}
             >
                 <Table columns={columns} dataSource={datas} pagination={pagination} />
             </Modal>
