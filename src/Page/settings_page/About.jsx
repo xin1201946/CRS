@@ -9,7 +9,6 @@ import {
 } from "@douyinfe/semi-ui";
 import {getSettings} from "../../code/Settings.js";
 import {useState} from "react";
-import {Logs_Viewer} from "./Logs_Viewer.jsx"
 import Meta from "@douyinfe/semi-ui/lib/es/card/meta.js";
 import {IconChevronRight, IconFile,IconInfoCircle} from "@douyinfe/semi-icons";
 import {getServer} from "../../code/get_server.js";
@@ -23,7 +22,7 @@ import {send_notify} from "../../code/SystemToast.jsx";
 export  default  function AboutWE(){
     const { t } = useTranslation();
     const { Text } = Typography;
-    const [logvisible, setlogVisible] = useState(false);
+
     const [beta, setbeta] = useState(0);
     const [betavisible, setbetaVisible] = useState('hidden');
     const [betaPagevisible, setbetaPageVisible] = useState(false);
@@ -49,10 +48,6 @@ export  default  function AboutWE(){
     const betaPchange=()=>{
         setbetaPageVisible(!betaPagevisible)
     }
-    const logchange = () => {
-        setlogVisible(!logvisible);
-    };
-
 
     function appInfo(){
         return (
@@ -84,26 +79,7 @@ export  default  function AboutWE(){
                         </Descriptions.Item>
                     </Descriptions>
                 </Card>
-                <br/>
-                <Card
-                    onClick={logchange}
-                    shadows='hover'
-                    style={{cursor: "pointer"}}
-                    bodyStyle={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                    }}
-                >
-                    <Meta
-                        avatar={
-                            <IconFile style={{color: 'var(--semi-color-primary)'}}/>
-                        }
-                        title={t('Log_viewer')}
-                        description={t('Log_viewer_text')}
-                    />
-                    <IconChevronRight style={{color: 'var(--semi-color-primary)'}}/>
-                </Card>
+
                 <br/>
                 <Card
                     onClick={betaPchange}
@@ -124,11 +100,7 @@ export  default  function AboutWE(){
                 <SideSheet style={{maxWidth: "100%"}} title="BetaFunc" visible={betaPagevisible} onCancel={betaPchange}>
                     <BetaFunctionalityPage></BetaFunctionalityPage>
                 </SideSheet>
-                <SideSheet  style={{
-                    width: '100%'
-                }} title={t('Log_viewer')} visible={logvisible} onCancel={logchange}>
-                    <Logs_Viewer></Logs_Viewer>
-                </SideSheet>
+
             </>
         );
     }

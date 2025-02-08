@@ -5,5 +5,10 @@
     .index-module_container__x1Eix {
         -webkit-backdrop-filter: saturate(180%) blur(40px);
         backdrop-filter: saturate(180%) blur(40px);
+        left: env(titlebar-area-x, 0);
+        top: env(titlebar-area-y, 0);
+        height: env(titlebar-area-height, 50px);
+        width: env(titlebar-area-width, 100%);
+        -webkit-app-region: drag;
     }
 }

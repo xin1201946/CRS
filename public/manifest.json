@@ -3,9 +3,9 @@
   "name": "智能铸造字识别系统",
   "icons": [
     {
-      "src": "64x64.ico",
+      "src": "64x64.png",
       "sizes": "64x64",
-      "type": "image/x-icon"
+      "type": "image/png"
 
     },
     {
