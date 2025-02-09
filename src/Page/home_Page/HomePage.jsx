@@ -213,6 +213,7 @@ export function HomePage() {
     }
 
 // 单个 Feature 卡片
+    // eslint-disable-next-line react/prop-types
     function FeatureCard({ title, icon, children, animation }) {
         const ref = useAnimateInView(animation);
 
