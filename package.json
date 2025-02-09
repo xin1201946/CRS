@@ -15,6 +15,9 @@
     "@douyinfe/semi-icons-lab": "^2.68.4",
     "@douyinfe/semi-ui": "^2.67.1",
     "@iconify/react": "^5.2.0",
+    "@tailwindcss/cli": "^4.0.5",
+    "@tailwindcss/postcss": "^4.0.5",
+    "@tailwindcss/vite": "^4.0.5",
     "@visactor/react-vchart": "^1.12.10",
     "@visactor/vchart": "^1.12.10",
     "@visactor/vchart-semi-theme": "^1.12.2",
@@ -44,17 +47,22 @@
     "workbox-window": "^7.3.0"
   },
   "devDependencies": {
+    "@douyinfe/semi-webpack-plugin": "^2.74.0",
     "@eslint/js": "^9.11.1",
     "@svgr/core": "^8.1.0",
     "@svgr/webpack": "^8.1.0",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.2",
+    "autoprefixer": "^10.4.20",
+    "daisyui": "^5.0.0-beta.7",
     "eslint": "^9.11.1",
     "eslint-plugin-react": "^7.37.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.12",
     "globals": "^15.9.0",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17",
     "vite": "^5.4.11"
   }
 }

@@ -42,24 +42,14 @@ function AppContent() {
             onContextMenu={handleContextMenu}
             style={{ border: '1px solid var(--semi-color-border)' }}
         >
-            <Header
-                style={{
-                    position: 'fixed',
-                    width: '100%',
-                    zIndex: 1,
-                    backdropFilter: 'blur(5px)',
-                    backgroundColor: 'rgba(255, 255, 255, 0)',
-                }}
-            >
+            <Header>
                 <Header1 />
             </Header>
             <Sider>
                 <Nav_T />
             </Sider>
-            <Layout>
-                <Content
-                    style={{ height: '100%', marginTop: '60px' }}
-                >
+            <Layout style={{ height: '100%', paddingTop: '68px'}}>
+                <Content>
                     <HomePage />
                     <CustomContextMenu />
                 </Content>

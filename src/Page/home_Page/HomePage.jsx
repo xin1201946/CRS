@@ -1,12 +1,15 @@
-import {SideSheet,Card, Carousel, Col, Row, Space} from "@douyinfe/semi-ui";
-import {IconArrowRight, IconFile, IconLink, IconScan, IconSetting} from "@douyinfe/semi-icons";
-import Meta from "@douyinfe/semi-ui/lib/es/card/meta.js";
+import {SideSheet, Space} from "@douyinfe/semi-ui";
 import {emit} from "../../code/PageEventEmitter.js";
-import {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Settings} from "../Settings.jsx";
 import {Logs_Viewer} from "../settings_page/Logs_Viewer.jsx";
-import {detectDevice} from "../../code/check_platform.js";
 import { useTranslation } from 'react-i18next';
+import "./Homepage.css"
+// import {Card, Carousel, Col, Row}from "@douyinfe/semi-ui";
+// import {IconArrowRight, IconFile, IconLink, IconScan, IconSetting} from "@douyinfe/semi-icons";
+// import Meta from "@douyinfe/semi-ui/lib/es/card/meta.js";
+// import {detectDevice} from "../../code/check_platform.js";
+
 
 export function HomePage() {
     const { t } = useTranslation();
@@ -18,101 +21,253 @@ export function HomePage() {
     const logchange = () => {
         setlogPagechange(!Logvisible);
     };
-    function changeSelectKey(){
+    function changeSelectKey() {
         emit('changePage', 'vision')
     }
-    function link(link){
-        window.open(link, "_blank");
-    }
-    function openPage(page){
-        if (page==='1'){
-            setlogPagechange(!Logvisible);
-        }else{
-            setPagechange(!setPagevisible);
-        }
-    }
-    const style = {
-        display: detectDevice()==='Phone'?"none":'',
-        width: 'auto',
-        height: window.innerHeight-200,
-        zIndex:'0'
-    };
-    const LinkCard=(title,func,can1='',icon=<IconArrowRight />)=> {
-        const fun = () => {
-            func(can1)
-        }
-        return (
-            <>
-                <Card
 
-                    onClick={fun}
-                    shadows={'hover'}
-                    style={{maxWidth: 330,margin:"5px"}}
-                    bodyStyle={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between'
+    // function OldHomePage() {
+    //     function link(link){
+    //         window.open(link, "_blank");
+    //     }
+    //     function openPage(page){
+    //         if (page==='1'){
+    //             setlogPagechange(!Logvisible);
+    //         }else{
+    //             setPagechange(!setPagevisible);
+    //         }
+    //     }
+    //     const style = {
+    //         display: detectDevice()==='Phone'?"none":'',
+    //         width: 'auto',
+    //         height: window.innerHeight-200,
+    //         zIndex:'0'
+    //     };
+    //     const LinkCard=(title,func,can1='',icon=<IconArrowRight />)=> {
+    //         const fun = () => {
+    //             func(can1)
+    //         }
+    //         return (
+    //             <>
+    //                 <Card
+    //
+    //                     onClick={fun}
+    //                     shadows={'hover'}
+    //                     style={{maxWidth: 330,margin:"5px"}}
+    //                     bodyStyle={{
+    //                         display: 'flex',
+    //                         alignItems: 'center',
+    //                         justifyContent: 'space-between'
+    //                     }}
+    //                 >
+    //                     <Meta
+    //                         title={title}
+    //                     />
+    //                     {icon}
+    //                 </Card>
+    //             </>
+    //         )
+    //     };
+    //     const imgList = [
+    //         './bannerimg1.jpg',
+    //         './bannerimg2.jpg',
+    //         './bannerimg3.jpg',
+    //     ];
+    //     return<>
+    //         <div className="grid" >
+    //             <Carousel  style={style} arrowType={'hover'} theme='dark'>
+    //                 {
+    //                     imgList.map((src, index) => {
+    //                         return (
+    //                             <div key={index} style={{backgroundSize: 'cover', backgroundImage: `url('${src}')`}}>
+    //                             </div>
+    //                         );
+    //                     })
+    //                 }
+    //             </Carousel>
+    //
+    //             <br/>
+    //             <div className="grid">
+    //                 <Space wrap={true} style={{width:"100%"}}>
+    //                     <Row justify="center" type="flex" style={{width:"100%"}}>
+    //                         <Col style={{minWidth:'150px'}} span={6} order={1}>
+    //                             {LinkCard(t('Start_OCR'), changeSelectKey, '', <IconScan/>)}
+    //                         </Col>
+    //                         <br/>
+    //                         <Col style={{minWidth:'150px'}} span={6} order={2}>
+    //                             {LinkCard(t('Visit_official'), link, 'https://www.dicastal.com/', <IconLink></IconLink>)}
+    //                         </Col>
+    //                         <br/>
+    //                         <Col  style={{minWidth:'150px'}} span={6} order={3}>
+    //                             {LinkCard(t('Change_Settings'), openPage, "0", <IconSetting/>)}
+    //                         </Col>
+    //                         <br/>
+    //                         <Col style={{minWidth:'150px'}} span={6} order={4}>
+    //                             {LinkCard(t('Check_logs'), openPage, '1', <IconFile/>)}
+    //                         </Col>
+    //
+    //                     </Row>
+    //                 </Space>
+    //             </div>
+    //
+    //         </div>
+    //     </>
+    // }
+
+    function NewHomePage() {
+        return (
+            <div className="scroll-smooth">
+                {/* 页面内容 */}
+                <HeroSection />
+                <FeaturesSection />
+
+                {/* 页脚 */}
+                <footer  className="footer footer-center p-10  semi-color-text-0">
+                    <aside>
+                        <p>Copyright © {new Date().getFullYear()} - All rights reserved by CCRS Team</p>
+                        <p className="textarea-sm text-gray-300 ">
+                            {t('Tip_Homepage_footer')}
+                        </p>
+                    </aside>
+                </footer>
+
+            </div>
+        );
+    }
+
+
+// Hero 区块
+    function HeroSection() {
+        const ref = useAnimateInView("animate-fade-in");
+
+        return (
+            <section id="hero" ref={ref} className="min-h-screen flex items-center justify-center opacity-0">
+                <div
+                    className="fixed inset-0 flex items-center justify-center pointer-events-none"
+                    style={{
+                        zIndex: -1, // 确保背景在内容之下
                     }}
                 >
-                    <Meta
-                        title={title}
-                    />
-                    {icon}
-                </Card>
-            </>
-        )
-    };
-    const imgList = [
-        './bannerimg1.jpg',
-        './bannerimg2.jpg',
-        './bannerimg3.jpg',
-    ];
+                    <div
+                        className="w-[600px] h-[600px] rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 opacity-20 blur-[150px]"
+                        style={{
+                            position: "fixed",
+                            top: "30%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                        }}
+                    ></div>
+                </div>
 
-
-    return (
-        <>
-            <div className="grid" >
-                <Carousel  style={style} arrowType={'hover'} theme='dark'>
-                    {
-                        imgList.map((src, index) => {
-                            return (
-                                <div key={index} style={{backgroundSize: 'cover', backgroundImage: `url('${src}')`}}>
-                                </div>
-                            );
-                        })
-                    }
-                </Carousel>
-
-                <br/>
-                <div className="grid">
-                    <Space wrap={true} style={{width:"100%"}}>
-                        <Row justify="center" type="flex" style={{width:"100%"}}>
-                                <Col style={{minWidth:'150px'}} span={6} order={1}>
-                                    {LinkCard(t('Start_OCR'), changeSelectKey, '', <IconScan/>)}
-                                </Col>
-                                <br/>
-                                <Col style={{minWidth:'150px'}} span={6} order={2}>
-                                    {LinkCard(t('Visit_official'), link, 'https://www.dicastal.com/', <IconLink></IconLink>)}
-                                </Col>
-                                <br/>
-                                <Col  style={{minWidth:'150px'}} span={6} order={3}>
-                                    {LinkCard(t('Change_Settings'), openPage, "0", <IconSetting/>)}
-                                </Col>
-                                <br/>
-                                <Col style={{minWidth:'150px'}} span={6} order={4}>
-                                    {LinkCard(t('Check_logs'), openPage, '1', <IconFile/>)}
-                                </Col>
-
-                        </Row>
+                <div className="text-center max-w-4xl px-4">
+                    <h1 className="text-5xl md:text-6xl font-bold mb-6">
+                        {t('Tip_Homepage_title_1')} <br />
+                        <span className="text-primary">{t('Tip_Homepage_title_2')}</span>
+                    </h1>
+                    <p className="text-xl text-gray-400 mb-8">
+                        {t('Tip_Homepage_title_3')}
+                    </p>
+                    <Space vertical>
+                        <button className="btn  btn-primary btn-lg" onClick={changeSelectKey}>{t('Start_OCR')}</button>
+                        <Space>
+                            <button className="btn btn-ghost" onClick={setchange}>{t('Change_Settings')}</button>
+                            <button className="btn btn-ghost" onClick={logchange}>{t('Check_logs')}</button>
+                        </Space>
                     </Space>
                 </div>
-                <SideSheet style={{maxWidth:"100%"}} title={t('Settings')} visible={setPagevisible} onCancel={setchange} placement={'right'}>
-                    <Settings/>
-                </SideSheet>
-                <SideSheet style={{width:'100%'}} title={t('Log_viewer')} visible={Logvisible} onCancel={logchange} placement={'right'}>
-                    <Logs_Viewer/>
-                </SideSheet>
+            </section>
+        );
+    }
+
+// Features 区块
+    function FeaturesSection() {
+        return (
+            <section id="features" className="py-20 bg-auto relative overflow-hidden">
+
+                <div className="max-w-6xl mx-auto px-4">
+                    <h2 className="text-4xl font-bold text-center mb-16">{t('Features')}</h2>
+                    <div className="grid md:grid-cols-3 gap-8">
+                        <FeatureCard
+                            title={t('Model tunable training')}
+                            icon="🎨"
+                            animation="animate-slide-in-left"
+                        >   {t('Tip_Homepage_1')}
+                        </FeatureCard>
+                        <FeatureCard
+                            title={t('High recognition accuracy')}
+                            icon="📱"
+                            animation="animate-fade-in"
+                        >
+                            {t('Tip_Homepage_2')}
+                        </FeatureCard>
+                        <FeatureCard
+                            title={t('Fast image recognition')}
+                            icon="⚡"
+                            animation="animate-slide-in-right"
+                        >
+                            {t('Tip_Homepage_3')}
+                        </FeatureCard>
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+// 单个 Feature 卡片
+    function FeatureCard({ title, icon, children, animation }) {
+        const ref = useAnimateInView(animation);
+
+        return (
+            <div ref={ref} className="card semi-color-bg-4 shadow-xl opacity-0">
+                <div className="card-body items-center text-center">
+                    <div className="text-6xl mb-4">{icon}</div>
+                    <h3 className="card-title text-2xl mb-2">{title}</h3>
+                    <p>{children}</p>
+                </div>
             </div>
+        );
+    }
+
+
+
+// 自定义动画钩子
+    function useAnimateInView(animationClass) {
+        const ref = useRef();
+        const [isVisible, setIsVisible] = useState(false);
+
+        useEffect(() => {
+            const observer = new IntersectionObserver(
+                ([entry]) => {
+                    if (entry.isIntersecting) {
+                        setIsVisible(true);
+                        observer.unobserve(entry.target);
+                    }
+                },
+                { threshold: 0.1 }
+            );
+
+            if (ref.current) observer.observe(ref.current);
+            return () => observer.disconnect();
+        }, []);
+
+        useEffect(() => {
+            if (isVisible && ref.current) {
+                ref.current.classList.add(animationClass);
+            }
+        }, [isVisible, animationClass]);
+
+        return ref;
+    }
+    return (
+        <>
+            <NewHomePage></NewHomePage>
+            <br/>
+            <br/>
+            <SideSheet style={{maxWidth:"100%"}} title={t('Settings')} visible={setPagevisible} onCancel={setchange} placement={'right'}>
+                <Settings/>
+            </SideSheet>
+            <SideSheet style={{width:'100%'}} title={t('Log_viewer')} visible={Logvisible} onCancel={logchange} placement={'right'}>
+                <Logs_Viewer/>
+            </SideSheet>
         </>
 
     );
