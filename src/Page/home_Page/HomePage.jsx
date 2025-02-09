@@ -1,6 +1,6 @@
 import {SideSheet, Space} from "@douyinfe/semi-ui";
 import {emit} from "../../code/PageEventEmitter.js";
-import React, {useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Settings} from "../Settings.jsx";
 import {Logs_Viewer} from "../settings_page/Logs_Viewer.jsx";
 import { useTranslation } from 'react-i18next';
