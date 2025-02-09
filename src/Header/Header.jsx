@@ -204,14 +204,15 @@ export function Header1 (){
 
     function New_Nav(){
         return <>
-            <div  className="navbar"
+            <div  className="navbar "
                  style={{
                      position: 'fixed',
-                    width: '100%',
-                    zIndex: 1,
+                     backgroundColor:'var(--semi-color-bg-1)',
+                     width: '100%',
+                     zIndex: 1,
                 }}
             >
-                <div className="flex-0">
+                <div className="flex-0" >
                     <button onClick={changeSelectKey} className="btn btn-ghost text-2xl">
                         <Space>
                             <svg
