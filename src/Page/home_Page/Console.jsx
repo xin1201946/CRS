@@ -327,6 +327,8 @@ export function Console(){
                 </Card>
 
             </div>
+            <br/>
+            <br/>
             <Modal
                 title="Table"
                 visible={Table_Visible}

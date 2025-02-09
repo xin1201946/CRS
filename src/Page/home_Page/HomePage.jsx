@@ -188,20 +188,20 @@ export function HomePage() {
                     <div className="grid md:grid-cols-3 gap-8">
                         <FeatureCard
                             title={t('Model tunable training')}
-                            icon="🎨"
+                            icon="⚙️"
                             animation="animate-slide-in-left"
                         >   {t('Tip_Homepage_1')}
                         </FeatureCard>
                         <FeatureCard
                             title={t('High recognition accuracy')}
-                            icon="📱"
+                            icon="🎯"
                             animation="animate-fade-in"
                         >
                             {t('Tip_Homepage_2')}
                         </FeatureCard>
                         <FeatureCard
                             title={t('Fast image recognition')}
-                            icon="⚡"
+                            icon="🚀"
                             animation="animate-slide-in-right"
                         >
                             {t('Tip_Homepage_3')}

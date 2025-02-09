@@ -18,6 +18,7 @@ import {send_notify} from "../code/SystemToast.jsx";
 import {get_language, set_language} from "../code/language.js";
 import {getSettings} from "../code/Settings.js";
 import NotifyCenter from "../Page/NotifyCenter.jsx";
+import {emit} from "../code/PageEventEmitter.js";
 
 export function Header1 (){
     const { Text } = Typography;
@@ -44,10 +45,9 @@ export function Header1 (){
         set_settingP_Visible(!settingP_visible);
     };
     const [settingThemeIcon, set_ThemeIcon] = useState(<MdHdrAuto style={{ width: '20px', height: '20px' }} />);
-    // function changeSelectKey(key){
-    //     setSelectKey(key.itemKey)
-    //     emit('changePage', key.itemKey)
-    // }
+    const changeSelectKey = ()=>{
+        emit('changePage', "home")
+    }
     const [settingadv_visible, set_settingadv_Visible] = useState(false);
     const adv_side_sheet_change = () => {
         set_settingadv_Visible(!settingadv_visible);
@@ -204,19 +204,52 @@ export function Header1 (){
 
     function New_Nav(){
         return <>
-            <div  className="navbar  "
+            <div  className="navbar"
                  style={{
                      position: 'fixed',
-                     backgroundColor: 'var(--semi-color-bg-1)',
                     width: '100%',
                     zIndex: 1,
                 }}
             >
                 <div className="flex-0">
-                    <a className="btn btn-ghost text-xl">CCRS</a>
+                    <button onClick={changeSelectKey} className="btn btn-ghost text-2xl">
+                        <Space>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-6"
+                                fill="none"
+                                viewBox="0 0 142 141"
+                                stroke="currentColor">
+                                <g clipPath="url(#a)">
+                                    <g
+                                        clipPath="url(#b)"
+                                        stroke="#4F46E5"
+                                        strokeLinejoin="round"
+                                    >
+                                        <path
+                                            d="M5.22 34.198v-14.63A14.61 14.61 0 0 1 9.519 9.223a14.699 14.699 0 0 1 10.377-4.285h14.676m73.378 0h14.676s7.625 1.541 10.377 4.285a14.608 14.608 0 0 1 4.298 10.345v14.63m0 73.152v14.631c0 3.88-1.546 7.601-4.298 10.345a14.701 14.701 0 0 1-10.377 4.285H107.95m-73.378 0H19.896a14.702 14.702 0 0 1-10.377-4.285 14.608 14.608 0 0 1-4.298-10.345V107.35"
+                                            strokeWidth="10.667"
+                                            strokeLinecap="round"
+                                        />
+
+                                        <path d="m47 78 28-42v28h20l-28 42V78H47Z" strokeWidth="8" />
+                                    </g>
+                                </g>
+                                <defs>
+                                    <clipPath id="a">
+                                        <path  d="M0 0h142v141H0z" />
+                                    </clipPath>
+                                    <clipPath id="b">
+                                        <path  d="M0 0h142v141H0z" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <p>CCRS</p>
+                        </Space>
+                    </button>
                 </div>
                 <div className="flex-1"></div>
-                <div className="flex-2 " >
+                <div className="flex-2 ">
                     <Space>
 
                         <Button style={{margin: "10px"}} theme='borderless' icon={settingThemeIcon}
