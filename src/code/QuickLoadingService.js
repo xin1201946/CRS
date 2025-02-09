@@ -2,6 +2,7 @@ import './Settings.js'
 import {getSettings, setSettings} from "./Settings.js";
 import {add_log} from "./log.js";
 import {api_map} from "./server_api_settings.js";
+import { Notification} from '@douyinfe/semi-ui';
 import {subscribeToServerNotifications} from './server _information_subscription_service.js'
 import { v4 as uuidv4 } from 'uuid';
 import {checkAPIAvailability} from "./chrome_gemini_support.js";
@@ -25,6 +26,7 @@ export default function initializeSettings(){
     const notify_card=2
     const use_app_content_menu='true'
     subscribeToServerNotifications();
+    Notification.config({top:30})
     checkAPIAvailability().then();
     getSettings('Language')===null ? setSettings("Language",language):"";
     getSettings('notify_card')===null ? setSettings("notify_card",notify_card):"";

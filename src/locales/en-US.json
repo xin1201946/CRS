@@ -108,7 +108,7 @@
   "Tip_Homepage_title_1": "Fast Image Recognition",
   "Tip_Homepage_title_2": "with CCRS",
   "Tip_Homepage_title_3": "Remove distractions - automatically generate training images - high accuracy",
-  "Tip_Homepage_1": "Use the program&#39;s built - in function to quickly generate pictures for tuning training from yours. Just label these pictures to use them for training.",
+  "Tip_Homepage_1": "Use the program`s built - in function to quickly generate pictures for tuning training from yours. Just label these pictures to use them for training.",
   "Tip_Homepage_2": "Use the YOLO model to precisely crop the image to remove excess interference areas",
   "Tip_Homepage_3": "The average time from processing start to output is only 2 seconds.",
   "Tip_Homepage_footer": "Note: The model accuracy is only applicable to the trained images, and high-precision predictions cannot be made. The recognition time is limited by the network environment, and the machine performance is affected. Please refer to the actual time. The training images for secondary tuning need to be annotated before training.",

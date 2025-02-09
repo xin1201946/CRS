@@ -204,7 +204,7 @@ export function Header1 (){
 
     function New_Nav(){
         return <>
-            <div  className="navbar "
+            <div  className="navbar index-module_container__x1Eix"
                  style={{
                      position: 'fixed',
                      backgroundColor:'var(--semi-color-bg-1)',

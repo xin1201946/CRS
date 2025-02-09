@@ -160,8 +160,10 @@ export function HomePage() {
 
                 <div className="text-center max-w-4xl px-4">
                     <h1 className="text-5xl md:text-6xl font-bold mb-6">
-                        {t('Tip_Homepage_title_1')} <br />
-                        <span className="text-primary">{t('Tip_Homepage_title_2')}</span>
+                        <Space vertical>
+                            <span>{t('Tip_Homepage_title_1')} </span>
+                            <span className="text-primary">{t('Tip_Homepage_title_2')}</span>
+                        </Space>
                     </h1>
                     <p className="text-xl text-gray-400 mb-8">
                         {t('Tip_Homepage_title_3')}
