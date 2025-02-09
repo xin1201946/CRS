@@ -7,7 +7,7 @@ export default defineConfig({
   base: './',
   build: {
     // 生产环境构建文件的输出目录
-    outDir: './../flask-dist',
+    outDir: './dist',
     // 生产环境是否生成 sourceMap 文件
     sourcemap: false,
   },
