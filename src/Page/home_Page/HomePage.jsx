@@ -4,6 +4,7 @@ import {useEffect, useRef, useState} from "react";
 import {Settings} from "../Settings.jsx";
 import {Logs_Viewer} from "../settings_page/Logs_Viewer.jsx";
 import { useTranslation } from 'react-i18next';
+import BlurText from "../widget/BlurText/BlurText.jsx";
 import "./Homepage.css"
 // import {Card, Carousel, Col, Row}from "@douyinfe/semi-ui";
 // import {IconArrowRight, IconFile, IconLink, IconScan, IconSetting} from "@douyinfe/semi-icons";
@@ -24,7 +25,6 @@ export function HomePage() {
     function changeSelectKey() {
         emit('changePage', 'vision')
     }
-
     // function OldHomePage() {
     //     function link(link){
     //         window.open(link, "_blank");
@@ -114,14 +114,16 @@ export function HomePage() {
     // }
 
     function NewHomePage() {
+
+
         return (
             <div className="scroll-smooth">
+
                 {/* 页面内容 */}
                 <HeroSection />
                 <FeaturesSection />
-
                 {/* 页脚 */}
-                <footer  className="footer footer-center p-10  semi-color-text-0">
+                <footer   className="footer footer-center p-10  semi-color-text-0">
                     <aside>
                         <p>Copyright © {new Date().getFullYear()} - All rights reserved by CCRS Team</p>
                         <p className="textarea-sm text-gray-300 ">
@@ -157,12 +159,18 @@ export function HomePage() {
                         }}
                     ></div>
                 </div>
-
                 <div className="text-center max-w-4xl px-4">
                     <h1 className="text-5xl md:text-6xl font-bold mb-6">
                         <Space vertical>
                             <span>{t('Tip_Homepage_title_1')} </span>
-                            <span className="text-primary">{t('Tip_Homepage_title_2')}</span>
+                            <BlurText
+                                text={t('Tip_Homepage_title_2')}
+                                delay={60}
+                                animateBy="letters"
+                                direction="bottom"
+                                className="text-primary"
+                            />
+
                         </Space>
                     </h1>
                     <p className="text-xl text-gray-400 mb-8">

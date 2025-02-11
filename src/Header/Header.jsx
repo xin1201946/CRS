@@ -207,13 +207,12 @@ export function Header1 (){
             <div  className="navbar index-module_container__x1Eix"
                  style={{
                      position: 'fixed',
-                     backgroundColor:'var(--semi-color-bg-1)',
                      width: '100%',
                      zIndex: 1,
                 }}
             >
                 <div className="flex-0" >
-                    <button onClick={changeSelectKey} className="btn btn-ghost text-2xl">
+                    <button onClick={changeSelectKey} style={{borderRadius:'7px'}} className="btn btn-ghost text-2xl">
                         <Space>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"

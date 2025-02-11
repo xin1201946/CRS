@@ -10,7 +10,7 @@
 }
 @supports ((-webkit-backdrop-filter:initial) or (backdrop-filter:initial)) or (-webkit-backdrop-filter:initial) {
     .index-module_container__x1Eix {
-        -webkit-backdrop-filter: saturate(180%) blur(40px);
-        backdrop-filter: saturate(180%) blur(40px);
+        background:var(--semi-color-nav-bg);
+        backdrop-filter: blur(50px);
     }
 }

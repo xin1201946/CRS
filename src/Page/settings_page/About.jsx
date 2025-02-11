@@ -17,6 +17,7 @@ import {useTranslation} from "react-i18next";
 import Chrome_AI_Info from "../info_Page/Chrome_AI_Info.jsx";
 import {detectDevice} from "../../code/check_platform.js";
 import {send_notify} from "../../code/SystemToast.jsx";
+import ServerInfo from "../info_Page/ServerInfo.jsx";
 
 
 export  default  function AboutWE(){
@@ -26,8 +27,14 @@ export  default  function AboutWE(){
     const [beta, setbeta] = useState(0);
     const [betavisible, setbetaVisible] = useState('hidden');
     const [betaPagevisible, setbetaPageVisible] = useState(false);
+    const [sysIngoPagevisible, setsysIngoPagevisible] = useState(false);
     const [showChromeAIInfo, setShowChromeAIInfo] = useState(false);
-
+    const betaPchange=()=>{
+        setbetaPageVisible(!betaPagevisible)
+    }
+    const sysIngoPagechange=()=>{
+        setsysIngoPagevisible(!sysIngoPagevisible)
+    }
     const handleIconClick = () => {
         if (detectDevice()==='PC'){
             setShowChromeAIInfo(true);
@@ -45,9 +52,6 @@ export  default  function AboutWE(){
 
     }
 
-    const betaPchange=()=>{
-        setbetaPageVisible(!betaPagevisible)
-    }
 
     function appInfo(){
         return (
@@ -82,6 +86,22 @@ export  default  function AboutWE(){
 
                 <br/>
                 <Card
+                    onClick={sysIngoPagechange}
+                    shadows='hover'
+                    style={{cursor: "pointer"}}
+                    bodyStyle={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                    }}
+                >
+                    <Meta
+                        title={t('Server Info')}
+                    />
+                    <IconChevronRight style={{color: 'var(--semi-color-primary)'}}/>
+                </Card>
+                <br/>
+                <Card
                     onClick={betaPchange}
                     shadows='hover'
                     style={{cursor: "pointer",visibility:betavisible}}
@@ -100,14 +120,15 @@ export  default  function AboutWE(){
                 <SideSheet style={{maxWidth: "100%"}} title="BetaFunc" visible={betaPagevisible} onCancel={betaPchange}>
                     <BetaFunctionalityPage></BetaFunctionalityPage>
                 </SideSheet>
-
+                <SideSheet width={"100%"} title={t('Server Info')} visible={sysIngoPagevisible} onCancel={sysIngoPagechange}>
+                    <ServerInfo></ServerInfo>
+                </SideSheet>
             </>
         );
     }
 
     return (
         <>
-            <h2 style={{fontFamily: "var(--Default-font)"}}>{t('AppInfo')}</h2>
             {appInfo()}
             <Chrome_AI_Info visible={showChromeAIInfo} handleOk={()=>{setShowChromeAIInfo(false)}} />
         </>

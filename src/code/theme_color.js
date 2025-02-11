@@ -24,7 +24,6 @@ function setTheme(isDark) {
         setSettings('theme_color','dark');
         add_log('setTheme:Dark','successfully');
 
-
     } else {
         // apply a theme
         body.removeAttribute('theme-mode');

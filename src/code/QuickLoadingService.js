@@ -20,7 +20,7 @@ export default function initializeSettings(){
         "api_upload":'/upload',
         "api_test":'/test',
         "api_info":'/info',
-        "api_command":'/command'
+        "api_command":'/command',
     }
     const uuid = uuidv4()
     const notify_card=2
