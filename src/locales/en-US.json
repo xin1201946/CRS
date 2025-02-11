@@ -169,5 +169,15 @@
   "View": "View",
   "View_all_info": "Overview",
   "Vision": "Recognition System",
-  "Warning": "Warning"
+  "Warning": "Warning",
+  "Name": "Name",
+  "Upload Speed": "Upload Speed",
+  "Download Speed": "Download Speed",
+  "Total Speed": "Total Speed",
+  "Total rate": "Total rate",
+  "Driver version": "Driver version",
+  "Video memory used": "Video memory used",
+  "Video memory available": "Video memory available",
+  "Graphics load": "Graphics load",
+  "Temperature": "Temperature"
 }

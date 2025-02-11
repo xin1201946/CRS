@@ -13,17 +13,19 @@ let platformR=""
 let swaptotal=0
 let swappercent=0
 let runTime=""
+let network=""
+let python=""
 
 export function set_server_info(data) {
     Usercount=data['Usercount']
     Cpucount=data["cpu"]["count"]
-    if (cpu_percent.length>20) {
+    if (cpu_percent.length>10) {
         cpu_percent.shift()
     }
-    if (current_time.length>20) {
+    if (current_time.length>10) {
         current_time.shift()
     }
-    if (mem_percent.length>20) {
+    if (mem_percent.length>10) {
         mem_percent.shift()
     }
     cpu_percent.push([data["cpu"]["percent"]])
@@ -31,7 +33,9 @@ export function set_server_info(data) {
     current_time.push([data["current_time"]])
     mem_total=data["memory"]["total"]
     external_ip=data["external_ip"]
-    gpu = data["gpus"][0];  // 访问第一个 GPU
+    gpu = data["gpus"]
+    python=data['python']
+    network=data["network"]
     hostname=data["hostname"]
     server_info=data["info"]
     platformR=data["os"]["platform"]+data["os"]["release"]+"/"+data["os"]["version"]
@@ -42,6 +46,7 @@ export function set_server_info(data) {
 
 export default function getServerInfoSnapshot() {
     return {
+        python:python? {...python}:null,
         currentTime: [...current_time], // 使用扩展运算符创建副本，防止修改原始数组
         userCount: Usercount || 0, // 提供默认值，防止未定义
         cpuCount: Cpucount || 0,
@@ -50,6 +55,7 @@ export default function getServerInfoSnapshot() {
         memTotal: mem_total || 0,
         externalIp: external_ip || "",
         gpu: gpu ? {...gpu} : null, // 如果 gpu 存在，创建副本，否则返回 null
+        network:network ?{...network}:[],
         hostname: hostname || "",
         serverInfo: server_info || "",
         platform: platformR || "",

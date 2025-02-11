@@ -1,10 +1,8 @@
 
-import { Col, Row, Upload, Button, Descriptions, Spin, SideSheet} from '@douyinfe/semi-ui';
-import {IconPlus, IconSetting} from "@douyinfe/semi-icons";
+import { Col, Row, Upload, Button, Descriptions, Spin} from '@douyinfe/semi-ui';
+import {IconPlus} from "@douyinfe/semi-icons";
 import  {useState} from "react";
 import {getServer} from "../../code/get_server.js";
-import {detectDevice} from "../../code/check_platform.js";
-import {Settings} from "../Settings.jsx";
 import {getAPI} from "../../code/server_api_settings.js";
 import { useTranslation } from 'react-i18next';
 import {send_notify} from "../../code/SystemToast.jsx";
@@ -14,10 +12,6 @@ export function Step1() {
     const [b1en,setb1en]=useState(true);
     const [datas,setdata]=useState([]);
     const [loading, toggleLoading] = useState(false);
-    const [setPagevisible, setPagechange] = useState(false);
-    const setchange = () => {
-        setPagechange(!setPagevisible);
-    };
     let action = getServer()+getAPI('upload');
     let clearfile = getServer()+getAPI('clear');
     let imageOnly = '.png,.jpeg,.jpg';
@@ -94,11 +88,7 @@ export function Step1() {
                         <Descriptions style={{marginTop:'20px'}}  data={datas} />
                     </Col>
                 </Row>
-                <Button onClick={setchange} size='large' theme='outline' icon={<IconSetting />} style={{ marginRight: 10,borderRadius:'20px',position:'fixed',top:'80%',right:'2%',display: detectDevice()==='PC'?"none":'' }}></Button>
             </div>
-            <SideSheet style={{maxWidth:"100%"}} title={t('Settings')} visible={setPagevisible} onCancel={setchange} placement={'right'}>
-                <Settings/>
-            </SideSheet>
         </>
     )
 }

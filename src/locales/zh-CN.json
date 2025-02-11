@@ -170,5 +170,15 @@
   "View": "查看",
   "View_all_info": "信息总览",
   "Vision": "识别系统",
-  "Warning": "注意"
+  "Warning": "注意",
+  "Name": "名称",
+  "Upload Speed": "上传速率",
+  "Download Speed": "下载速率",
+  "Total Speed": "总速率",
+  "Total rate": "利用率",
+  "Driver version": "驱动版本",
+  "Video memory used": "已用显存",
+  "Video memory available": "可用显存",
+  "Graphics load": "显卡负载",
+  "Temperature": "温度"
 }

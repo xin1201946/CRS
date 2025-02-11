@@ -292,7 +292,7 @@ export function Console(){
                         width: '100%',
                         display: 'flex',
                         position: 'fixed',
-                        bottom: '5%',
+                        bottom: '7%',
                         left: '50%',
                         transform: 'translateX(-50%)',
                         zIndex: 99,
@@ -325,10 +325,7 @@ export function Console(){
                         }} render={newHotKeys} />
                     </Space>
                 </Card>
-
             </div>
-            <br/>
-            <br/>
             <Modal
                 title="Table"
                 visible={Table_Visible}
