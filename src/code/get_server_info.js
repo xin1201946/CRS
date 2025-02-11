@@ -46,7 +46,11 @@ export function set_server_info(data) {
 
 export default function getServerInfoSnapshot() {
     return {
-        python:python? {...python}:null,
+        python:python? {...python}:{
+            "version":"Unknown",
+            "released":"",
+            "RepairNumber":""
+        },
         currentTime: [...current_time], // 使用扩展运算符创建副本，防止修改原始数组
         userCount: Usercount || 0, // 提供默认值，防止未定义
         cpuCount: Cpucount || 0,

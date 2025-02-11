@@ -20,7 +20,11 @@ export default function ServerInfo() {
     const [swaptotal,setswaptotal] = useState(0);
     const [swappercent,setswappercent] = useState(0);
     const [runTime,setrunTime] = useState("");
-    const [python,setpython] = useState({});
+    const [python,setpython] = useState({
+        "version":"Unknown",
+        "released":"",
+        "RepairNumber":""
+    });
 
     const [selectGpu,setselectGpu] = useState("");
     const [selectNetwork,setselectNetwork] = useState("");
