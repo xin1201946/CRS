@@ -1,55 +1,21 @@
 /* eslint-disable no-unused-vars */
-import {
-    AutoComplete,
-    HotKeys,
-    Button,
-    Input,
-    InputGroup,
-    Layout,
-    Space,
-    TextArea,
-    Modal,
-    Table, Card, Divider
-} from "@douyinfe/semi-ui";
+import {Button, Card, Input, Layout, Modal, Space, Table} from "@douyinfe/semi-ui";
 import {getServer} from "../../code/get_server.js";
-import {useEffect, useMemo, useRef, useState} from "react";
-import {get_Time} from "../../code/times.js";
-import { useTranslation } from 'react-i18next';
+import {useMemo, useState} from "react";
+import {useTranslation} from 'react-i18next';
 import {IconSearch} from "@douyinfe/semi-icons";
+import XConsole from "./XConsole.jsx";
 
 export function Console(){
     const { t } = useTranslation();
     const {Content } = Layout;
-    const [inputValue, setInputValue] = useState('');
     const [columns,setcolumns] = useState([]);
     const [datas,setdatas] = useState([]);
-    const [isLocked, setIsLocked] = useState(false); // 锁机制
-    const [queue, setQueue] = useState([]); // 队列
-    const [buffer, setBuffer] = useState(''); // 缓冲区，用于缓存文本更新
     const [Table_Visible, setTable_Visible] = useState(false);
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-    const [consoleValue, setConsoleValue] = useState('Server Console 1.0 \n');
-    const hotKeys = [HotKeys.Keys.Control,"Enter"];
-    const newHotKeys = <p></p>;
+
     // 处理输入值变化的回调函数
     // 设置批量更新延迟（可以调整这个时间来平衡流畅度与性能）
     const batchUpdateDelay = 10; // 100ms 以内的多次调用会合并为一次更新
-    function processQueue() {
-        if (queue.length === 0 || isLocked) {
-            return; // 如果没有待处理的任务或锁被占用，退出
-        }
-
-        // 获取队列中的第一个命令
-        const nextCommand = queue[0];
-        setQueue(queue.slice(1)); // 移除队列中的第一个命令
-
-        // 执行命令
-        setIsLocked(true); // 设置锁
-        formatAndSetConsoleValue(nextCommand.data);
-        setIsLocked(false); // 释放锁
-        processQueue(); // 处理下一个命令
-    }
-
     const showDialog = (data) => {
         // 第一行数据作为列名
         const columns_cahce = data[0].map((col, index) => ({
@@ -72,8 +38,6 @@ export function Console(){
         });
         setcolumns(columns_cahce)
         setdatas(datas_cache)
-        console.log("Columns:", columns);
-        console.log("Data:", datas);
         setTable_Visible(true);
     };
     const handleOk = () => {
@@ -87,19 +51,6 @@ export function Console(){
         }),
         []
     );
-    useEffect(() => {
-        const handleResize = () => {
-            setWindowWidth(window.innerWidth);
-        };
-
-        // 监听窗口大小变化事件
-        window.addEventListener('resize', handleResize);
-
-        send_command('exit').then();
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
     function formatAndSetConsoleValue(data) {
         let newTextToAppend = '';
 
@@ -154,36 +105,10 @@ export function Console(){
             // 如果是普通字符串，直接使用
             newTextToAppend = parsedData;
         }
-
-        // 如果有新文本，更新控制台内容
-        if (newTextToAppend) {
-            // 将更新放入缓存中，而不是立即更新控制台
-            setBuffer(prevBuffer => prevBuffer + '\n' + newTextToAppend);
-
-            // 设置延迟更新（批量更新）
-            clearTimeout(window.batchUpdateTimeout);
-            window.batchUpdateTimeout = setTimeout(() => {
-                setConsoleValue(prev => prev + buffer + '\n' + newTextToAppend);
-                setBuffer(''); // 清空缓冲区
-            }, batchUpdateDelay);
-            // setConsoleValue(consoleValue + '\n' + newTextToAppend);
-        }
     }
+
     function consol_insert_result(result){
-        let code =result;
-        if (!isLocked) {
-            formatAndSetConsoleValue(code);
-        } else {
-            setQueue(prevQueue => [...prevQueue, { type: 'result', data: code }]);
-        }
-    }
-    function consol_insert_command(command){
-        let code = "┌──(㉿)-["+get_Time()+"]\n"+"└─#\t" +command+"\n";
-        if (!isLocked) {
-            formatAndSetConsoleValue(code);
-        } else {
-            setQueue(prevQueue => [...prevQueue, { type: 'command', data: code }]);
-        }
+        formatAndSetConsoleValue(result);
     }
     function view_table(){
         send_command('sql').then(result => {
@@ -244,18 +169,7 @@ export function Console(){
         });
 
     }
-
     async function send_command(command = '') {
-        if (inputValue === 'clear' || command === 'clear') {
-            setConsoleValue('');
-            setInputValue('');
-            return;
-        }
-
-        // 如果没有传递command参数，使用inputValue
-        command = command === '' ? inputValue : command;
-        consol_insert_command(command);
-        console.log(command);
 
         const api = getServer() + '/command' + '?command=' + command;
 
@@ -269,22 +183,39 @@ export function Console(){
             }
 
             const data = await response.json();  // 解析 JSON 数据
-            console.log('请求成功，返回数据：', data);
             consol_insert_result(data);
-            setInputValue('');  // 清空输入框
+            return data
         } catch (error) {
             console.error('请求出错：', error);
-            consol_insert_result('>' + 'Failed：' + error);
+            return error
         }
     }
 
+    const promptInfo = () => {
+        const date = new Date()
+        return `[${date.toLocaleTimeString()}] `
+    }
 
+    const initialMessage = `
+Welcome to the Enhanced Terminal!
+
+This terminal supports:
+- JSON formatting
+- Clickable links
+- Basic command processing
+
+Type 'help' to see available commands.
+  `
     return (
         <>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <Content className={"semi-always-dark"}
                 >
-                    <TextArea value={consoleValue} autosize={{ maxRows: 25}} readonly rows={10}  style={{backgroundColor: 'var(--semi-color-bg-1)'}}/>
+                    <XConsole onCommand={send_command}
+                              prompt={">"}
+                              promptInfo={promptInfo}
+                              initialMessage={initialMessage} >
+                    </XConsole>
                 </Content>
                 <Card
                     bordered={false}
@@ -299,30 +230,9 @@ export function Console(){
                         alignItems: 'center',
                     }}>
                     <Space wrap={true}>
-                        <Input
-                            onChange={(e)=>{setInputValue(e)}}
-                            value={inputValue}
-                            style={{width:windowWidth*0.3   }}
-                            data-target="inputConsole"
-                            placeholder={t('Run_command_shortcut')}
-                            onEnterPress={()=>{send_command(inputValue)}}
-                        />
-
-                        <Button onClick={()=> {
-                            send_command(inputValue)
-                        }}>{t('Send')}</Button>
-                        <Button onClick={()=>{send_command('help')}}>{t('Help')}</Button>
-
-                        <Button onClick={()=>{send_command('clear')}}>{t('Clear Console')}</Button>
-
-                        <Divider layout="vertical" margin='12px'/>
                         <Button onClick={Search_history_Lungu}>{t('Search_history_Lungu')}</Button>
                         <Button onClick={Search_moju_Lungu}>{t('Search_moju_lungu')}</Button>
-
                         <Button onClick={()=>{view_table()}}>{t('History')}</Button>
-                        <HotKeys hotKeys={hotKeys} onHotKey={()=> {
-                            send_command(inputValue)
-                        }} render={newHotKeys} />
                     </Space>
                 </Card>
             </div>
