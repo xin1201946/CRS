@@ -1,17 +1,10 @@
-
 import "./header.css"
 // eslint-disable-next-line no-unused-vars
 import React, {useEffect, useState} from 'react';
 import {Button, Nav, SideSheet} from '@douyinfe/semi-ui';
-import {
-    IconCode,
-    IconHome, IconMailStroked1,
-    IconScan, IconSidebar,
-    IconTerminal
-} from "@douyinfe/semi-icons";
-import {emit} from "../code/PageEventEmitter.js";
-import {on,off} from "../code/PageEventEmitter.js";
-import { useTranslation } from 'react-i18next';
+import {IconCode, IconHome, IconMailStroked1, IconScan, IconSidebar, IconTerminal} from "@douyinfe/semi-icons";
+import {emit, off, on} from "../code/PageEventEmitter.js";
+import {useTranslation} from 'react-i18next';
 import NotifyCenter from "../Page/NotifyCenter.jsx";
 import {getSettings} from "../code/Settings.js";
 import {detectDevice} from "../code/check_platform.js";
@@ -37,11 +30,9 @@ export function Nav_T (){
         set_NotifyCenter_visible(!NotifyCenter_visible);
     };
     function changeSelectKey(key){
-        console.log(key);
         // 根据 key.itemKey 的值执行不同操作
         if (key.itemKey!== 'message' && key.itemKey!== 'settings') {
             let selectItemIndex;
-            console.log(true,1)
             // 根据不同的 key.itemKey 值设置选中项索引
             if (key.itemKey === 'home') {
                 selectItemIndex = 1;
@@ -59,7 +50,6 @@ export function Nav_T (){
             // 触发 changePage 事件
             emit('changePage', key.itemKey);
         } else if (key.itemKey === 'settings') {
-            console.log(true,2)
             // 调用 s_side_sheet_change 函数
             s_side_sheet_change();
         } else {

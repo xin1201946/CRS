@@ -1,21 +1,21 @@
 import {
     Button,
-    Modal,
-    Input,
     Card,
+    Collapse,
     Descriptions,
-    Tag,
-    Space,
+    Input,
+    Modal,
     Popover,
-    Typography,
-    Collapse
+    Row,
+    Space,
+    Table,
+    Tag,
+    Typography
 } from "@douyinfe/semi-ui";
 import {useEffect, useMemo, useRef, useState} from 'react';
-import { Table } from '@douyinfe/semi-ui';
 import {get_error_logs, get_logs, get_successfully_logs, get_warning_logs, saveLogsToTxt} from "../../code/log.js";
-import { VChart } from "@visactor/react-vchart";
-import {  Row } from '@douyinfe/semi-ui';
-import {IconInfoCircle,IconHelpCircle} from "@douyinfe/semi-icons";
+import {VChart} from "@visactor/react-vchart";
+import {IconHelpCircle, IconInfoCircle} from "@douyinfe/semi-icons";
 import {detectDevice} from "../../code/check_platform.js";
 import {useTranslation} from "react-i18next";
 import {send_notify} from "../../code/SystemToast.jsx";
@@ -66,7 +66,6 @@ export  function Logs_Viewer(){
     }
     function showDialog(message){
         if(detectDevice() === 'Phone'){
-            console.log(Notify_id)
             if (Notify_id === ''){
                 Notify_id = send_notify(t('Remarks'),message,null,0,'info',false,'light');
             }else{

@@ -1,6 +1,6 @@
 import {getSettings, setSettings} from "./Settings.js";
 import {add_log} from "./log.js";
-import { initVChartSemiTheme } from '@visactor/vchart-semi-theme';
+import {initVChartSemiTheme} from '@visactor/vchart-semi-theme';
 
 // initialization
 initVChartSemiTheme();
@@ -12,8 +12,7 @@ function removeMqlListener() {
         mql.removeEventListener('change', matchMode);
         add_log('removeThemeListener','successfully');
     } catch (e) {
-        console.error('Error removing MQL listener:', e);
-        add_log('removeThemeListener','warning','Can`t remove Theme listener');
+        add_log('removeThemeListener','warning','Can`t remove Theme listener:'+e);
     }
 }
 

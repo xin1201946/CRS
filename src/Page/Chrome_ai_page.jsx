@@ -1,6 +1,7 @@
 import {useCallback, useState} from "react";
-import { Chat, Space} from "@douyinfe/semi-ui";
+import {Chat, Space} from "@douyinfe/semi-ui";
 import {clearAiHistory, tryAskAI} from "../code/chrome_gemini_support.js";
+import {add_log} from "../code/log.js";
 
 const defaultMessage = [
     // {
@@ -68,7 +69,7 @@ export default function Chrome_ai_page() {
             };
             setMessage([...currentMessage.slice(0, -1), newLastMessage]);
         } catch (error) {
-            console.error('Error in tryAskAI:', error);
+            add_log('AI Error','error',error)
         }
     }, [message]);
     const clearAIhistory = useCallback(async() => {

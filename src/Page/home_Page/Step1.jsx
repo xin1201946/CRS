@@ -1,11 +1,11 @@
-
-import { Col, Row, Upload, Button, Descriptions, Spin} from '@douyinfe/semi-ui';
+import {Button, Col, Descriptions, Row, Spin, Upload} from '@douyinfe/semi-ui';
 import {IconPlus} from "@douyinfe/semi-icons";
-import  {useState} from "react";
+import {useState} from "react";
 import {getServer} from "../../code/get_server.js";
 import {getAPI} from "../../code/server_api_settings.js";
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import {send_notify} from "../../code/SystemToast.jsx";
+import {add_log} from "../../code/log.js";
 
 export function Step1() {
     const { t } = useTranslation();
@@ -28,7 +28,7 @@ export function Step1() {
             const data = await response.json(); // 根据需要解析数据
             update(data); // 调用 update 函数处理数据
         } catch (error) {
-            console.error('Error fetching data:', error);
+            add_log('Fetch Error','error',error)
             setLoading(false)
         }
     }
@@ -36,7 +36,6 @@ export function Step1() {
     function update(data) {
         // 处理获取到的数据
         let desiderata=[]
-        console.log('data:'+data)
         if ( data[0] === ""){
             desiderata = [
                 { key: t('Failed_OCR'), value: data[0] },
@@ -50,7 +49,6 @@ export function Step1() {
         }
         setdata(desiderata)
         setLoading(false)
-        console.log(data);
     }
     function showTotst(message){
         send_notify(t('New_Notify_Send'),message);

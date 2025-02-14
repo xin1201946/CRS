@@ -23,7 +23,6 @@ export function setAPI(name, value){
     add_log('setAPI','successfully', name+" => "+value);
 }
 export function setAPIJ(JsonValue){
-    console.log(JsonValue);
     setSettings('api_service',JsonValue,true);
     add_log('setAPIJson','successfully');
 }

@@ -55,7 +55,7 @@ function get_server_logs() {
             });
         })
         .catch(error => {
-            console.error("获取日志时出错：", error);  // 错误处理
+            add_log('Get Server Logs Error','error',error)
         });
 }
 

@@ -1,18 +1,19 @@
 import './App.css';
 import initializeSettings from './code/QuickLoadingService.js';
-import { useEffect } from 'react';
-import { Header1 } from './Header/Header.jsx';
-import { HomePage } from './Page/Home.jsx';
-import { getSettings } from './code/Settings.js';
-import { setAutoTheme, queck_change_theme } from './code/theme_color.js';
-import { add_log } from './code/log.js';
+import {useEffect} from 'react';
+import {Header1} from './Header/Header.jsx';
+import {HomePage} from './Page/Home.jsx';
+import {getSettings} from './code/Settings.js';
+import {queck_change_theme, setAutoTheme} from './code/theme_color.js';
+import {add_log} from './code/log.js';
 import register from './code/registerServiceWorker.js';
-import { Layout } from '@douyinfe/semi-ui';
+import {Layout} from '@douyinfe/semi-ui';
 import Sider from '@douyinfe/semi-ui/lib/es/layout/Sider.js';
-import { Nav_T } from './Header/Nav_T.jsx';
+import {Nav_T} from './Header/Nav_T.jsx';
 import CustomContextMenu from './Page/RightClickMenu.jsx';
-import { ContextMenuProvider, useContextMenu } from "./contexts/ContextMenuContext.jsx";
+import {ContextMenuProvider, useContextMenu} from "./contexts/ContextMenuContext.jsx";
 import {detectDevice} from "./code/check_platform.js";
+import {log} from "./Theme/prettyLog.jsx";
 
 function AppContent() {
     const { Header, Content } = Layout;
@@ -64,7 +65,7 @@ function App() {
     add_log('UI Loading...', 'successfully', 'UI Loading(1/3)...');
     add_log('Check Settings...', 'successfully', 'UI Loading(2/3)...');
     initializeSettings();
-
+    log.title("Here is CCRS")
     add_log('UI was Start...', 'successfully', 'Start successfully');
 
     return (

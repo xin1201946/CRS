@@ -7,6 +7,7 @@ let mem_percent=[]
 let mem_total=0
 let external_ip=""
 let gpu=[]
+let cpu_name=""
 let hostname=""
 let server_info=""
 let platformR=""
@@ -28,6 +29,7 @@ export function set_server_info(data) {
     if (mem_percent.length>10) {
         mem_percent.shift()
     }
+    cpu_name=data["cpu"]["name"]
     cpu_percent.push([data["cpu"]["percent"]])
     mem_percent.push([data["memory"]["percent"]])
     current_time.push([data["current_time"]])
@@ -53,6 +55,7 @@ export default function getServerInfoSnapshot() {
         },
         currentTime: [...current_time], // 使用扩展运算符创建副本，防止修改原始数组
         userCount: Usercount || 0, // 提供默认值，防止未定义
+        cpu_name: cpu_name || "Unknown",
         cpuCount: Cpucount || 0,
         cpuPercent: [...cpu_percent],
         memPercent: [...mem_percent],

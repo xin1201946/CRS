@@ -186,7 +186,6 @@ export function Console(){
             consol_insert_result(data);
             return data
         } catch (error) {
-            console.error('请求出错：', error);
             return error
         }
     }

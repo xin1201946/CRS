@@ -1,7 +1,7 @@
 // 尝试获取权限，返回布尔值
-import { add_log } from "./log.js";
-import { Notification as SemiNotification } from '@douyinfe/semi-ui'; // 给 semi-ui 的 Notification 添加别名
-import { get_Time } from "./times.js";
+import {add_log} from "./log.js";
+import {Notification as SemiNotification} from '@douyinfe/semi-ui'; // 给 semi-ui 的 Notification 添加别名
+import {get_Time} from "./times.js";
 
 let message_list = [];
 // 存储每种通知内容的上一次发送时间，用于限制发送频率
@@ -12,7 +12,6 @@ const FIVE_MINUTES_IN_MS = 15 * 1000;
 function getSystemToastPermissions() {
     if (!("Notification" in window)) {
         add_log('getSystemToastPermissions', 'warning', '您的浏览器不支持系统通知');
-        console.log("您的浏览器不支持系统通知。");
         return false;
     }
 
@@ -24,16 +23,13 @@ function getSystemToastPermissions() {
         // 用户尚未授权，请求权限
         Notification.requestPermission().then(permission => {
             if (permission === "granted") {
-                console.log("通知权限已获得。");
                 add_log('getSystemToastPermissions', 'successfully', '用户已授权系统通知权限');
             } else {
-                console.log("通知权限被拒绝。");
                 add_log('getSystemToastPermissions', 'warning', '通知权限被拒绝');
             }
         });
         return false; // 由于权限请求是异步的，这里返回false
     } else {
-        console.log("通知权限已被拒绝。");
         add_log('getSystemToastPermissions', 'warning', '通知权限被拒绝');
         return false;
     }
@@ -45,7 +41,6 @@ export function sendSystemToast(title, message, icon = 'CCRS.png') {
         new Notification(title, { body: message, icon: icon });
         return true;
     } else {
-        console.log("没有权限发送通知。");
         return false;
     }
 }
@@ -67,7 +62,6 @@ export function send_notify(
     let Notify_id;
     // 检查是否距离上一次发送时间超过 5 分钟
     if (lastSendTime && now - lastSendTime < FIVE_MINUTES_IN_MS && notify_id===null) {
-        console.log(`内容为 "${content}" 的通知发送频率过快，需等待 ${Math.ceil((FIVE_MINUTES_IN_MS - (now - lastSendTime)) / 1000)} 秒后再试。`);
         return false;
     }
     id=id+1
@@ -82,7 +76,6 @@ export function send_notify(
 
     // 更新该内容的上一次发送时间
     lastSendTimeMap[content] = now;
-    console.log(new_notify);
 
     let opts = {
         title: title,
@@ -129,7 +122,6 @@ export function clear_notify(id = 0) {
     } else {
         message_list = message_list.filter(notify => notify.id !== id);
     }
-    console.log(id)
     notifySubscribers(); // 清除后通知所有订阅者
     return true;
 }

@@ -1,15 +1,15 @@
-import ReactDOM from 'react-dom';
-import { StrictMode } from 'react';
+import {createRoot} from 'react-dom/client'; // 修改这里
+import {StrictMode} from 'react';
 import App from './App.jsx';
 import './index.css';
 import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import {initReactI18next} from 'react-i18next';
 import zh_CN from '@douyinfe/semi-ui/lib/es/locale/source/zh_CN';
 import en_US from '@douyinfe/semi-ui/lib/es/locale/source/en_US';
 import zhCN from './locales/zh-CN.json';
 import enUS from './locales/en-US.json';
-import { LocaleProvider } from '@douyinfe/semi-ui';
-import { get_language } from './code/language.js'; // 引入语言设置函数
+import {LocaleProvider} from '@douyinfe/semi-ui';
+import {get_language} from './code/language.js'; // 引入语言设置函数
 
 // 初始化 i18next
 i18n
@@ -29,7 +29,7 @@ i18n
 // 获取当前语言并设置 LocaleProvider 的语言
 const currentLocale = get_language() === 1 ? zh_CN : en_US;
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById('root')).render(
     <StrictMode>
         <LocaleProvider locale={currentLocale}>
             <App />

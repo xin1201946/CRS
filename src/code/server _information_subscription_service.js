@@ -1,10 +1,10 @@
-import { io } from 'socket.io-client';
-import { getServer } from "./get_server.js";
-import { add_log } from "./log.js";
-import { getSettings } from "./Settings.js";
-import { send_notify } from "./SystemToast.jsx";
-import { set_server_info } from "./get_server_info.js";
-import { v4 as uuidv4 } from "uuid";
+import {io} from 'socket.io-client';
+import {getServer} from "./get_server.js";
+import {add_log} from "./log.js";
+import {getSettings} from "./Settings.js";
+import {send_notify} from "./SystemToast.jsx";
+import {set_server_info} from "./get_server_info.js";
+import {v4 as uuidv4} from "uuid";
 
 const SOCKET_TIMEOUT = 5000;  // 设置超时阈值，单位为毫秒
 
@@ -15,7 +15,6 @@ function createSocketConnection(uuid, onConnect, onMessage,onSysinfo, onRegister
     socket.emit('register', { uuid });
 
     socket.on('connect', () => {
-        console.log('Connected to server');
         onConnect && onConnect(socket);  // 可传递自定义连接成功的回调
     });
 
@@ -40,24 +39,20 @@ function createSocketConnection(uuid, onConnect, onMessage,onSysinfo, onRegister
     });
 
     socket.on('connect_error', (error) => {
-        console.log('Connection error:', error);
         add_log('连接服务器失败', 'error', error.message);
     });
 
     socket.on('connect_timeout', () => {
-        console.log('Connection timed out');
         add_log('连接超时，请稍后重试', 'error');
     });
 
     socket.on('error', (err) => {
-        console.error('Socket error:', err);
         add_log('网络错误', 'error', err.message);
     });
 
     // 页面卸载或组件销毁时取消订阅
     window.addEventListener('beforeunload', () => {
         socket.off();  // 取消所有事件监听器
-        console.log('Disconnected from server');
     });
 
     return socket;  // 返回 socket 实例以供其他用途
@@ -79,7 +74,7 @@ export function subscribeToServerNotifications() {
 
     createSocketConnection(
         uuid,
-        (socket) => {
+        () => {
             add_log('已与服务器建立连接', 'successfully');
         },
         (data) => {

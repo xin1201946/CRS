@@ -3,10 +3,12 @@ import {VChart} from "@visactor/react-vchart";
 import {useEffect, useState} from "react";
 import getServerInfoSnapshot from "../../code/get_server_info.js";
 import {t} from "i18next";
+import ProcessorStats from "../widget/ProcessorStats.jsx";
 
 export default function ServerInfo() {
     const [current_time,setCurrent_time] = useState([[0]]);
     const [Usercount,setUsercount] = useState(0);
+    const [cpuName,setcpuname] = useState("");
     const [Cpucount,setCpucount] = useState(0);
     const [cpu_percent,setcpu_percent] = useState([[0]]);
     const [mem_percent,setmem_percent] = useState([[0]]);
@@ -30,12 +32,14 @@ export default function ServerInfo() {
     const [selectNetwork,setselectNetwork] = useState("");
 
     const set_info= (data) => {
-        console.log(data)
         if (typeof data !== 'object' || data === null) {
             return;
         }
         for (const key in data) {
             switch (key) {
+                case "cpu_name":
+                    setcpuname(data[key]);
+                    break;
                 case "currentTime":
                     setCurrent_time(data[key]);
                     break;
@@ -283,28 +287,31 @@ export default function ServerInfo() {
                 <div className="col-span-2 space-y-6">
                     <div className="grid grid-cols-2 gap-6">
                         {/* CPU、内存、交换空间、网络 */}
-                        <Card className="col-span-2 lg:col-span-1" title="CPU">
-                            <Progress
-                                percent={cpu_percent[cpu_percent.length - 1]}
-                                type="circle"
-                                strokeWidth={10}
-                                format={(per) => per + "%"}
-                                style={{ margin: 5 }}
-                                aria-label="cpu usage"
-                                showInfo
-                            />
-                        </Card>
-                        <Card className="col-span-2 lg:col-span-1" title="Memory">
-                            <Progress
-                                percent={mem_percent[mem_percent.length - 1]}
-                                strokeWidth={10}
-                                type="circle"
-                                style={{ margin: 5 }}
-                                format={(per) => per + "%"}
-                                aria-label="mem usage"
-                                showInfo
-                            />
-                        </Card>
+                        <ProcessorStats
+                            mainColor="#6366f1"
+                            content={cpuName}
+                            backgroundColor="#2D2D2D"
+                            percentage={parseInt(cpu_percent[cpu_percent.length - 1])}
+                            bottomStats={{
+                                left: Cpucount +" Cores",
+                                center: Usercount+" Devices",
+                                right: "64-bit",
+                            }}
+                        />
+                        <ProcessorStats
+                            mainColor="orange"
+                            backgroundColor="#2D2D2D"
+                            icon={"/Public/memory.png"}
+                            title="Memory"
+                            content={platformR}
+                            percentage={parseInt(mem_percent[mem_percent.length - 1])}
+                            bottomStats={{
+                                left: (mem_total/1024).toFixed(1)+" GiB RAM",
+                                center: "64-bit",
+                                right: runTime,
+                            }}
+                        />
+
                         <Card className="col-span-2 lg:col-span-1" title="Swap">
                             <Progress
                                 percent={swappercent}

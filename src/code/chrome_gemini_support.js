@@ -13,13 +13,13 @@
 
 import {add_log} from "./log.js";
 import {setSettings} from "./Settings.js";
+
 let session = null; // 先定义全局变量
 
 export async function initAI() {
     session = await ai.languageModel.create({
         systemPrompt: "You are a Google Gemini named Canf, used to assist users in solving program problems.."
     });
-    console.log("AI session initialized:", session);
 }
 export async function clearAiHistory() {
     session = await session.clone();
@@ -49,14 +49,12 @@ export async function tryAskAI(something) {
             if (typeof result === 'string') {
                 return result;
             } else {
-                console.error('Invalid result format from session.prompt:', result);
                 return 'Invalid result format from session.prompt:'+result;
             }
         } else {
             return 'something was wrong';
         }
     } catch (error) {
-        console.error('Error in tryAskAI:', error);
         return 'something was wrong:'+error;
     }
 }
