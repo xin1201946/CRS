@@ -290,6 +290,7 @@ export default function ServerInfo() {
                         <ProcessorStats
                             mainColor="#6366f1"
                             content={cpuName}
+                            icon={"./processor.png"}
                             backgroundColor="#2D2D2D"
                             percentage={parseInt(cpu_percent[cpu_percent.length - 1])}
                             bottomStats={{
@@ -301,7 +302,7 @@ export default function ServerInfo() {
                         <ProcessorStats
                             mainColor="orange"
                             backgroundColor="#2D2D2D"
-                            icon={"/Public/memory.png"}
+                            icon={"./memory.png"}
                             title="Memory"
                             content={platformR}
                             percentage={parseInt(mem_percent[mem_percent.length - 1])}
