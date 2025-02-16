@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
-import { Button, Col, Dropdown, Row, SideSheet } from '@douyinfe/semi-ui';
-import { IconCopy, IconRefresh, IconEdit, IconDelete } from '@douyinfe/semi-icons';
-import { send_notify } from '../code/SystemToast.jsx';
-import { FooterPage } from '../Footer/Footer.jsx';
-import { Settings } from './Settings.jsx';
-import { get_language, set_language } from "../code/language.js";
-import { emit } from "../code/PageEventEmitter.js";
-import { getSetTheme, setAutoTheme, setDarkTheme, setLightTheme } from "../code/theme_color.js";
-import { MdHdrAuto, MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
-import { getSettings } from "../code/Settings.js";
-import { useTranslation } from 'react-i18next';
-import { useContextMenu } from '../contexts/ContextMenuContext';
+import {useEffect, useState} from 'react';
+import {Button, Col, Dropdown, Row, SideSheet} from '@douyinfe/semi-ui';
+import {IconCopy, IconDelete, IconEdit, IconRefresh} from '@douyinfe/semi-icons';
+import {send_notify} from '../code/SystemToast.jsx';
+import {FooterPage} from '../Footer/Footer.jsx';
+import {Settings} from './Settings.jsx';
+import {get_language, set_language} from "../code/language.js";
+import {emit} from "../code/PageEventEmitter.js";
+import {getSetTheme, setAutoTheme, setDarkTheme, setLightTheme} from "../code/theme_color.js";
+import {MdHdrAuto, MdOutlineDarkMode, MdOutlineLightMode} from "react-icons/md";
+import {getSettings} from "../code/Settings.js";
+import {useTranslation} from 'react-i18next';
+import {useContextMenu} from '../contexts/ContextMenuContext';
 
-export default function CustomContextMenu() {
+function CustomContextMenu() {
     const { contextMenu} = useContextMenu();
     const [settingP_visible, set_settingP_Visible] = useState(false);
     const [settingThemeIcon, set_ThemeIcon] = useState(<MdHdrAuto style={{ width: '20px', height: '20px' }} />);
@@ -189,3 +189,4 @@ export default function CustomContextMenu() {
         </div>
     );
 }
+export default CustomContextMenu

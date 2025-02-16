@@ -1,20 +1,20 @@
 import './App.css';
 import initializeSettings from './code/QuickLoadingService.js';
-import {useEffect} from 'react';
-import {Header1} from './Header/Header.jsx';
-import {HomePage} from './Page/Home.jsx';
+import {lazy, useEffect} from 'react';
 import {getSettings} from './code/Settings.js';
 import {queck_change_theme, setAutoTheme} from './code/theme_color.js';
 import {add_log} from './code/log.js';
 import register from './code/registerServiceWorker.js';
 import {Layout} from '@douyinfe/semi-ui';
 import Sider from '@douyinfe/semi-ui/lib/es/layout/Sider.js';
-import {Nav_T} from './Header/Nav_T.jsx';
-import CustomContextMenu from './Page/RightClickMenu.jsx';
 import {ContextMenuProvider, useContextMenu} from "./contexts/ContextMenuContext.jsx";
 import {detectDevice} from "./code/check_platform.js";
 import {log} from "./Theme/prettyLog.jsx";
 
+const Header1 = lazy(() => import("./Header/Header.jsx"))
+const HomePage = lazy(() => import("./Page/Home.jsx"))
+const Nav_T = lazy(() => import("./Header/Nav_T.jsx"))
+const CustomContextMenu = lazy(() => import("./Page/RightClickMenu.jsx"))
 function AppContent() {
     const { Header, Content } = Layout;
     const { showContextMenu } = useContextMenu();

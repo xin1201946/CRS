@@ -5,7 +5,7 @@ import getServerInfoSnapshot from "../../code/get_server_info.js";
 import {t} from "i18next";
 import ProcessorStats from "../widget/ProcessorStats.jsx";
 
-export default function ServerInfo() {
+function ServerInfo() {
     const [current_time,setCurrent_time] = useState([[0]]);
     const [Usercount,setUsercount] = useState(0);
     const [cpuName,setcpuname] = useState("");
@@ -362,3 +362,4 @@ export default function ServerInfo() {
     );
 
 }
+export default ServerInfo

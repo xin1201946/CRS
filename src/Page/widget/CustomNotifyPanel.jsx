@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import './customNotifyPanel.css';
 import {AnimatePresence, motion, useAnimation} from "framer-motion";
 
-export default function CustomNotifyPanel({
+function CustomNotifyPanel({
                                               title,
                                               message,
                                               showTime,
@@ -171,3 +171,4 @@ CustomNotifyPanel.defaultProps = {
     noOffsetScreen:false,
 };
 
+export default  CustomNotifyPanel

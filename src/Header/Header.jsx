@@ -1,26 +1,24 @@
-
 import "./header.css"
 // eslint-disable-next-line no-unused-vars
 import React, {useEffect, useState} from 'react';
-import {Button, SideSheet, Space,  Typography, Dropdown} from '@douyinfe/semi-ui';
+import {Button, Dropdown, SideSheet, Space, Typography} from '@douyinfe/semi-ui';
 import {Settings} from "../Page/Settings.jsx";
 import {FooterPage} from "../Footer/Footer.jsx";
 import {MdHdrAuto, MdOutlineDarkMode, MdOutlineLightMode} from "react-icons/md";
-import {getSetTheme,  setAutoTheme, setDarkTheme, setLightTheme} from "../code/theme_color.js";
+import {getSetTheme, setAutoTheme, setDarkTheme, setLightTheme} from "../code/theme_color.js";
 import {IconLanguage, IconMail, IconSetting} from "@douyinfe/semi-icons";
-// import {on,off} from "../code/PageEventEmitter.js";
 import {detectDevice} from "../code/check_platform.js";
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import checkNetwork from "../code/NetWorkConnect.js";
 import {getServer} from "../code/get_server.js";
-import {AdvancedSettingsPage} from "../Page/settings_page/AdvancedSettings.jsx";
+import AdvancedSettingsPage from "../Page/settings_page/AdvancedSettings.jsx";
 import {send_notify} from "../code/SystemToast.jsx";
 import {get_language, set_language} from "../code/language.js";
 import {getSettings} from "../code/Settings.js";
 import NotifyCenter from "../Page/NotifyCenter.jsx";
 import {emit} from "../code/PageEventEmitter.js";
 
-export function Header1 (){
+function Header1 (){
     const { Text } = Typography;
     const { t } = useTranslation();
     const langmenu = [
@@ -305,3 +303,4 @@ export function Header1 (){
         </>
     )
 }
+export default Header1

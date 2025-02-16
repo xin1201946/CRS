@@ -2,9 +2,9 @@ import {Banner, Button, Card, Space, Toast, Typography} from "@douyinfe/semi-ui"
 import {send_notify, sendSystemToast} from "../../code/SystemToast.jsx";
 import {clear_log} from "../../code/log.js";
 import {clearLocalStorage, getSettings, setSettings} from "../../code/Settings.js";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
-export function BetaFunctionalityPage() {
+function BetaFunctionalityPage() {
     const {Text} = Typography;
     const testStoast=()=>{
         var result= sendSystemToast('Hi','This is SystemNotify')
@@ -59,3 +59,4 @@ export function BetaFunctionalityPage() {
         </>
     )
 }
+export default BetaFunctionalityPage;

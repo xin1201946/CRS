@@ -13,12 +13,12 @@ import {
 import {getSettings, setSettings} from "../../code/Settings.js";
 import {IconInfoCircle} from "@douyinfe/semi-icons";
 import {useState} from "react";
-import {getAPI,  setAPIJ, setDefaultAPI} from "../../code/server_api_settings.js";
+import {getAPI, setAPIJ, setDefaultAPI} from "../../code/server_api_settings.js";
 import BaseSPage from "./BaseS.jsx";
-import {Logs_Viewer} from "./Logs_Viewer.jsx";
+import Logs_Viewer from "./Logs_Viewer.jsx";
 import {useTranslation} from "react-i18next";
 
-export function AdvancedSettingsPage() {
+function AdvancedSettingsPage() {
     const { t } = useTranslation();
     const [httpschecked, sethttpsChecked] = useState(getSettings('use_https')==='true');
     const { Text } = Typography;
@@ -176,3 +176,4 @@ export function AdvancedSettingsPage() {
         </>
     )
 }
+export default  AdvancedSettingsPage

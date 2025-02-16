@@ -1,135 +1,166 @@
-import { useState, useEffect } from 'react';
-import { Banner, Collapse, IconButton, Space, Tag } from '@douyinfe/semi-ui';
-import { get_notify_list, clear_notify } from "../code/SystemToast.jsx";
-import { useTranslation } from "react-i18next";
-import { IconClock, IconClose } from "@douyinfe/semi-icons";
-import './notifycenter.css';
-import { getSettings } from "../code/Settings.js";
-import CustomNotifyPanel from "./widget/CustomNotifyPanel.jsx";
-import { motion } from 'framer-motion';
-export default function NotifyCenter() {
-    const [notifys, setNotifys] = useState([]);
-    const [removing, setRemoving] = useState([]);
-    const { t } = useTranslation();
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+"use client"
 
-    // 加载通知列表
-    const fetchNotifyList = () => {
-        const updatedNotifys = get_notify_list();
-        setNotifys(updatedNotifys);
-        renderNotifications();
-    };
+import {useCallback, useEffect, useState} from "react"
+import {Banner, Collapse, IconButton, Space, Tag} from "@douyinfe/semi-ui"
+import {IconClock, IconClose} from "@douyinfe/semi-icons"
+import {useTranslation} from "react-i18next"
+import {AnimatePresence, motion} from "framer-motion"
+import {clear_notify, get_notify_list} from "../code/SystemToast.jsx"
+import {getSettings} from "../code/Settings.js"
+import CustomNotifyPanel from "./widget/CustomNotifyPanel.jsx"
+import "./notifycenter.css"
 
-    // 初始化加载通知列表
+function useNotifications() {
+    const [notifys, setNotifys] = useState([])
+    const [removing, setRemoving] = useState([])
+
+    const fetchNotifyList = useCallback(() => {
+        const updatedNotifys = get_notify_list()
+        setNotifys(updatedNotifys)
+    }, [])
+
+    const handleClose = useCallback(
+        (id) => {
+            setRemoving((prev) => [...prev, id])
+            setTimeout(() => {
+                const isCleared = clear_notify(id)
+                if (isCleared) {
+                    fetchNotifyList()
+                }
+                setRemoving((prev) => prev.filter((removingId) => removingId !== id))
+            }, 300)
+        },
+        [fetchNotifyList],
+    )
+
+    const handleClearAll = useCallback(() => {
+        setRemoving(notifys.map((notify) => notify.id))
+        setTimeout(() => {
+            setNotifys([])
+            setRemoving([])
+            clear_notify()
+        }, 300)
+    }, [notifys])
+
     useEffect(() => {
-        fetchNotifyList();
-        const handleResize = () => {
-            setWindowWidth(window.innerWidth);
-        };
+        fetchNotifyList()
+    }, [fetchNotifyList])
 
-        // 监听窗口大小变化事件
-        window.addEventListener('resize', handleResize);
+    return { notifys, removing, handleClose, handleClearAll, fetchNotifyList }
+}
 
-        // 在组件卸载时移除事件监听器，避免内存泄漏
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
+function useWindowWidth() {
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
-    // 关闭单个通知
-    const handleClose = (id) => {
-        setRemoving((prev) => [...prev, id]);
-        setTimeout(() => {
-            const isCleared = clear_notify(id);
-            if (isCleared) {
-                fetchNotifyList(); // 更新通知列表
-            }
-            setRemoving((prev) => prev.filter((removingId) => removingId !== id));
-            renderNotifications();
-        }, 300);
-    };
+    useEffect(() => {
+        const handleResize = () => setWindowWidth(window.innerWidth)
+        window.addEventListener("resize", handleResize)
+        return () => window.removeEventListener("resize", handleResize)
+    }, [])
 
-    const handleClearAll = () => {
-        setRemoving(notifys.map((notify) => notify.id));
-        setTimeout(() => {
-            setNotifys([]);
-            setRemoving([]);
-            clear_notify();
-        }, 300);
-    };
+    return windowWidth
+}
 
-    const renderNotifications = () => (
-        <Collapse className={'Notify_center_Conner'} accordion>
-            <motion.div
-                initial={{ opacity: 0, y: 20 }} // 初始位置和透明度
-                animate={{ opacity: 1, y: 0 }} // 动画结束时的位置
-                exit={{ opacity: 0, y: 20 }}  // 退出时的动画
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-            >
-            {notifys.length > 0 ? (
-                notifys.map(({ id, title, content, type, time }) => (
-                    getSettings('notify_card') === '1' ? (
-                        // eslint-disable-next-line react/jsx-key
-                            <Collapse.Panel
-                                header={title}
-                                itemKey={id}
-                                showArrow={false}
-                                className={removing.includes(id) ? 'slide-out' : ''}
-                                extra={
-                                    <Space>
-                                        <Tag color="violet" type={'ghost'} style={{ margin: 0 }}>
-                                            {type}
-                                        </Tag>
-                                        <Tag color="cyan" prefixIcon={<IconClock style={{ color: 'cyan' }} />} type={'ghost'} style={{ margin: 0 }}>
-                                            {time}
-                                        </Tag>
-                                    </Space>
-                                }
-                            >
-                                <Banner
-                                    key={id}
-                                    fullMode={false}
-                                    title={title}
-                                    description={<Space vertical={true}>{content}</Space>}
-                                    type={type}
-                                    onClose={() => handleClose(id)}
-                                    className={removing.includes(id) ? 'slide-out' : ''}
-                                    style={{ marginBottom: '12px', transition: 'all 0.3s ease' }}
-                                />
-                            </Collapse.Panel>
+function NotifyCenter() {
+    const { t } = useTranslation()
+    const { notifys, removing, handleClose, handleClearAll } = useNotifications()
+    const windowWidth = useWindowWidth()
+    const useCustomNotifyPanel = getSettings("notify_card") === "1"
 
-                    ) : (
-                        // eslint-disable-next-line react/jsx-key
-                        <CustomNotifyPanel
-                            title={title}
-                            message={content}
-                            showTime={time}
-                            type={type}
-                            id={id}
-                            onClose={() => handleClose(id)}
-                        />
-                    )
-                ))
-            ) : (
-                <p style={{ textAlign: 'center', color: 'var(--semi-color-text-2)' }}>
-                    {t('No_notifications_available')}
-                </p>
-            )}
-            </motion.div>
-        </Collapse>
-    );
+    const renderNotification = ({ id, title, content, type, time }) => {
+        const commonProps = {
+            key: id,
+            className: removing.includes(id) ? "slide-out" : "",
+        }
+
+        if (useCustomNotifyPanel) {
+            return (
+                <Collapse.Panel
+                    {...commonProps}
+                    header={title}
+                    itemKey={id}
+                    showArrow={false}
+                    extra={
+                        <Space>
+                            <Tag color="violet" type="ghost" style={{ margin: 0 }}>
+                                {type}
+                            </Tag>
+                            <Tag color="cyan" prefixIcon={<IconClock style={{ color: "cyan" }} />} type="ghost" style={{ margin: 0 }}>
+                                {time}
+                            </Tag>
+                        </Space>
+                    }
+                >
+                    <Banner
+                        fullMode={false}
+                        title={title}
+                        description={<Space vertical>{content}</Space>}
+                        type={type}
+                        onClose={() => handleClose(id)}
+                        style={{ marginBottom: "12px", transition: "all 0.3s ease" }}
+                    />
+                </Collapse.Panel>
+            )
+        } else {
+            return (
+                <CustomNotifyPanel
+                    {...commonProps}
+                    title={title}
+                    message={content}
+                    showTime={time}
+                    type={type}
+                    id={id}
+                    onClose={() => handleClose(id)}
+                />
+            )
+        }
+    }
 
     return (
-        <div style={{ padding: '16px', position: 'relative' }}>
-            {renderNotifications()}
+        <div style={{ padding: "16px", position: "relative" }}>
+            <Collapse className="Notify_center_Conner" accordion>
+                <AnimatePresence>
+                    {notifys.length > 0 ? (
+                        notifys.map((notify) => (
+                            <motion.div
+                                key={notify.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 20 }}
+                                transition={{ duration: 0.3, ease: "easeOut" }}
+                            >
+                                {renderNotification(notify)}
+                            </motion.div>
+                        ))
+                    ) : (
+                        <motion.p
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            style={{ textAlign: "center", color: "var(--semi-color-text-2)" }}
+                        >
+                            {t("No_notifications_available")}
+                        </motion.p>
+                    )}
+                </AnimatePresence>
+            </Collapse>
             {notifys.length > 0 && (
                 <IconButton
                     theme="light"
                     icon={<IconClose />}
-                    style={{ left: windowWidth / 2 - 20, bottom: '10%', zIndex: 9999, position: 'fixed', borderRadius: '20px', backgroundColor: 'var(--semi-color-bg-4)' }}
+                    style={{
+                        left: windowWidth / 2 - 20,
+                        bottom: "10%",
+                        zIndex: 9999,
+                        position: "fixed",
+                        borderRadius: "20px",
+                        backgroundColor: "var(--semi-color-bg-4)",
+                    }}
                     onClick={handleClearAll}
                 />
             )}
         </div>
-    );
+    )
 }
+
+export default NotifyCenter
+

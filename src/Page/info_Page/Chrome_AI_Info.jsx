@@ -6,7 +6,7 @@ import Column from "@douyinfe/semi-ui/lib/es/table/Column.js";
 import {detectDevice} from "../../code/check_platform.js";
 
 // eslint-disable-next-line react/prop-types
-export  default  function Chrome_AI_Info({visible,handleOk}){
+function Chrome_AI_Info({visible,handleOk}){
     const { t } = useTranslation();
     const { Text } = Typography;
     const [windowHeight, setWindowHeight] = useState(window.innerHeight);
@@ -187,3 +187,5 @@ export  default  function Chrome_AI_Info({visible,handleOk}){
         </Tabs>
     </Modal>
 }
+
+export default  Chrome_AI_Info

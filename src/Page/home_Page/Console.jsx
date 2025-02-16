@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import {IconSearch} from "@douyinfe/semi-icons";
 import XConsole from "./XConsole.jsx";
 
-export function Console(){
+function Console(){
     const { t } = useTranslation();
     const {Content } = Layout;
     const [columns,setcolumns] = useState([]);
@@ -246,3 +246,4 @@ Type 'help' to see available commands.
         </>
     )
 }
+export default Console

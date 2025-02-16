@@ -1,18 +1,10 @@
-
-import {
-    Card,
-    Descriptions,
-    Typography,
-    Space,
-    SideSheet,
-    Popover
-} from "@douyinfe/semi-ui";
+import {Card, Descriptions, Popover, SideSheet, Space, Typography} from "@douyinfe/semi-ui";
 import {getSettings} from "../../code/Settings.js";
 import {useState} from "react";
 import Meta from "@douyinfe/semi-ui/lib/es/card/meta.js";
-import {IconChevronRight, IconFile,IconInfoCircle} from "@douyinfe/semi-icons";
+import {IconChevronRight, IconInfoCircle} from "@douyinfe/semi-icons";
 import {getServer} from "../../code/get_server.js";
-import {BetaFunctionalityPage} from "./BetaFunctionality.jsx";
+import BetaFunctionalityPage from "./BetaFunctionality.jsx";
 import {useTranslation} from "react-i18next";
 import Chrome_AI_Info from "../info_Page/Chrome_AI_Info.jsx";
 import {detectDevice} from "../../code/check_platform.js";
@@ -20,7 +12,7 @@ import {send_notify} from "../../code/SystemToast.jsx";
 import ServerInfo from "../info_Page/ServerInfo.jsx";
 
 
-export  default  function AboutWE(){
+function AboutWE(){
     const { t } = useTranslation();
     const { Text } = Typography;
 
@@ -134,3 +126,4 @@ export  default  function AboutWE(){
         </>
     )
 }
+export default AboutWE

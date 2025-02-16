@@ -11,7 +11,7 @@ import {detectDevice} from "../code/check_platform.js";
 import {FooterPage} from "../Footer/Footer.jsx";
 import {Settings} from "../Page/Settings.jsx";
 
-export function Nav_T (){
+function Nav_T (){
     const [collapsed, setCollapsed] = useState(false);
 
     const toggleCollapse = () => {
@@ -188,3 +188,4 @@ export function Nav_T (){
         </>
     )
 }
+export default Nav_T

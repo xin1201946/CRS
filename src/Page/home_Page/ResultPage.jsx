@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react"
-import { AnimatePresence, motion } from "framer-motion"
+import {lazy, useEffect, useState} from "react"
+import {AnimatePresence, motion} from "framer-motion"
 import "./resultpage_css.css"
-import { Step1 } from "./Step1.jsx"
-import { HomePage } from "./HomePage.jsx"
-import { Console } from "./Console.jsx"
-import { on, off } from "../../code/PageEventEmitter.js"
-import { getSettings, setSettings } from "../../code/Settings.js"
-import Chrome_ai_page from "../Chrome_ai_page.jsx"
+import {off, on} from "../../code/PageEventEmitter.js"
+import {getSettings, setSettings} from "../../code/Settings.js"
 
+const Step1 = lazy(() => import("./Step1.jsx"))
+const HomePage = lazy(() => import("./HomePage.jsx"))
+const Console = lazy(() => import("./Console.jsx"))
+const Chrome_ai_page = lazy(() => import("../Chrome_ai_page.jsx"))
 export function ResultPage() {
     const [page, setPage] = useState("home")
 

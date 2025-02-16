@@ -1,29 +1,33 @@
 import {
     Banner,
     Button,
-    Card, Collapse, Divider,
-    Input, Popover,
+    Card,
+    Collapse,
+    Divider,
+    Input,
     Radio,
-    RadioGroup, SideSheet,
+    RadioGroup,
+    SideSheet,
     Space,
     Switch,
-    Tag, Tooltip,
+    Tag,
+    Tooltip,
     Typography
 } from "@douyinfe/semi-ui";
 import {getSettings, setSettings} from "../../code/Settings.js";
 import {useState} from "react";
 import {Title} from "@douyinfe/semi-ui/lib/es/skeleton/item.js";
-import {IconClock, IconDelete, IconInfoCircle} from "@douyinfe/semi-icons";
-import {setDarkTheme,setLightTheme,setAutoTheme} from "../../code/theme_color.js";
-import {AdvancedSettingsPage} from "./AdvancedSettings.jsx";
-import {Logs_Viewer} from "./Logs_Viewer.jsx";
+import {IconClock, IconDelete} from "@douyinfe/semi-icons";
+import {setAutoTheme, setDarkTheme, setLightTheme} from "../../code/theme_color.js";
+import AdvancedSettingsPage from "./AdvancedSettings.jsx";
+import Logs_Viewer from "./Logs_Viewer.jsx";
 import {useTranslation} from "react-i18next";
 import {send_notify} from "../../code/SystemToast.jsx";
 import Chrome_AI_Info from "../info_Page/Chrome_AI_Info.jsx";
 import CustomNotifyPanel from "../widget/CustomNotifyPanel.jsx";
 import {getServer} from "../../code/get_server.js";
 
-export default function BaseSPage(){
+function BaseSPage(){
     const { t } = useTranslation();
     const { Text } = Typography;
     const [switchMenuPchecked, setswitchMenuPchecked] = useState('true'===getSettings('use_app_content_menu'));
@@ -311,3 +315,4 @@ export default function BaseSPage(){
         </>
     )
 }
+export default BaseSPage

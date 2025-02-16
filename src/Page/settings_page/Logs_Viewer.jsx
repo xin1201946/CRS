@@ -20,7 +20,7 @@ import {detectDevice} from "../../code/check_platform.js";
 import {useTranslation} from "react-i18next";
 import {send_notify} from "../../code/SystemToast.jsx";
 
-export  function Logs_Viewer(){
+function Logs_Viewer(){
     const { Text } = Typography;
     const { t } = useTranslation();
     const [filteredValue, setFilteredValue] = useState([]);
@@ -351,3 +351,5 @@ export  function Logs_Viewer(){
         </>
     )
 }
+
+export default Logs_Viewer

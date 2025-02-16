@@ -33,7 +33,7 @@ function getId() {
 }
 
 
-export default function Chrome_ai_page() {
+function Chrome_ai_page() {
     const [message, setMessage] = useState(defaultMessage);
     const onMessageSend = useCallback(async(content) => {
         tryAskAI(content).then(result => {
@@ -93,3 +93,4 @@ export default function Chrome_ai_page() {
         </Space>
     );
 }
+export default Chrome_ai_page

@@ -1,7 +1,7 @@
 import {Card, Radio, RadioGroup} from "@douyinfe/semi-ui";
 import {get_language, set_language} from "../../code/language.js";
 
-export function LanguagePage() {
+function LanguagePage() {
     return (
         <>
             <Card>
@@ -12,4 +12,4 @@ export function LanguagePage() {
             </Card>
         </>
     )
-}
+}export default  LanguagePage
