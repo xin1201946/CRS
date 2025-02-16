@@ -27,5 +27,4 @@ export function check_browser() {
 
         return `${browserName.charAt(0).toUpperCase() + browserName.slice(1)}: ${browserVersion}`
   }
-
 }
