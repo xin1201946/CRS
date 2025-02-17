@@ -47,8 +47,8 @@ export function sendSystemToast(title, message, icon = 'CCRS.png') {
 
 // 发送 Semi UI 通知，并加入消息队列限制
 export function send_notify(
-    title,
-    content,
+    title="title",
+    content="",
     customIcon = null,
     sendtime = 3,
     type = 'info',

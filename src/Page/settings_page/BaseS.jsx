@@ -43,6 +43,7 @@ function BaseSPage(){
     const onswitchMenuChange = checked => {
         setswitchMenuPchecked(checked);
         setSettings('use_app_content_menu',checked.toString());
+        window.location.reload();
     };
     const onchange_ai_page = checked => {
         set_use_ai_pagechecked(checked);

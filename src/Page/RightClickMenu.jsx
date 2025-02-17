@@ -1,192 +1,105 @@
-import {useEffect, useState} from 'react';
-import {Button, Col, Dropdown, Row, SideSheet} from '@douyinfe/semi-ui';
-import {IconCopy, IconDelete, IconEdit, IconRefresh} from '@douyinfe/semi-icons';
-import {send_notify} from '../code/SystemToast.jsx';
-import {FooterPage} from '../Footer/Footer.jsx';
-import {Settings} from './Settings.jsx';
-import {get_language, set_language} from "../code/language.js";
-import {emit} from "../code/PageEventEmitter.js";
-import {getSetTheme, setAutoTheme, setDarkTheme, setLightTheme} from "../code/theme_color.js";
-import {MdHdrAuto, MdOutlineDarkMode, MdOutlineLightMode} from "react-icons/md";
-import {getSettings} from "../code/Settings.js";
-import {useTranslation} from 'react-i18next';
-import {useContextMenu} from '../contexts/ContextMenuContext';
+import {useEffect, useRef, useState} from 'react';
+import {ChevronRight} from 'lucide-react';
+import "./RightClickMenu.css"
 
-function CustomContextMenu() {
-    const { contextMenu} = useContextMenu();
-    const [settingP_visible, set_settingP_Visible] = useState(false);
-    const [settingThemeIcon, set_ThemeIcon] = useState(<MdHdrAuto style={{ width: '20px', height: '20px' }} />);
-    const { t } = useTranslation();
+// eslint-disable-next-line react/prop-types
+const MenuList = ({ items, isSubmenu = false, onClose }) => {
+    const [activeSubmenu, setActiveSubmenu] = useState(null);
+    const timeoutRef = useRef();
 
-    useEffect(() => {
-        window.addEventListener('themeChange', initialThemeIcon);
-        return () => {
-            window.removeEventListener('themeChange', initialThemeIcon);
-        };
-    }, []);
-
-    const initialThemeIcon = () => {
-        if (getSettings('theme_color') === 'light') {
-            set_ThemeIcon(<MdOutlineLightMode style={{ width: '20px', height: '20px' }} />);
-        } else if (getSettings('theme_color') === 'dark') {
-            set_ThemeIcon(<MdOutlineDarkMode style={{ width: '20px', height: '20px' }} />);
-        } else if (getSettings('theme_color') === 'auto') {
-            set_ThemeIcon(<MdHdrAuto style={{ width: '20px', height: '20px' }} />);
-        }
+    const handleMouseEnter = (index) => {
+        clearTimeout(timeoutRef.current);
+        setActiveSubmenu(index);
     };
 
-    const s_side_sheet_change = () => {
-        set_settingP_Visible(prevState => !prevState);
+    const handleMouseLeave = () => {
+        timeoutRef.current = setTimeout(() => {
+            setActiveSubmenu(null);
+        }, 100);
     };
 
-    function switchDarkMode() {
-        const currentTheme = getSetTheme();
-        if (currentTheme === 'dark') {
-            setAutoTheme();
-            set_ThemeIcon(<MdHdrAuto style={{ width: '20px', height: '20px' }} />);
-        } else if (currentTheme === 'light') {
-            setDarkTheme();
-            set_ThemeIcon(<MdOutlineDarkMode style={{ width: '20px', height: '20px' }} />);
-        } else if (currentTheme === 'auto') {
-            setLightTheme();
-            set_ThemeIcon(<MdOutlineLightMode style={{ width: '20px', height: '20px' }} />);
+    const handleClick = (e, item) => {
+        e.stopPropagation(); // 阻止事件冒泡
+        // 只有当点击的项目没有子菜单且有onClick处理函数时才执行
+        if (!item.subItems && item.onClick) {
+            item.onClick();
+            onClose();
         }
-    }
-
-    if (!contextMenu.visible) {
-        return null;
-    }
-
-    const langmenu = [
-        { node: 'item', name: '中文', type: 'primary', active: get_language() === 1, onClick: () => set_language(1) },
-        { node: 'item', name: 'English', type: 'primary', active: get_language() === 2, onClick: () => set_language(2) },
-    ];
-
-    const uimenu = [
-        { node: 'item', name: t('Console'), type: 'primary', onClick: () => emit('changePage', 'console') },
-        { node: 'item', name: t('Vision'), type: 'primary', onClick: () => emit('changePage', 'vision') },
-        { node: 'item', name: t('Settings'), type: 'primary', onClick: () => s_side_sheet_change() },
-    ];
-
-    const handleCopy = () => {
-        const selectedText = window.getSelection()?.toString();
-        if (selectedText) {
-            navigator.clipboard.writeText(selectedText)
-                .then(() => {
-                    send_notify(t('New_Notify_Send'), t('Copy successful'));
-                })
-                .catch(err => {
-                    send_notify(t('Copy failed'), err);
-                });
-        }
-    };
-
-    const handleCut = () => {
-        const selectedText = window.getSelection()?.toString();
-        if (selectedText && contextMenu.target instanceof HTMLInputElement) {
-            navigator.clipboard.writeText(selectedText)
-                .then(() => {
-                    const start = contextMenu.target.selectionStart || 0;
-                    const end = contextMenu.target.selectionEnd || 0;
-                    contextMenu.target.setRangeText('', start, end, 'end');
-                    send_notify(t('New_Notify_Send'), t('Cut successful'));
-                })
-                .catch(err => {
-                    send_notify(t('Cut failed'),err);
-                });
-        }
-    };
-
-    const handlePaste = () => {
-        if (contextMenu.target instanceof HTMLInputElement) {
-            navigator.clipboard.readText()
-                .then(text => {
-                    const start = contextMenu.target.selectionStart || 0;
-                    const end = contextMenu.target.selectionEnd || 0;
-                    contextMenu.target.setRangeText(text, start, end, 'end');
-                    send_notify(t('New_Notify_Send'), t('Paste successful'));
-                })
-                .catch(err => {
-                    send_notify(t('Paste failed'), err);
-                });
-        }
-    };
-
-    const getDynamicMenuItems = () => {
-        if (contextMenu.target instanceof HTMLInputElement || contextMenu.target instanceof HTMLTextAreaElement) {
-            return [
-                { node: 'item', name: t('Cut'), icon: <IconDelete />, onClick: handleCut },
-                { node: 'item', name: t('Copy'), icon: <IconCopy />, onClick: handleCopy },
-                { node: 'item', name: t('Paste'), icon: <IconEdit />, onClick: handlePaste },
-            ];
-        }
-        return [
-
-        ];
     };
 
     return (
-        <div
-            className="grid"
-            style={{
-                position: 'fixed',
-                top: `${contextMenu.y}px`,
-                left: `${contextMenu.x}px`,
-                backgroundColor: 'var(--semi-color-bg-1)',
-                padding: '10px',
-                borderRadius: '10px',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                display: contextMenu.visible ? 'inline-block' : 'none',
-                minWidth: '100px',
-                zIndex: 1001,
-            }}
-            onClick={(e) => {
-                e.stopPropagation();
-            }}
-
+        <div className={`bg-[--semi-color-bg-0] text-sm rounded-lg shadow-lg py-2 min-w-[200px] ${
+            isSubmenu ? 'absolute left-full top-0 ml-1' : ''
+        }`}
         >
-            <Row>
-                <Col span={8}>
-                    <Button theme="borderless" onClick={() => window.location.reload()} icon={<IconRefresh />} aria-label={t('Refresh')} />
-                </Col>
-                <Col span={8}>
-                    <Button theme="borderless" onClick={handleCopy} icon={<IconCopy />} aria-label={t('Copy')} />
-                </Col>
-                <Col span={8}>
-                    <Button theme="borderless" icon={settingThemeIcon} onClick={switchDarkMode} aria-label={t('Theme_color')} />
-                </Col>
-            </Row>
-
-            <br />
-            <Dropdown.Menu tabIndex={-1}>
-                {getDynamicMenuItems().map((item, index) => (
-                    <Dropdown.Item key={index} style={{ borderRadius: '10px' }} icon={item.icon} onClick={item.onClick}>
-                        {item.name}
-                    </Dropdown.Item>
-                ))}
-                <Dropdown.Item style={{ borderRadius: '10px' }}>
-                    <Dropdown trigger={'hover'} showTick position={'right'} menu={uimenu}>
-                        <div style={{ cursor: 'pointer' }}>{t('Switch page')}</div>
-                    </Dropdown>
-                </Dropdown.Item>
-                <Dropdown.Item style={{ borderRadius: '10px' }}>
-                    <Dropdown trigger={'hover'} showTick position={'right'} menu={langmenu}>
-                        <div style={{ cursor: 'pointer' }}>{t('Regional language')}</div>
-                    </Dropdown>
-                </Dropdown.Item>
-            </Dropdown.Menu>
-
-            <SideSheet
-                closeOnEsc={true}
-                style={{ maxWidth: '100%', fontFamily: 'var(--Default-font)' }}
-                title="Settings"
-                visible={settingP_visible}
-                onCancel={s_side_sheet_change}
-                footer={<FooterPage />}
-            >
-                <Settings />
-            </SideSheet>
+            {/* eslint-disable-next-line react/prop-types */}
+            {items.map((item, index) => (
+                <div
+                    key={index}
+                    className="relative"
+                    onMouseEnter={() => handleMouseEnter(index)}
+                    onMouseLeave={handleMouseLeave}
+                >
+                    <div
+                        className="px-4 py-2 hover:bg-[--semi-color-fill-0] flex items-center cursor-pointer"
+                        onClick={(e) => handleClick(e, item)}
+                    >
+                        <div className="w-5 h-5 mr-3 flex items-center justify-center">
+                            {item.icon}
+                        </div>
+                        <span className="flex-grow" style={{color:"var(--semi-color-text-0)"}}>{item.label}</span>
+                        {item.rightElement && (
+                            <div className="ml-4">{item.rightElement}</div>
+                        )}
+                        {item.subItems && (
+                            <ChevronRight className="w-4 h-4 ml-2 text-gray-400" />
+                        )}
+                    </div>
+                    {item.subItems && activeSubmenu === index && (
+                        <MenuList
+                            items={item.subItems}
+                            isSubmenu={true}
+                            onClose={onClose}
+                        />
+                    )}
+                </div>
+            ))}
         </div>
     );
-}
-export default CustomContextMenu
+};
+
+// eslint-disable-next-line react/prop-types
+function RightClickMenu ({ items, x, y, onClose }) {
+    const menuRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                onClose();
+            }
+        };
+
+        // 使用 mousedown 而不是 click，以确保在拖动时也能正确处理
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [onClose]);
+
+    return (
+        <div
+            ref={menuRef}
+            className="context-menu-animation"
+            style={{
+                textAlign: 'left',
+                position: 'fixed',
+                left: x,
+                top: y,
+                zIndex: 99999,
+            }}
+            onClick={(e) => e.stopPropagation()} // 阻止点击事件冒泡
+        >
+            <MenuList items={items} onClose={onClose} />
+        </div>
+    );
+};
+
+export default RightClickMenu
