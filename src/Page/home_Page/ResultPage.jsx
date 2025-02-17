@@ -1,4 +1,4 @@
-import {lazy, useEffect, useState} from "react"
+import React, {lazy, useEffect, useState} from "react"
 import {AnimatePresence, motion} from "framer-motion"
 import "./resultpage_css.css"
 import {off, on} from "../../code/PageEventEmitter.js"
@@ -10,7 +10,7 @@ const Console = lazy(() => import("./Console.jsx"))
 const Chrome_ai_page = lazy(() => import("../Chrome_ai_page.jsx"))
 export function ResultPage() {
     const [page, setPage] = useState("home")
-
+    const MemoizedHomePage = React.memo(HomePage);
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search)
         setSettings("server_ip", urlParams.get("serverip") || getSettings("server_ip"))
@@ -41,7 +41,7 @@ export function ResultPage() {
     const renderPage = () => {
         switch (page) {
             case "home":
-                return <HomePage />
+                return <MemoizedHomePage />
             case "console":
                 return <Console />
             case "vision":

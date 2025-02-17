@@ -1,21 +1,10 @@
 html{
   width: 100%;
   height: 100%;
-  --Default-font:'Noto Sans SC',sans-serif;
-  --Theme-font: 'HalloweenCN', "HalloweenEN"; /* 默认字体 */
   -webkit-tap-highlight-color: transparent;
 }
 
-@font-face {
-    font-display: swap;
-    font-family: 'Noto Sans SC';
-    src: url('./Fonts/NotoSansSC-VariableFont_wght.ttf') format('truetype');
-    font-weight: 700; /* 可根据需要调整 */
-    font-style: normal; /* 可根据需要调整 */
-}
-
 :root {
-  font-family: var(--Default-font), sans-serif;
   color-scheme: light dark;
   color: var(--semi-color-text-0);
   background-color: var( --semi-color-bg-0);
@@ -25,7 +14,6 @@ html{
   -moz-osx-font-smoothing: grayscale;
 }
 body {
-  font-family: var(--Default-font), sans-serif;
   user-select: none;
   width: 100%;
   height: 100%;

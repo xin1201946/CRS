@@ -1,4 +1,3 @@
-import "./header.css"
 // eslint-disable-next-line no-unused-vars
 import React, {useEffect, useState} from 'react';
 import {Button, Dropdown, SideSheet, Space, Typography} from '@douyinfe/semi-ui';
@@ -37,7 +36,6 @@ function Header1 (){
             return(<MdHdrAuto style={{ width: '20px', height: '20px' }} />)
         }
     };
-    // const [selectKey,setSelectKey]=useState('home');
     const [settingP_visible, set_settingP_Visible] = useState(false);
     const s_side_sheet_change = () => {
         set_settingP_Visible(!settingP_visible);
@@ -55,10 +53,6 @@ function Header1 (){
         set_NotifyCenter_visible(!NotifyCenter_visible);
     };
     useEffect(() => {
-        // const handleChangePage = (newPage) => {
-        //     setSelectKey(newPage);
-        // };
-        // on('changePage', handleChangePage);
         window.addEventListener('themeChange', initialThemeIcon);
         // 清理事件监听器
         return () => {
@@ -159,50 +153,10 @@ function Header1 (){
 
         return <></>
     }
-    // function Old_nav(){
-    //     return<>
-    //         <div className={'index-module_container__x1Eix'}
-    //              style={{width: '100%',top:'0',zIndex:'1',height:'5%',position: 'fixed',}}>
-    //             <Nav
-    //                 selectedKeys={selectKey}
-    //                 mode={'horizontal'}
-    //                 onSelect={key => changeSelectKey(key)}
-    //                 header={{
-    //                     text: 'CCRS'
-    //                 }}
-    //                 footer={
-    //                     <>
-    //                         <Space>
-    //
-    //                             <Button style={{margin: "10px"}} theme='borderless' icon={settingThemeIcon}
-    //                                     onClick={switchDarkMode}
-    //                                     aria-label="切换颜色"/>
-    //                             {/*onClick={LanguagePage_change}*/}
-    //                             <Dropdown trigger={'click'} showTick position={'bottomLeft'} menu={langmenu}>
-    //                                 <Button style={{
-    //                                     color: 'var(--semi-color-text-0)',
-    //                                     display: detectDevice() === 'Phone' ? "none" : ''
-    //                                 }} theme='borderless'>
-    //                                     <IconLanguage/>
-    //                                 </Button>
-    //                             </Dropdown>
-    //                             <Button onClick={s_side_sheet_change} style={{
-    //                                 color: 'var(--semi-color-text-0)',
-    //                                 display: detectDevice() === 'Phone' ? "none" : ''
-    //                             }} theme='borderless'>
-    //                                 <IconSetting/>
-    //                             </Button>
-    //                         </Space>
-    //                     </>
-    //                 }
-    //             />
-    //         </div>
-    //     </>
-    // }
 
     function New_Nav(){
         return <>
-            <div  className="navbar index-module_container__x1Eix"
+            <div  className="navbar bg-[--semi-color-nav-bg] backdrop-blur-md"
                  style={{
                      position: 'fixed',
                      width: '100%',
@@ -283,18 +237,18 @@ function Header1 (){
         <>
             {MyComponent()}
             <New_Nav/>
-            <SideSheet closeOnEsc={true} style={{maxWidth: "100%", fontFamily: "var(--Default-font)"}}
+            <SideSheet closeOnEsc={true} style={{maxWidth: "100%"}}
                        title={t('Settings')}
                        visible={settingP_visible} onCancel={s_side_sheet_change} footer={<FooterPage></FooterPage>}>
                 <Settings></Settings>
             </SideSheet>
-            <SideSheet closeOnEsc={true} style={{maxWidth: "100%", fontFamily: "var(--Default-font)"}}
+            <SideSheet closeOnEsc={true} style={{maxWidth: "100%"}}
                        title={t('Advanced_Settings')}
                        visible={settingadv_visible} onCancel={adv_side_sheet_change}
                        footer={<FooterPage></FooterPage>}>
                 <AdvancedSettingsPage></AdvancedSettingsPage>
             </SideSheet>
-            <SideSheet closeOnEsc={true} placement='left' style={{maxWidth: "100%", fontFamily: "var(--Default-font)"}}
+            <SideSheet closeOnEsc={true} placement='left' style={{maxWidth: "100%"}}
                        title={t('NotifyCenter')}
                        visible={NotifyCenter_visible} onCancel={NotifyCenter_change}>
                 <NotifyCenter></NotifyCenter>
