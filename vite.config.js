@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite';
+import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
-import { createHtmlPlugin } from 'vite-plugin-html';
+import {createHtmlPlugin} from 'vite-plugin-html';
 import semi from "vite-plugin-semi-theme";
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -10,7 +10,7 @@ export default defineConfig({
     // 生产环境构建文件的输出目录
     outDir: './dist',
     // 生产环境是否生成 sourceMap 文件
-    sourcemap: false,
+    sourcemap: true,
   },
   server: {
     // 服务器端口号

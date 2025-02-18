@@ -80,6 +80,15 @@ function Logs_Viewer(){
             });
         }
     }
+    // 计算百分比的函数
+    function calculatePercentage(part, total) {
+        return (part / total * 100).toFixed(2); // 保留两位小数
+    }
+    const totalLogs =
+        get_successfully_logs().length +
+        get_warning_logs().length +
+        get_error_logs().length;
+
     function get_logs_pie(){
         const commonSpec = {
             type: 'pie',
@@ -87,9 +96,9 @@ function Logs_Viewer(){
                 {
                     id: 'id0',
                     values: [
-                        { type: 'Success', value: get_successfully_logs().length},
-                        { type: 'Warning', value: get_warning_logs().length},
-                        { type: 'Error', value: get_error_logs().length},
+                        { type: 'Success', value: calculatePercentage(get_successfully_logs().length, totalLogs) },
+                        { type: 'Warning', value: calculatePercentage(get_warning_logs().length, totalLogs) },
+                        { type: 'Error', value: calculatePercentage(get_error_logs().length, totalLogs) },
                     ]
                 }
             ],

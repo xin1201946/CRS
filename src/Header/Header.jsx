@@ -156,7 +156,7 @@ function Header1 (){
 
     function New_Nav(){
         return <>
-            <div  className="navbar bg-[--semi-color-nav-bg] backdrop-blur-md"
+            <div  className="navbar bg-[--semi-color-nav-bg] backdrop-blur-3xl"
                  style={{
                      position: 'fixed',
                      width: '100%',

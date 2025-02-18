@@ -11,7 +11,6 @@
 import {getSettings, setSettings} from "./Settings.js";
 import {add_log} from "./log.js";
 
-
 export function getAPI(name){
     let api_service=getSettings('api_service',true);
     return api_service['api_'+name];

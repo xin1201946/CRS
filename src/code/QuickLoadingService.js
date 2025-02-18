@@ -2,10 +2,11 @@ import './Settings.js'
 import {getSettings, setSettings} from "./Settings.js";
 import {add_log} from "./log.js";
 import {api_map} from "./server_api_settings.js";
-import { Notification} from '@douyinfe/semi-ui';
-import {subscribeToServerNotifications} from './server _information_subscription_service.js'
-import { v4 as uuidv4 } from 'uuid';
+import {Notification} from '@douyinfe/semi-ui';
+import {subscribeToServerNotifications} from '././server_information_subscription_service.js'
+import {v4 as uuidv4} from 'uuid';
 import {checkAPIAvailability} from "./chrome_gemini_support.js";
+
 export default function initializeSettings(){
     const server_ip= "127.0.0.1:5000"
     const language= 2

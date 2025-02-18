@@ -1,7 +1,7 @@
 import './App.css';
 import initializeSettings from './code/QuickLoadingService.js';
 import {lazy, Suspense, useEffect, useState} from 'react';
-import {getSettings} from './code/Settings.js';
+import {getSettings, setSettings} from './code/Settings.js';
 import {queck_change_theme, setAutoTheme, setDarkTheme, setLightTheme} from './code/theme_color.js';
 import {add_log, saveLogsToTxt} from './code/log.js';
 import register from './code/registerServiceWorker.js';
@@ -33,7 +33,7 @@ import {useTranslation} from "react-i18next";
 import {send_notify} from "./code/SystemToast.jsx";
 
 const Header1 = lazy(() => import("./Header/Header.jsx"))
-const HomePage = lazy(() => import("./Page/Home.jsx"))
+const ResultPage = lazy(() => import("./Page/home_Page/ResultPage.jsx"))
 const Nav_T = lazy(() => import("./Header/Nav_T.jsx"))
 const BaseSettings = lazy(() => import("./Page/settings_page/BaseS.jsx"))
 const Advanced_Settings = lazy(() => import("./Page/settings_page/AdvancedSettings.jsx"))
@@ -72,6 +72,7 @@ function AppContent() {
 
     useEffect(() => {
         add_log('Hook Theme...', 'successfully', 'UI Loading(3/3)...');
+        setSettings('buile_time', document.querySelector('#build-time').content.toString(),true)
         let theme_color = getSettings('theme_color');
         if (theme_color === 'auto') {
             setAutoTheme();
@@ -260,7 +261,7 @@ function AppContent() {
                 </Sider>
                 <Layout style={{ height: '100%', paddingTop: '68px'}}>
                     <Content>
-                        <HomePage />
+                        <ResultPage />
                         {contextMenu.visible && (
                             <RightClickMenu
                                 items={contextMenu.menuItems}

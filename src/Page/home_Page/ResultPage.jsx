@@ -8,7 +8,7 @@ const Step1 = lazy(() => import("./Step1.jsx"))
 const HomePage = lazy(() => import("./HomePage.jsx"))
 const Console = lazy(() => import("./Console.jsx"))
 const Chrome_ai_page = lazy(() => import("../Chrome_ai_page.jsx"))
-export function ResultPage() {
+function ResultPage() {
     const [page, setPage] = useState("home")
     const MemoizedHomePage = React.memo(HomePage);
     useEffect(() => {
@@ -71,4 +71,5 @@ export function ResultPage() {
         </div>
     )
 }
+export default  ResultPage
 

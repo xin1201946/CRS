@@ -122,7 +122,7 @@ function Nav_T (){
     function PhoneNav(){
         return (
             <>
-                <div className="dock dock-md bg-[--semi-color-nav-bg] backdrop-blur-md">
+                <div className="dock dock-md bg-[--semi-color-nav-bg] backdrop-blur-3xl">
                     <button className={selectItem===1?'dock-active':''} onClick={()=>{changeSelectKey({itemKey:'home'})}}>
                         <svg className="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <g fill="currentColor" strokeLinejoin="miter" strokeLinecap="butt">

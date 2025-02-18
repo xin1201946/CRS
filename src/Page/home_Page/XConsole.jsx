@@ -1,10 +1,10 @@
 "use client";
 
-import { useRef, useEffect } from "react";
-import { Terminal as XTerm } from "xterm";
-import { FitAddon } from "xterm-addon-fit";
-import { WebLinksAddon } from "xterm-addon-web-links";
-import "xterm/css/xterm.css";
+import {useEffect, useRef} from "react";
+import {Terminal as XTerm} from "@xterm/xterm";
+import {FitAddon} from "@xterm/addon-fit";
+import {WebLinksAddon} from "@xterm/addon-web-links";
+import "@xterm/xterm/css/xterm.css";
 
 // eslint-disable-next-line react/prop-types
 const Terminal = ({ onCommand, prompt = ">", promptInfo = () => "", initialMessage = "Welcome to the terminal!" }) => {
