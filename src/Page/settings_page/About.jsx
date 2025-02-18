@@ -11,7 +11,6 @@ import {detectDevice} from "../../code/check_platform.js";
 import {send_notify} from "../../code/SystemToast.jsx";
 import ServerInfo from "../info_Page/ServerInfo.jsx";
 
-
 function AboutWE(){
     const { t } = useTranslation();
     const { Text } = Typography;

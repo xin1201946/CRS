@@ -39,6 +39,7 @@
     "react-redux": "^9.1.2",
     "react-transition-group": "^4.4.5",
     "reset-css": "^5.0.2",
+    "rollup": "^4.34.8",
     "socket.io-client": "^4.8.1",
     "utils": "^0.2.2",
     "uuid": "^11.0.3",
@@ -70,6 +71,6 @@
     "globals": "^15.9.0",
     "postcss": "^8.5.1",
     "tailwindcss": "^3.4.17",
-    "vite": "^5.4.11"
+    "vite": "^6.1.0"
   }
 }

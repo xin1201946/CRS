@@ -32,6 +32,7 @@ import {emit} from "./code/PageEventEmitter.js";
 import {useTranslation} from "react-i18next";
 import {send_notify} from "./code/SystemToast.jsx";
 
+
 const Header1 = lazy(() => import("./Header/Header.jsx"))
 const ResultPage = lazy(() => import("./Page/home_Page/ResultPage.jsx"))
 const Nav_T = lazy(() => import("./Header/Nav_T.jsx"))

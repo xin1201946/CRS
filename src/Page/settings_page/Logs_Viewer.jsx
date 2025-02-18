@@ -20,6 +20,7 @@ import {detectDevice} from "../../code/check_platform.js";
 import {useTranslation} from "react-i18next";
 import {send_notify} from "../../code/SystemToast.jsx";
 
+
 function Logs_Viewer(){
     const { Text } = Typography;
     const { t } = useTranslation();

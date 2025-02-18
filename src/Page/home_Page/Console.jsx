@@ -6,6 +6,7 @@ import {useTranslation} from 'react-i18next';
 import {IconSearch} from "@douyinfe/semi-icons";
 import XConsole from "./XConsole.jsx";
 
+
 function Console(){
     const { t } = useTranslation();
     const {Content } = Layout;

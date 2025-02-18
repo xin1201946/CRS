@@ -6,6 +6,7 @@ import Logs_Viewer from "../settings_page/Logs_Viewer.jsx";
 import {useTranslation} from 'react-i18next';
 import "./Homepage.css"
 
+
 function HomePage() {
     const { t } = useTranslation();
     const [setPagevisible, setPagechange] = useState(false);

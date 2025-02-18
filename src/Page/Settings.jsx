@@ -1,5 +1,4 @@
 "use client"
-
 import React, {lazy, Suspense, useMemo, useState} from "react"
 import {Card, SideSheet} from "@douyinfe/semi-ui"
 import {IconArrowRight, IconBeaker, IconFile, IconInfoCircle, IconLanguage, IconSetting} from "@douyinfe/semi-icons"

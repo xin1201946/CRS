@@ -4,6 +4,7 @@ import "./resultpage_css.css"
 import {off, on} from "../../code/PageEventEmitter.js"
 import {getSettings, setSettings} from "../../code/Settings.js"
 
+
 const Step1 = lazy(() => import("./Step1.jsx"))
 const HomePage = lazy(() => import("./HomePage.jsx"))
 const Console = lazy(() => import("./Console.jsx"))
