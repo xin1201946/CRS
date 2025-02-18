@@ -54,7 +54,7 @@ function ResultPage() {
 
     return (
         <div id={"container"}>
-            <div id={"returnpage"} style={{ height: "100%" }}>
+            <div id={"returnpage"} style={{ height: "100%" ,width: "100%" }}>
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={page}
@@ -63,7 +63,7 @@ function ResultPage() {
                         exit="out"
                         variants={pageVariants}
                         transition={pageTransition}
-                        style={{ height: "100%" }}
+                        style={{ height: "100%",width: "100%" }}
                     >
                         {renderPage()}
                     </motion.div>

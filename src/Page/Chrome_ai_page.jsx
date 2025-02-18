@@ -1,16 +1,8 @@
-import {useCallback, useState} from "react";
-import {Chat, Space} from "@douyinfe/semi-ui";
-import {clearAiHistory, tryAskAI} from "../code/chrome_gemini_support.js";
-import {add_log} from "../code/log.js";
+import { useCallback, useState } from "react";
+import { tryAskAI } from "../code/chrome_gemini_support.js";
+import AIChatComponent from "./widget/AIChatComponent.jsx";
 
-const defaultMessage = [
-    // {
-    //     role: 'assistant',
-    //     id: '1',
-    //     createAt: 1715676751919,
-    //     content: "Hi, Can I help you?"
-    // },
-];
+const defaultMessage = [];
 
 const roleInfo = {
     user: {
@@ -32,65 +24,44 @@ function getId() {
     return `id-${id++}`;
 }
 
-
 function Chrome_ai_page() {
     const [message, setMessage] = useState(defaultMessage);
-    const onMessageSend = useCallback(async(content) => {
-        tryAskAI(content).then(result => {
+
+    const onMessageSend = useCallback(async (content) => {
+        const userMessage = {
+            role: 'User',
+            id: getId(),
+            createAt: Date.now(),
+            content: content,
+        };
+        setMessage((prevMessages) => [...prevMessages, userMessage]);
+
+        // Get AI response
+        try {
+            const result = await tryAskAI(content);
             const newAssistantMessage = {
                 role: 'assistant',
                 id: getId(),
                 createAt: Date.now(),
                 content: result,
-            }
-            setMessage((message) => ([ ...message, newAssistantMessage]));
-        })
-
-    }, []);
-
-    const onChatsChange = useCallback((chats) => {
-        setMessage(chats);
-    }, []);
-
-    const commonOuterStyle = {
-        height: window.innerHeight-100,
-        textAlign: "left",
-        width: window.innerWidth,
-    }
-    const onMessageReset = useCallback(async () => {
-        const currentMessage = [...message];
-        const lastMessage = currentMessage[currentMessage.length - 1];
-        try {
-            const result = await tryAskAI(currentMessage[currentMessage.length - 2].content);
-            const newLastMessage = {
-                ...lastMessage,
-                status: 'complete',
-                content: result
             };
-            setMessage([...currentMessage.slice(0, -1), newLastMessage]);
+            setMessage((prevMessages) => [...prevMessages, newAssistantMessage]);
         } catch (error) {
-            add_log('AI Error','error',error)
+            console.error("Error getting AI response:", error);
         }
-    }, [message]);
-    const clearAIhistory = useCallback(async() => {
-        await clearAiHistory()
-    },[])
+    }, []);
+
     return (
-        <Space align='start' style={{width:'100%'}}>
-            <Chat
-                key={'leftRightuserBubble'}
-                align={'leftRight'}
-                mode={'userBubble'}
-                style={commonOuterStyle}
-                chats={message}
-                roleConfig={roleInfo}
-                onChatsChange={onChatsChange}
-                onMessageSend={onMessageSend}
-                onMessageReset={onMessageReset}
-                clearContext={clearAIhistory}
-                showClearContext
-            />
-        </Space>
+        <AIChatComponent
+            roleInfo={roleInfo}
+            messages={message}
+            onSendMessage={onMessageSend}
+            backgroundColor="bg-gray-50"
+            userBubbleColor="bg-blue-500"
+            aiBubbleColor="bg-white"
+            textColor="text-gray-800"
+        />
     );
 }
-export default Chrome_ai_page
+
+export default Chrome_ai_page;

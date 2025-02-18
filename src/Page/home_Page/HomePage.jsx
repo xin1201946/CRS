@@ -56,10 +56,10 @@ function HomePage() {
                     }}
                 >
                     <div
-                        className="w-[300px] h-[300px] rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 blur-[150px]"
+                        className="w-[300px] h-[300px] rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 blur-[200px]"
                         style={{
                             position: "fixed",
-                            top: "30%",
+                            top: "50%",
                             left: "50%",
                             transform: "translate(-50%, -50%)",
                         }}

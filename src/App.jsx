@@ -97,6 +97,7 @@ function AppContent() {
                         {
                             icon: <Copy className="w-4 h-4 text-blue-400" />,
                             label: selectedText ? t('Copy selected text') : t('Copy'),
+                            rightElement:<span className="text-xs text-gray-400">Ctrl+C</span>,
                             onClick: () => {
                                 const text = target.value || target.textContent;
                                 if (selectedText) {
@@ -113,6 +114,7 @@ function AppContent() {
                         {
                             icon: <Clipboard className="w-4 h-4 text-green-400" />,
                             label: t('Paste'),
+                            rightElement:<span className="text-xs text-gray-400">Ctrl+V</span>,
                             onClick: async () => {
                                 try {
                                     const text = await navigator.clipboard.readText();
@@ -137,6 +139,7 @@ function AppContent() {
                         {
                             icon: <RotateCcw className="w-4 h-4 text-pink-400" />,
                             label: t('Refresh'),
+                            rightElement:<span className="text-xs text-gray-400">F5</span>,
                             onClick: () => { window.location.reload() },
                         },
                         {
@@ -261,17 +264,15 @@ function AppContent() {
                     <Nav_T />
                 </Sider>
                 <Layout style={{ height: '100%', paddingTop: '68px'}}>
-                    <Content>
-                        <ResultPage />
-                        {contextMenu.visible && (
-                            <RightClickMenu
-                                items={contextMenu.menuItems}
-                                x={contextMenu.x}
-                                y={contextMenu.y}
-                                onClose={() => setContextMenu({ ...contextMenu, visible: false })}
-                            />
-                        )}
-                    </Content>
+                    <ResultPage />
+                    {contextMenu.visible && (
+                        <RightClickMenu
+                            items={contextMenu.menuItems}
+                            x={contextMenu.x}
+                            y={contextMenu.y}
+                            onClose={() => setContextMenu({ ...contextMenu, visible: false })}
+                        />
+                    )}
                 </Layout>
             </Layout>
 
