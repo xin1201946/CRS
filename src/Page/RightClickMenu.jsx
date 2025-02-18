@@ -1,7 +1,6 @@
-import {useEffect, useRef, useState} from 'react';
-import {ChevronRight} from 'lucide-react';
-import "./RightClickMenu.css"
-
+import { useEffect, useRef, useState } from 'react';
+import { ChevronRight } from 'lucide-react';
+import './RightClickMenu.css';
 
 // eslint-disable-next-line react/prop-types
 const MenuList = ({ items, isSubmenu = false, onClose }) => {
@@ -29,11 +28,11 @@ const MenuList = ({ items, isSubmenu = false, onClose }) => {
     };
 
     return (
-        <div className={`bg-[--semi-color-bg-0] text-sm rounded-lg shadow-lg py-2 min-w-[200px] ${
-            isSubmenu ? 'absolute left-full top-0 ml-1' : ''
-        }`}
+        <div
+            className={`bg-[--semi-color-bg-0] text-sm rounded-lg shadow-lg py-2 min-w-[200px] ${
+                isSubmenu ? 'absolute left-full top-0 ml-1' : ''
+            }`}
         >
-            {/* eslint-disable-next-line react/prop-types */}
             {items.map((item, index) => (
                 <div
                     key={index}
@@ -48,20 +47,14 @@ const MenuList = ({ items, isSubmenu = false, onClose }) => {
                         <div className="w-5 h-5 mr-3 flex items-center justify-center">
                             {item.icon}
                         </div>
-                        <span className="flex-grow" style={{color:"var(--semi-color-text-0)"}}>{item.label}</span>
-                        {item.rightElement && (
-                            <div className="ml-4">{item.rightElement}</div>
-                        )}
-                        {item.subItems && (
-                            <ChevronRight className="w-4 h-4 ml-2 text-gray-400" />
-                        )}
+                        <span className="flex-grow" style={{ color: 'var(--semi-color-text-0)' }}>
+                            {item.label}
+                        </span>
+                        {item.rightElement && <div className="ml-4">{item.rightElement}</div>}
+                        {item.subItems && <ChevronRight className="w-4 h-4 ml-2 text-gray-400" />}
                     </div>
                     {item.subItems && activeSubmenu === index && (
-                        <MenuList
-                            items={item.subItems}
-                            isSubmenu={true}
-                            onClose={onClose}
-                        />
+                        <MenuList items={item.subItems} isSubmenu={true} onClose={onClose} />
                     )}
                 </div>
             ))}
@@ -70,7 +63,7 @@ const MenuList = ({ items, isSubmenu = false, onClose }) => {
 };
 
 // eslint-disable-next-line react/prop-types
-function RightClickMenu ({ items, x, y, onClose }) {
+function RightClickMenu({ items, x, y, onClose }) {
     const menuRef = useRef(null);
 
     useEffect(() => {
@@ -80,10 +73,29 @@ function RightClickMenu ({ items, x, y, onClose }) {
             }
         };
 
-        // 使用 mousedown 而不是 click，以确保在拖动时也能正确处理
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [onClose]);
+
+    // 获取窗口的宽度和高度
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    // 获取菜单的宽度和高度
+    const [menuDimensions, setMenuDimensions] = useState({ width: 0, height: 0 });
+
+    useEffect(() => {
+        if (menuRef.current) {
+            setMenuDimensions({
+                width: menuRef.current.offsetWidth,
+                height: menuRef.current.offsetHeight,
+            });
+        }
+    }, [items]); // 如果 items 更新了，则重新计算菜单的宽高
+
+    // 计算菜单的最终位置，确保不超出屏幕
+    const adjustedX = Math.min(x, windowWidth - menuDimensions.width);
+    const adjustedY = Math.min(y, windowHeight - menuDimensions.height);
 
     return (
         <div
@@ -92,8 +104,8 @@ function RightClickMenu ({ items, x, y, onClose }) {
             style={{
                 textAlign: 'left',
                 position: 'fixed',
-                left: x,
-                top: y,
+                left: adjustedX,
+                top: adjustedY,
                 zIndex: 99999,
             }}
             onClick={(e) => e.stopPropagation()} // 阻止点击事件冒泡
@@ -101,6 +113,6 @@ function RightClickMenu ({ items, x, y, onClose }) {
             <MenuList items={items} onClose={onClose} />
         </div>
     );
-};
+}
 
-export default RightClickMenu
+export default RightClickMenu;
