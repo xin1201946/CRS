@@ -3,8 +3,9 @@
 import { useState, useRef, useEffect } from "react"
 import ReactMarkdown from "react-markdown"
 import { Send, Copy, ArrowDown } from "lucide-react"
-import {send_notify} from "../../code/SystemToast.jsx";
-import {t} from "i18next";
+import { send_notify } from "../../code/SystemToast.jsx"
+import { t } from "i18next"
+import {Button, TextArea} from "@douyinfe/semi-ui"
 
 const AIChatComponent = ({
                              roleInfo,
@@ -17,11 +18,12 @@ const AIChatComponent = ({
                          }) => {
     const [input, setInput] = useState("")
     const [showScrollButton, setShowScrollButton] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const chatContainerRef = useRef(null)
 
     useEffect(() => {
         scrollToBottom(false)
-    }, []) // Removed unnecessary dependency: messages
+    }, [])
 
     useEffect(() => {
         const container = chatContainerRef.current
@@ -44,11 +46,13 @@ const AIChatComponent = ({
         }
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        if (input.trim()) {
-            onSendMessage(input)
+        if (input.trim() && !isLoading) {
+            setIsLoading(true)
+            await onSendMessage(input)
             setInput("")
+            setIsLoading(false)
         }
     }
 
@@ -58,12 +62,18 @@ const AIChatComponent = ({
 
     const copyToClipboard = (text) => {
         navigator.clipboard.writeText(text).then(() => {
-            send_notify(t('Copy successful'), "", null, 3, "success", false);
+            send_notify(t("Copy successful"), "", null, 3, "success", false)
         })
     }
 
+    const handleTextKeyDown = (event) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault(); // 阻止默认的换行行为
+        }
+    };
+
     return (
-        <div className={`flex flex-col h-full ${backgroundColor} relative`} style={{textAlign: "left"}}>
+        <div className={`flex flex-col h-full ${backgroundColor} relative`} style={{ textAlign: "left" }}>
             <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4 scroll-smooth">
                 {messages.map((message, index) => {
                     const isUser = message.role === roleInfo.user.name
@@ -71,12 +81,14 @@ const AIChatComponent = ({
                     return (
                         <div key={index} className={`flex items-start ${isUser ? "justify-end" : "justify-start"}`}>
                             {!isUser && (
-                                <img src={avatar || "/placeholder.svg"} alt={message.role} className="w-8 h-8 rounded-full mr-2" />
+                                <img src={avatar} alt={message.role} className="w-8 h-8 rounded-full mr-2" />
                             )}
                             <div className="flex flex-col max-w-[50%]">
                                 <div
                                     className={`rounded-lg p-3 group relative ${
-                                        isUser ? `${userBubbleColor} text-white` : `${aiBubbleColor} ${textColor} border border-gray-200`
+                                        isUser
+                                            ? `${userBubbleColor} text-[ --semi-color-text-0]`
+                                            : `${aiBubbleColor} ${textColor} border border-[--semi-color-tertiary-light-hover]`
                                     }`}
                                 >
                                     <ReactMarkdown>{message.content}</ReactMarkdown>
@@ -92,39 +104,54 @@ const AIChatComponent = ({
                                 </div>
                             </div>
                             {isUser && (
-                                <img src={avatar || "/placeholder.svg"} alt={message.role} className="w-8 h-8 rounded-full ml-2" />
+                                <img src={avatar} alt={message.role} className="w-8 h-8 rounded-full ml-2" />
                             )}
                         </div>
                     )
                 })}
+                {isLoading && (
+                    <div className="flex items-start justify-start">
+                        <img
+                            src={roleInfo.assistant.avatar || "/placeholder.svg"}
+                            alt="Assistant"
+                            className="w-8 h-8 rounded-full mr-2"
+                        />
+                        <div
+                            className={`rounded-lg p-3 ${aiBubbleColor} ${textColor} border border-[--semi-color-tertiary-light-hover]`}
+                        >
+                            Thinking...
+                        </div>
+                    </div>
+                )}
             </div>
             {showScrollButton && (
                 <button
                     onClick={() => scrollToBottom(true)}
-                    className="absolute bottom-20 right-4 bg-gray-800 text-white rounded-full p-2 shadow-lg transition-opacity hover:bg-gray-700"
+                    className="absolute bottom-20 right-4 bg-[--semi-color-tertiary-light-default] text-[ --semi-color-text-0] rounded-full p-2 shadow-lg transition-opacity hover:bg-gray-700"
                 >
                     <ArrowDown size={20} />
                 </button>
             )}
-            <form onSubmit={handleSubmit} className="p-4 border-t border-gray-200">
+            <form onSubmit={handleSubmit} className="p-4 border-t border-[--semi-color-tertiary-light-hover]">
                 <div className="flex items-center">
-                    <input
-                        type="text"
+                    <TextArea
                         value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        className="flex-1 border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Type your message..."
+                        autosize={{ minRows: 1, maxRows: 5}}
+                        onChange={(value, event) => setInput(event.target.value)}
+                        onKeyDown={handleTextKeyDown}
+                        disabled={isLoading}
+                        placeholder="Type your message , press Enter to send the message...."
                     />
-                    <button
-                        type="submit"
-                        className={`${userBubbleColor} text-white px-4 py-2 rounded-r-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                    >
-                        <Send size={20} />
-                    </button>
+                    <Button type="submit" onClick={handleSubmit} className={"h-max w-auto"} disabled={isLoading}>
+                        <Send size={20}/>
+                    </Button>
                 </div>
             </form>
+            <span className={"text-gray-400 text-center"}>AI may make mistakes. Please use with discretion.</span>
+            <br/>
         </div>
     )
 }
 
 export default AIChatComponent
+

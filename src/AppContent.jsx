@@ -23,6 +23,9 @@ import {set_language} from "./code/language.js";
 import {emit} from "./code/PageEventEmitter.js";
 import RightClickMenu from "./Page/RightClickMenu.jsx";
 import Sider from "@douyinfe/semi-ui/lib/es/layout/Sider.js";
+import register from "./code/registerServiceWorker.js";
+import initializeSettings from "./code/QuickLoadingService.js";
+
 const Header1 = lazy(() => import("./Header/Header.jsx"))
 const ResultPage = lazy(() => import("./Page/home_Page/ResultPage.jsx"))
 const Nav_T = lazy(() => import("./Header/Nav_T.jsx"))
@@ -32,7 +35,15 @@ const Logs_Viewer = lazy(() => import("./Page/settings_page/Logs_Viewer.jsx"))
 const ServerInfo=lazy(() => import("./Page/info_Page/ServerInfo.jsx"))
 
 function AppContent() {
-
+    // Register services and logs
+    register();
+    initializeSettings();
+    let theme_color = getSettings('theme_color');
+    if (theme_color === 'auto') {
+        setAutoTheme();
+    } else {
+        queck_change_theme(theme_color);
+    }
 
     const { t } = useTranslation();
     const { Header} = Layout;
@@ -66,12 +77,7 @@ function AppContent() {
     useEffect(() => {
         add_log('Hook Theme...', 'successfully', 'UI Loading(3/3)...');
         setSettings('buile_time', document.querySelector('#build-time').content.toString(),true)
-        let theme_color = getSettings('theme_color');
-        if (theme_color === 'auto') {
-            setAutoTheme();
-        } else {
-            queck_change_theme(theme_color);
-        }
+
 
         if (detectDevice() === "PC" && getSettings("use_app_content_menu") === "true") {
             const handleGlobalContextMenu = (event) => {
@@ -241,8 +247,6 @@ function AppContent() {
             };
         }
     }, [Log_Page_visible_change, Server_Info_visible_change, contextMenu, settingA_visible_change, settingB_visible_change, t]);
-
-
 
 
     return (

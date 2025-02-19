@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 function ProcessorStats({
                             mainColor = "#6366f1",
                             backgroundColors = "rgb(60, 60, 60)",
-                            icon = "/public/Processor.png",
+                            icon = "",
                             title = "Processor",
                             content = "Intel(R) Core(TM) i5-7400 CPU",
                             percentage = 22,

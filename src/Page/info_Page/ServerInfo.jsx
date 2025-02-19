@@ -290,7 +290,7 @@ function ServerInfo() {
                         <ProcessorStats
                             mainColor="#6366f1"
                             content={cpuName}
-                            icon={"./processor.png"}
+                            icon={"./processor.webp"}
                             backgroundColor="#2D2D2D"
                             percentage={parseInt(cpu_percent[cpu_percent.length - 1])}
                             bottomStats={{
@@ -302,7 +302,7 @@ function ServerInfo() {
                         <ProcessorStats
                             mainColor="orange"
                             backgroundColor="#2D2D2D"
-                            icon={"./memory.png"}
+                            icon={"./memory.webp"}
                             title="Memory"
                             content={platformR}
                             percentage={parseInt(mem_percent[mem_percent.length - 1])}

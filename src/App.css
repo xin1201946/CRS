@@ -8,7 +8,6 @@
 @layer tailwind-utils {
   @tailwind utilities;
 }
-@plugin "daisyui";
 
 #root {
   text-align: center;

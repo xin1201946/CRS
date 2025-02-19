@@ -1,15 +1,13 @@
 import { lazy, Suspense } from 'react';
 import './App.css';
-import initializeSettings from './code/QuickLoadingService.js';
 import { add_log } from './code/log.js';
-import register from './code/registerServiceWorker.js';
-import { log } from "./Theme/prettyLog.jsx";
 import { motion } from "framer-motion"
+
 const AppContent = lazy(() => import('./AppContent.jsx'));
 
 function LoadingScreen() {
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-[--semi-color-bg-0] overflow-hidden">
+        <div className={`flex flex-col items-center justify-center min-h-screen bg-[--semi-color-bg-0] overflow-hidden`}>
             <div className="flex flex-col items-center gap-16">
                 {/* Logo Container */}
                 <div className="relative w-32 h-32">
@@ -62,17 +60,12 @@ function LoadingScreen() {
     );
 }
 function App() {
-    // Register services and logs
-    register();
-    add_log('UI Loading...', 'successfully', 'UI Loading(1/3)...');
-    add_log('Check Settings...', 'successfully', 'UI Loading(2/3)...');
-    initializeSettings();
-    log.title("Here is CCRS")
+
     add_log('UI was Start...', 'successfully', 'Start successfully');
 
     return (
         <Suspense fallback={<LoadingScreen />}>
-            <AppContent />
+            <AppContent/>
         </Suspense>
     );
 }
