@@ -12,7 +12,7 @@ const register = () => {
             }
         };
         wb.addEventListener("waiting", checkForUpdate);
-        wb.register();
+        wb.register()
     }
 };
 
