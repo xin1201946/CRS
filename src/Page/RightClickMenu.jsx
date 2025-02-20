@@ -6,6 +6,28 @@ import './RightClickMenu.css';
 const MenuList = ({ items, isSubmenu = false, onClose }) => {
     const [activeSubmenu, setActiveSubmenu] = useState(null);
     const timeoutRef = useRef();
+    const menuRef = useRef(null);
+    const [submenuPosition, setSubmenuPosition] = useState('right');
+
+    // 检查子菜单位置并设置最佳显示方向
+    const checkSubmenuPosition = () => {
+        if (menuRef.current && isSubmenu) {
+            const menuRect = menuRef.current.getBoundingClientRect();
+            const windowWidth = window.innerWidth;
+            const submenuWidth = 200; // 子菜单的最小宽度
+
+            if (menuRect.right + submenuWidth > windowWidth) {
+                setSubmenuPosition('left');
+            } else {
+                setSubmenuPosition('right');
+            }
+        }
+    };
+
+    // 在组件挂载和更新时检查子菜单位置
+    useEffect(() => {
+        checkSubmenuPosition();
+    }, []);
 
     const handleMouseEnter = (index) => {
         clearTimeout(timeoutRef.current);
@@ -29,9 +51,8 @@ const MenuList = ({ items, isSubmenu = false, onClose }) => {
 
     return (
         <div
-            className={`bg-[--semi-color-bg-0] text-sm rounded-lg shadow-lg py-2 min-w-[200px] ${
-                isSubmenu ? 'absolute left-full top-0 ml-1' : ''
-            }`}
+            ref={menuRef}
+            className={`bg-[--semi-color-bg-0] text-sm rounded-lg shadow-lg py-2 min-w-[200px] ${isSubmenu ? submenuPosition === 'right' ? 'absolute left-full top-0 ml-1' : 'absolute right-full top-0 mr-1' : ''}`}
         >
             {items.map((item, index) => (
                 <div
@@ -51,7 +72,11 @@ const MenuList = ({ items, isSubmenu = false, onClose }) => {
                             {item.label}
                         </span>
                         {item.rightElement && <div className="ml-4">{item.rightElement}</div>}
-                        {item.subItems && <ChevronRight className="w-4 h-4 ml-2 text-gray-400" />}
+                        {item.subItems && (
+                            <ChevronRight 
+                                className={`w-4 h-4 ml-2 text-gray-400 ${submenuPosition === 'left' ? 'transform rotate-180' : ''}`} 
+                            />
+                        )}
                     </div>
                     {item.subItems && activeSubmenu === index && (
                         <MenuList items={item.subItems} isSubmenu={true} onClose={onClose} />

@@ -11,6 +11,21 @@ export default defineConfig({
     outDir: './dist',
     // 生产环境是否生成 sourceMap 文件
     sourcemap: true,
+    // 启用br压缩
+    brotliSize: true,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    },
+    // 配置压缩选项
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
+      }
+    }
   },
   server: {
     // 服务器端口号
