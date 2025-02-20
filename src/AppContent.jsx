@@ -1,3 +1,4 @@
+// 导入必要的依赖和组件
 import {useTranslation} from "react-i18next";
 import {Layout, SideSheet} from "@douyinfe/semi-ui";
 import {lazy, Suspense, useEffect, useState} from "react";
@@ -26,6 +27,7 @@ import Sider from "@douyinfe/semi-ui/lib/es/layout/Sider.js";
 import register from "./code/registerServiceWorker.js";
 import initializeSettings from "./code/QuickLoadingService.js";
 
+// 懒加载主要组件
 const Header1 = lazy(() => import("./Header/Header.jsx"))
 const ResultPage = lazy(() => import("./Page/home_Page/ResultPage.jsx"))
 const Nav_T = lazy(() => import("./Header/Nav_T.jsx"))
@@ -34,6 +36,7 @@ const Advanced_Settings = lazy(() => import("./Page/settings_page/AdvancedSettin
 const Logs_Viewer = lazy(() => import("./Page/settings_page/Logs_Viewer.jsx"))
 const ServerInfo=lazy(() => import("./Page/info_Page/ServerInfo.jsx"))
 
+// 应用内容主组件
 function AppContent() {
     // Register services and logs
     register();

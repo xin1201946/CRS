@@ -1,10 +1,13 @@
+// 导入必要的React组件和功能模块
 import { lazy, Suspense } from 'react';
 import './App.css';
 import { add_log } from './code/log.js';
 import { motion } from "framer-motion"
 
+// 懒加载主要内容组件，优化首次加载性能
 const AppContent = lazy(() => import('./AppContent.jsx'));
 
+// 加载屏幕组件，在主内容加载时显示
 function LoadingScreen() {
     return (
         <div className={`flex flex-col items-center justify-center min-h-screen bg-[--semi-color-bg-0] overflow-hidden`}>
@@ -59,10 +62,12 @@ function LoadingScreen() {
         </div>
     );
 }
+// 主应用组件
 function App() {
-
+    // 记录应用启动日志
     add_log('UI was Start...', 'successfully', 'Start successfully');
 
+    // 使用Suspense包装懒加载的内容，并显示加载屏幕
     return (
         <Suspense fallback={<LoadingScreen />}>
             <AppContent/>

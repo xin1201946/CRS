@@ -9,7 +9,6 @@
     }
 }
 
-
 .context-menu-animation {
     animation: menuFadeIn 0.15s ease-out;
     transform-origin: top left;

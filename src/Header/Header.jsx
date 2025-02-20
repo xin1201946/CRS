@@ -78,10 +78,11 @@ function Header1 (){
             set_ThemeIcon(<MdOutlineLightMode style={{width:'20px',height:'20px'}}/>);
         }
     }
+    // 网络检查组件
     function MyComponent() {
         const [networkCheckResult, setNetworkCheckResult] = useState([null, null, null]);
 
-        // 检查网络连接函数
+        // 检查服务器连接状态
         function checkNetworks() {
             return new Promise((resolve) => {
                 checkNetwork(getServer()).then((result) => {

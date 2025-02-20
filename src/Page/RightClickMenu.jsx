@@ -52,10 +52,11 @@ const MenuList = ({ items, isSubmenu = false, onClose }) => {
     return (
         <div
             ref={menuRef}
-            className={`bg-[--semi-color-bg-0] text-sm rounded-lg shadow-lg py-2 min-w-[200px] ${isSubmenu ? submenuPosition === 'right' ? 'absolute left-full top-0 ml-1' : 'absolute right-full top-0 mr-1' : ''}`}
+            className={` bg-[--semi-color-bg-1]  text-sm rounded-lg shadow-lg py-2 min-w-[200px] ${isSubmenu ? submenuPosition === 'right' ? 'absolute left-full top-0 ml-1' : 'absolute right-full top-0 mr-1' : ''}`}
         >
             {items.map((item, index) => (
                 <div
+                
                     key={index}
                     className="relative"
                     onMouseEnter={() => handleMouseEnter(index)}
@@ -125,7 +126,7 @@ function RightClickMenu({ items, x, y, onClose }) {
     return (
         <div
             ref={menuRef}
-            className="context-menu-animation"
+            className="context-menu-animation "
             style={{
                 textAlign: 'left',
                 position: 'fixed',

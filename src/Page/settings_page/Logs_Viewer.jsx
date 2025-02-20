@@ -82,6 +82,7 @@ function Logs_Viewer(){
         }
     }
     // 计算百分比的函数
+    // 计算百分比的函数
     function calculatePercentage(part, total) {
         return (part / total * 100).toFixed(2); // 保留两位小数
     }
