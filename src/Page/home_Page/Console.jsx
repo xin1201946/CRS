@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import {Button, Card, Input, Layout, Modal, Space, Table} from "@douyinfe/semi-ui";
+import {Button, ButtonGroup, Card, Input, Layout, Modal, Space, Table} from "@douyinfe/semi-ui";
 import {getServer} from "../../code/get_server.js";
 import {useMemo, useState} from "react";
 import {useTranslation} from 'react-i18next';
@@ -229,11 +229,11 @@ Type 'help' to see available commands.
                         zIndex: 99,
                         alignItems: 'center',
                     }}>
-                    <Space wrap={true}>
+                    <ButtonGroup>
                         <Button onClick={Search_history_Lungu}>{t('Search_history_Lungu')}</Button>
                         <Button onClick={Search_moju_Lungu}>{t('Search_moju_lungu')}</Button>
                         <Button onClick={()=>{view_table()}}>{t('History')}</Button>
-                    </Space>
+                    </ButtonGroup>
                 </Card>
             </div>
             <Modal
