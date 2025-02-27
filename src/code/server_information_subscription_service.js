@@ -9,9 +9,32 @@ import {v4 as uuidv4} from "uuid";
 const SOCKET_TIMEOUT = 5000;  // 设置超时阈值，单位为毫秒
 
 // 用于创建并管理 socket 连接的函数
-function createSocketConnection(uuid, onConnect, onMessage,onSysinfo, onRegister) {
-    const socket = io(getServer(), { timeout: SOCKET_TIMEOUT });
+function createSocketConnection(uuid, onConnect, onMessage, onSysinfo, onRegister) {
+    // 配置 Socket.IO 选项
+    const socketOptions = {
+        timeout: SOCKET_TIMEOUT,
+        transports: ['websocket'],
+        secure: getServer().startsWith('https'),
+        rejectUnauthorized: false, // 允许自签名证书
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000
+    };
 
+    const socket = io(getServer(), socketOptions);
+
+    // 重连事件处理
+    socket.on('reconnect_attempt', (attemptNumber) => {
+        add_log('正在尝试重新连接', 'warning', `第 ${attemptNumber} 次重试`);
+    });
+
+    socket.on('reconnect', (attemptNumber) => {
+        add_log('重新连接成功', 'successfully', `在第 ${attemptNumber} 次尝试后`);
+        // 重新注册
+        socket.emit('register', { uuid });
+    });
+
+    // 原有的事件处理
     socket.emit('register', { uuid });
 
     socket.on('connect', () => {
@@ -38,24 +61,30 @@ function createSocketConnection(uuid, onConnect, onMessage,onSysinfo, onRegister
         onRegister && onRegister(data);  // 可传递自定义注册事件回调
     });
 
+    // 优化错误处理
     socket.on('connect_error', (error) => {
-        add_log('连接服务器失败', 'error', error.message);
+        const protocol = getServer().startsWith('https') ? 'HTTPS' : 'HTTP';
+        add_log(`${protocol}连接失败`, 'error', `${error.message}`);
+        
+        // 如果是SSL相关错误，给出更明确的提示
+        if (error.message.includes('SSL') || error.message.includes('certificate')) {
+            send_notify('连接错误', '服务器SSL证书验证失败，请检查证书配置');
+        }
     });
 
-    socket.on('connect_timeout', () => {
-        add_log('连接超时，请稍后重试', 'error');
-    });
+    // 优化清理逻辑
+    const cleanup = () => {
+        socket.off();
+        socket.close();
+    };
 
-    socket.on('error', (err) => {
-        add_log('网络错误', 'error', err.message);
-    });
+    window.addEventListener('beforeunload', cleanup);
 
-    // 页面卸载或组件销毁时取消订阅
-    window.addEventListener('beforeunload', () => {
-        socket.off();  // 取消所有事件监听器
-    });
-
-    return socket;  // 返回 socket 实例以供其他用途
+    // 返回清理函数，方便在组件卸载时调用
+    return {
+        socket,
+        cleanup
+    };
 }
 
 export function reflash_sysInfo() {

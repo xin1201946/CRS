@@ -204,7 +204,7 @@ This terminal supports:
 - Clickable links
 - Basic command processing
 
-Type 'help' to see available commands.
+Enter 'help' to view the help information, or enter '--help' after entering 'sql' to view the help for SQL commands.
   `
     return (
         <>
