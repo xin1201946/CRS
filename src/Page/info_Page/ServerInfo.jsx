@@ -31,67 +31,80 @@ function ServerInfo() {
     const [selectGpu,setselectGpu] = useState("");
     const [selectNetwork,setselectNetwork] = useState("");
 
-    const set_info= (data) => {
-        if (typeof data !== 'object' || data === null) {
-            return;
-        }
-        for (const key in data) {
-            switch (key) {
-                case "cpu_name":
-                    setcpuname(data[key]);
-                    break;
-                case "currentTime":
-                    setCurrent_time(data[key]);
-                    break;
-                case "userCount":
-                    setUsercount(data[key]);
-                    break;
-                case "cpuCount":
-                    setCpucount(data[key]);
-                    break;
-                case "cpuPercent":
-                    setcpu_percent(data[key]);
-                    break;
-                case "memPercent":
-                    setmem_percent(data[key]);
-                    break;
-                case "memTotal":
-                    setmem_total(data[key]);
-                    break;
-                case "externalIp":
-                    setexternal_ip(data[key]);
-                    break;
-                case "gpu":
-                    setgpu(data[key]);
-                    break;
-                case "hostname":
-                    sethostname(data[key]);
-                    break;
-                case "serverInfo":
-                    setserver_info(data[key]);
-                    break;
-                case "platform":
-                    setplatformR(data[key]);
-                    break;
-                case "swapTotal":
-                    setswaptotal(data[key]);
-                    break;
-                case "swapPercent":
-                    setswappercent(data[key]);
-                    break;
-                case "runTime":
-                    setrunTime(data[key]);
-                    break;
-                case "python":
-                    setpython(data[key]);
-                    break;
-                case "network":
-                    // 假设 data[key] 是对象，且它的值是网卡信息
-                    setnetwork(Object.values(data[key]).filter(network => network.is_up === true));
-                    break;
+    const set_info = (data) => {
+        try {
+            if (typeof data !== 'object' || data === null) {
+                return;
             }
+
+            for (const key in data) {
+                if (!Object.prototype.hasOwnProperty.call(data, key)) {
+                    continue;
+                }
+
+                switch (key) {
+                    case "cpu_name":
+                        setcpuname(data[key]);
+                        break;
+                    case "currentTime":
+                        setCurrent_time(data[key]);
+                        break;
+                    case "userCount":
+                        setUsercount(data[key]);
+                        break;
+                    case "cpuCount":
+                        setCpucount(data[key]);
+                        break;
+                    case "cpuPercent":
+                        setcpu_percent(data[key]);
+                        break;
+                    case "memPercent":
+                        setmem_percent(data[key]);
+                        break;
+                    case "memTotal":
+                        setmem_total(data[key]);
+                        break;
+                    case "externalIp":
+                        setexternal_ip(data[key]);
+                        break;
+                    case "gpu":
+                        setgpu(data[key]);
+                        break;
+                    case "hostname":
+                        sethostname(data[key]);
+                        break;
+                    case "serverInfo":
+                        setserver_info(data[key]);
+                        break;
+                    case "platform":
+                        setplatformR(data[key]);
+                        break;
+                    case "swapTotal":
+                        setswaptotal(data[key]);
+                        break;
+                    case "swapPercent":
+                        setswappercent(data[key]);
+                        break;
+                    case "runTime":
+                        setrunTime(data[key]);
+                        break;
+                    case "python":
+                        setpython(data[key]);
+                        break;
+                    case "network":
+                        // 假设 data[key] 是对象，且它的值是网卡信息
+                        setnetwork(Object.values(data[key]).filter(network => network.is_up === true));
+                        break;
+                    default:
+                        // 忽略未知的键
+                        break;
+                }
+            }
+        } catch (error) {
+            console.error('Error in set_info:', error);
+            // 你可以在这里添加更多的错误处理逻辑，比如记录日志或者通知用户
         }
-    }
+    };
 
     useEffect(() => {
         const intervalId = setInterval(() => {
