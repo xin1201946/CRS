@@ -6,6 +6,7 @@ import {getAPI} from "../../code/server_api_settings.js";
 import {useTranslation} from 'react-i18next';
 import {send_notify} from "../../code/SystemToast.jsx";
 import {add_log} from "../../code/log.js";
+import {getSettings} from "../../code/Settings.js";
 
 
 function Step1() {
@@ -13,7 +14,7 @@ function Step1() {
     const [b1en,setb1en]=useState(true);
     const [datas,setdata]=useState([]);
     const [loading, toggleLoading] = useState(false);
-    let action = getServer()+getAPI('upload');
+    let action = getServer()+getAPI('upload')+"?uuid="+getSettings('uuid');
     let clearfile = getServer()+getAPI('clear');
     let imageOnly = '.png,.jpeg,.jpg';
     function setLoading(bool){
@@ -25,7 +26,7 @@ function Step1() {
     async function get_result() {
         setLoading(true)
         try {
-            const response = await fetch(getServer() + getAPI('start'));
+            const response = await fetch(getServer() + getAPI('start')+"?uuid="+getSettings('uuid'));
             const data = await response.json(); // 根据需要解析数据
             update(data); // 调用 update 函数处理数据
         } catch (error) {
