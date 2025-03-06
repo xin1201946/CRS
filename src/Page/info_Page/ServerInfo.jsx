@@ -1,35 +1,35 @@
-import {Card, Descriptions, Progress, Space, TabPane, Tabs} from "@douyinfe/semi-ui";
-import {VChart} from "@visactor/react-vchart";
-import {useEffect, useState} from "react";
+import { Card, Descriptions, Progress, Space, TabPane, Tabs } from "@douyinfe/semi-ui";
+import { VChart } from "@visactor/react-vchart";
+import { useEffect, useState } from "react";
 import getServerInfoSnapshot from "../../code/get_server_info.js";
-import {t} from "i18next";
+import { t } from "i18next";
 import ProcessorStats from "../widget/ProcessorStats.jsx";
 
 function ServerInfo() {
-    const [current_time,setCurrent_time] = useState([[0]]);
-    const [Usercount,setUsercount] = useState(0);
-    const [cpuName,setcpuname] = useState("");
-    const [Cpucount,setCpucount] = useState(0);
-    const [cpu_percent,setcpu_percent] = useState([[0]]);
-    const [mem_percent,setmem_percent] = useState([[0]]);
-    const [mem_total,setmem_total] = useState(0);
-    const [external_ip,setexternal_ip] = useState("");
-    const [gpu,setgpu] = useState([]);
-    const [network,setnetwork] = useState([]);
-    const [hostname,sethostname] = useState("");
-    const [server_info,setserver_info] = useState("Waiting");
-    const [platformR,setplatformR] = useState("");
-    const [swaptotal,setswaptotal] = useState(0);
-    const [swappercent,setswappercent] = useState(0);
-    const [runTime,setrunTime] = useState("");
-    const [python,setpython] = useState({
-        "version":"Unknown",
-        "released":"",
-        "RepairNumber":""
+    const [current_time, setCurrent_time] = useState([]);
+    const [Usercount, setUsercount] = useState(0);
+    const [cpuName, setcpuname] = useState("");
+    const [Cpucount, setCpucount] = useState(0);
+    const [cpu_percent, setcpu_percent] = useState([]);
+    const [mem_percent, setmem_percent] = useState([]);
+    const [mem_total, setmem_total] = useState(0);
+    const [external_ip, setexternal_ip] = useState("");
+    const [gpu, setgpu] = useState({});
+    const [network, setnetwork] = useState({});
+    const [hostname, sethostname] = useState("");
+    const [server_info, setserver_info] = useState("Waiting");
+    const [platformR, setplatformR] = useState("");
+    const [swaptotal, setswaptotal] = useState(0);
+    const [swappercent, setswappercent] = useState(0);
+    const [runTime, setrunTime] = useState("");
+    const [python, setpython] = useState({
+        "version": "Unknown",
+        "released": "",
+        "RepairNumber": ""
     });
 
-    const [selectGpu,setselectGpu] = useState("");
-    const [selectNetwork,setselectNetwork] = useState("");
+    const [selectGpu, setselectGpu] = useState("");
+    const [selectNetwork, setselectNetwork] = useState("");
 
     const set_info = (data) => {
         try {
@@ -44,56 +44,60 @@ function ServerInfo() {
 
                 switch (key) {
                     case "cpu_name":
-                        setcpuname(data[key]);
+                        setcpuname(data[key] || "");
                         break;
                     case "currentTime":
-                        setCurrent_time(data[key]);
+                        setCurrent_time(data[key] || []);
                         break;
                     case "userCount":
-                        setUsercount(data[key]);
+                        setUsercount(data[key] || 0);
                         break;
                     case "cpuCount":
-                        setCpucount(data[key]);
+                        setCpucount(data[key] || 0);
                         break;
                     case "cpuPercent":
-                        setcpu_percent(data[key]);
+                        setcpu_percent(data[key] || []);
                         break;
                     case "memPercent":
-                        setmem_percent(data[key]);
+                        setmem_percent(data[key] || []);
                         break;
                     case "memTotal":
-                        setmem_total(data[key]);
+                        setmem_total(data[key] || 0);
                         break;
                     case "externalIp":
-                        setexternal_ip(data[key]);
+                        setexternal_ip(data[key] || "");
                         break;
                     case "gpu":
-                        setgpu(data[key]);
+                        setgpu(data[key] || {});
                         break;
                     case "hostname":
-                        sethostname(data[key]);
+                        sethostname(data[key] || "");
                         break;
                     case "serverInfo":
-                        setserver_info(data[key]);
+                        setserver_info(data[key] || "Waiting");
                         break;
                     case "platform":
-                        setplatformR(data[key]);
+                        setplatformR(data[key] || "");
                         break;
                     case "swapTotal":
-                        setswaptotal(data[key]);
+                        setswaptotal(data[key] || 0);
                         break;
                     case "swapPercent":
-                        setswappercent(data[key]);
+                        setswappercent(data[key] || 0);
                         break;
                     case "runTime":
-                        setrunTime(data[key]);
+                        setrunTime(data[key] || "");
                         break;
                     case "python":
-                        setpython(data[key]);
+                        setpython(data[key] || {
+                            "version": "Unknown",
+                            "released": "",
+                            "RepairNumber": ""
+                        });
                         break;
                     case "network":
                         // 假设 data[key] 是对象，且它的值是网卡信息
-                        setnetwork(Object.values(data[key]).filter(network => network.is_up === true));
+                        setnetwork(Object.values(data[key] || {}).filter(network => network.is_up === true));
                         break;
                     default:
                         // 忽略未知的键
@@ -122,7 +126,7 @@ function ServerInfo() {
         stack: true,
         title: {
             visible: true,
-            text: t('CPU usage')+cpu_percent[cpu_percent.length-1]+"%",
+            text: t('CPU usage') + (cpu_percent[cpu_percent.length - 1] || 0) + "%",
         },
         xField: 'type',
         yField: 'value',
@@ -156,7 +160,7 @@ function ServerInfo() {
         stack: true,
         title: {
             visible: true,
-            text: t('memory usage')+mem_percent[mem_percent.length-1]+"%",
+            text: t('memory usage') + (mem_percent[mem_percent.length - 1] || 0) + "%",
         },
         xField: 'type',
         yField: 'value',
@@ -185,9 +189,10 @@ function ServerInfo() {
         }
     };
 
-    const cpu_value=cpu_percent
-    const mem_value=mem_percent
-    const time=current_time
+    const cpu_value = cpu_percent.length > 0 ? cpu_percent : [[]];
+    const mem_value = mem_percent.length > 0 ? mem_percent : [[]];
+    const time = current_time.length > 0 ? current_time : [[]];
+
     // 确保两个数组的长度一致
     const cpu_datas = {
         values: cpu_value.map((arr, index) => ({
@@ -201,21 +206,22 @@ function ServerInfo() {
             value: arr,        // cpu_percent 中的对应值
         }))
     };
+
     const Ddata = [
-        {key: t('OS version'), value: platformR},
-        {key: t('Computer_Name'), value: hostname},
-        {key: t('Server_IP'), value: external_ip},
-        {key: t('connected device'), value: Usercount, span: 3},
-        {key: t('CPU core count'), value: Cpucount, span: 3},
-        {key: t('Mem total'), value: mem_total, span: 3},
-        {key: t('server runtime'), value: runTime, span: 3},
-        {key: t('Swap total'), value: swaptotal, span: 3},
-        {key: t('Server Info'), value: server_info, span: 3},
+        { key: t('OS version'), value: platformR },
+        { key: t('Computer_Name'), value: hostname },
+        { key: t('Server_IP'), value: external_ip },
+        { key: t('connected device'), value: Usercount, span: 3 },
+        { key: t('CPU core count'), value: Cpucount, span: 3 },
+        { key: t('Mem total'), value: mem_total, span: 3 },
+        { key: t('server runtime'), value: runTime, span: 3 },
+        { key: t('Swap total'), value: swaptotal, span: 3 },
+        { key: t('Server Info'), value: server_info, span: 3 },
     ];
     const Pdata = [
-        {key: t('Python Version'), value: python.version},
-        {key: t('released'), value: python.released},
-        {key: t('RepairNumber'), value: python.RepairNumber},
+        { key: t('Python Version'), value: python.version },
+        { key: t('released'), value: python.released },
+        { key: t('RepairNumber'), value: python.RepairNumber },
     ];
 
     const GPUMonitor = () => {
@@ -223,14 +229,14 @@ function ServerInfo() {
             return <div>正在加载GPU信息...</div>;
         }
         return (
-            <Tabs type={"line"} activeKey={selectGpu===''?"0":selectGpu} onChange={(key)=>{setselectGpu(key)}}>
+            <Tabs type={"line"} activeKey={selectGpu === '' ? "0" : selectGpu} onChange={(key) => { setselectGpu(key) }}>
                 {Object.keys(gpu).map((gpuId) => {
                     const gpuData = gpu[gpuId];
                     return (
-                        <TabPane tab={"GPU "+gpuData.id} itemKey={gpuId} key={gpuData.id}>
-                            <Space align={'start'} style={{margin:'5px'}} className="scroll-auto">
+                        <TabPane tab={"GPU " + gpuData.id} itemKey={gpuId} key={gpuData.id}>
+                            <Space align={'start'} style={{ margin: '5px' }} className="scroll-auto">
                                 <Progress
-                                    percent={isNaN(Math.floor(gpuData.load))?0:Math.floor(gpuData.load)}
+                                    percent={isNaN(Math.floor(gpuData.load)) ? 0 : Math.floor(gpuData.load)}
                                     strokeWidth={10}
                                     type="circle"
                                     style={{ margin: 5 }}
@@ -238,15 +244,15 @@ function ServerInfo() {
                                     aria-label="gpu usage"
                                     showInfo
                                 />
-                                <div >
+                                <div>
                                     <p>{t('Name')}: {gpuData.name}</p>
                                     <p>{t('Driver version')}: {gpuData.driver}</p>
-                                    <p>{t('Video RAM')}: {isNaN(Math.floor(gpuData.memory_total))?0:Math.floor(gpuData.memory_total)} GB</p>
-                                    <p>{t('Video memory used')}: {isNaN(Math.floor(gpuData.memory_used))?0:Math.floor(gpuData.memory_used)} GB</p>
-                                    <p>{t('Video memory available')}: {isNaN(Math.floor(gpuData.memory_free))?0:Math.floor(gpuData.memory_free)} GB</p>
-                                    <p>{t('memory usage')}: {isNaN(Math.floor(gpuData.memory_percent))?0:Math.floor(gpuData.memory_percent)}%</p>
+                                    <p>{t('Video RAM')}: {isNaN(Math.floor(gpuData.memory_total)) ? 0 : Math.floor(gpuData.memory_total)} GB</p>
+                                    <p>{t('Video memory used')}: {isNaN(Math.floor(gpuData.memory_used)) ? 0 : Math.floor(gpuData.memory_used)} GB</p>
+                                    <p>{t('Video memory available')}: {isNaN(Math.floor(gpuData.memory_free)) ? 0 : Math.floor(gpuData.memory_free)} GB</p>
+                                    <p>{t('memory usage')}: {isNaN(Math.floor(gpuData.memory_percent)) ? 0 : Math.floor(gpuData.memory_percent)}%</p>
                                     <p>{t('Temperature')}: {gpuData.temperature} °C</p>
-                                    <p>{t('Graphics load')}: {isNaN(Math.floor(gpuData.load))?0:Math.floor(gpuData.load)}%</p>
+                                    <p>{t('Graphics load')}: {isNaN(Math.floor(gpuData.load)) ? 0 : Math.floor(gpuData.load)}%</p>
                                 </div>
                             </Space>
                         </TabPane>
@@ -256,21 +262,21 @@ function ServerInfo() {
         );
     };
 
-    function  NetworkMonitor (){
-        const changeDW=(speed)=>{
-            if (speed < 1024){
-                return speed+"KB/s"
-            }else if (speed < 1024*1024){
-                return (speed/1024).toFixed(1)+"MB/s"
-            }else{
-                return ( speed/1024/1024).toFixed(2)+"GB/s"
+    function NetworkMonitor() {
+        const changeDW = (speed) => {
+            if (speed < 1024) {
+                return speed + "KB/s";
+            } else if (speed < 1024 * 1024) {
+                return (speed / 1024).toFixed(1) + "MB/s";
+            } else {
+                return (speed / 1024 / 1024).toFixed(2) + "GB/s";
             }
-        }
+        };
         if (!network || Object.keys(network).length === 0) {
             return <div>正在加载网卡信息...</div>;
         }
         return (
-            <Tabs type={"line"} tabPosition="left"  activeKey={selectNetwork===''?"0":selectNetwork} onChange={(key)=>{setselectNetwork(key)}}>
+            <Tabs type={"line"} tabPosition="left" activeKey={selectNetwork === '' ? "0" : selectNetwork} onChange={(key) => { setselectNetwork(key) }}>
                 {Object.keys(network).map((networkid) => {
                     const networkData = network[networkid];
                     return (
@@ -305,10 +311,10 @@ function ServerInfo() {
                             content={cpuName}
                             icon={"./processor.webp"}
                             backgroundColor="#2D2D2D"
-                            percentage={parseInt(cpu_percent[cpu_percent.length - 1])}
+                            percentage={parseInt(cpu_percent[cpu_percent.length - 1] || 0)}
                             bottomStats={{
-                                left: Cpucount +" Cores",
-                                center: Usercount+" Devices",
+                                left: Cpucount + " Cores",
+                                center: Usercount + " Devices",
                                 right: "64-bit",
                             }}
                         />
@@ -318,9 +324,9 @@ function ServerInfo() {
                             icon={"./memory.webp"}
                             title="Memory"
                             content={platformR}
-                            percentage={parseInt(mem_percent[mem_percent.length - 1])}
+                            percentage={parseInt(mem_percent[mem_percent.length - 1] || 0)}
                             bottomStats={{
-                                left: (mem_total/1024).toFixed(1)+" GiB RAM",
+                                left: (mem_total / 1024).toFixed(1) + " GiB RAM",
                                 center: "64-bit",
                                 right: runTime,
                             }}
@@ -373,6 +379,6 @@ function ServerInfo() {
             </div>
         </>
     );
-
 }
-export default ServerInfo
+
+export default ServerInfo;
