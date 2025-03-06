@@ -36,12 +36,12 @@ function ServerInfo() {
             if (typeof data !== 'object' || data === null) {
                 return;
             }
-
+    
             for (const key in data) {
                 if (!Object.prototype.hasOwnProperty.call(data, key)) {
                     continue;
                 }
-
+    
                 switch (key) {
                     case "cpu_name":
                         setcpuname(data[key] || "");
@@ -56,11 +56,11 @@ function ServerInfo() {
                         setCpucount(data[key] || 0);
                         break;
                     case "cpuPercent":
-                        setcpu_percent(data[key] || []);
-                        break;
+                        setcpu_percent(Array.isArray(data[key]) ? data[key] : []);
+                        break; // 确保 cpuPercent 是数组
                     case "memPercent":
-                        setmem_percent(data[key] || []);
-                        break;
+                        setmem_percent(Array.isArray(data[key]) ? data[key] : []);
+                        break; // 确保 memPercent 是数组
                     case "memTotal":
                         setmem_total(data[key] || 0);
                         break;
@@ -74,8 +74,8 @@ function ServerInfo() {
                         sethostname(data[key] || "");
                         break;
                     case "serverInfo":
-                        setserver_info(data[key] || "Waiting");
-                        break;
+                        setserver_info(typeof data[key] === "string" ? data[key] : "Invalid data");
+                        break; // 确保 serverInfo 是字符串
                     case "platform":
                         setplatformR(data[key] || "");
                         break;
@@ -96,17 +96,17 @@ function ServerInfo() {
                         });
                         break;
                     case "network":
-                        // 假设 data[key] 是对象，且它的值是网卡信息
-                        setnetwork(Object.values(data[key] || {}).filter(network => network.is_up === true));
-                        break;
+                            // 假设 data[key] 是对象，且它的值是网卡信息
+                            setnetwork(Object.values(data[key]).filter(network => network.is_up === true));
+                            break;// 确保 network 是数组
                     default:
-                        // 忽略未知的键
+                        console.log("Unknown key: >> " + key + " <<")
                         break;
                 }
             }
         } catch (error) {
             console.error('Error in set_info:', error);
-            // 你可以在这里添加更多的错误处理逻辑，比如记录日志或者通知用户
+            // 添加错误处理逻辑
         }
     };
 
