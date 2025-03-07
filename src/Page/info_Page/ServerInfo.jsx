@@ -6,7 +6,7 @@ import { t } from "i18next";
 import ProcessorStats from "../widget/ProcessorStats.jsx";
 
 function ServerInfo() {
-    const [current_time, setCurrent_time] = useState([]);
+    const [current_time, setCurrent_time] = useState([]);   
     const [Usercount, setUsercount] = useState(0);
     const [cpuName, setcpuname] = useState("");
     const [Cpucount, setCpucount] = useState(0);
@@ -216,7 +216,7 @@ function ServerInfo() {
         { key: t('Mem total'), value: mem_total, span: 3 },
         { key: t('server runtime'), value: runTime, span: 3 },
         { key: t('Swap total'), value: swaptotal, span: 3 },
-        { key: t('Server Info'), value: server_info, span: 3 },
+        { key: t('Server Info'), value: typeof server_info === 'object' ? JSON.stringify(server_info) : server_info, span: 3 }, // 修复对象渲染问题
     ];
     const Pdata = [
         { key: t('Python Version'), value: python.version },
