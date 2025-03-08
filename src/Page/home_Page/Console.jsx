@@ -1,11 +1,10 @@
 /* eslint-disable no-unused-vars */
-import {Button, ButtonGroup, Card, Input, Layout, Modal, Space, Table} from "@douyinfe/semi-ui";
+import {Button, ButtonGroup, Card, Input, Layout, Modal,Table} from "@douyinfe/semi-ui";
 import {getServer} from "../../code/get_server.js";
 import {useMemo, useState} from "react";
 import {useTranslation} from 'react-i18next';
 import {IconSearch} from "@douyinfe/semi-icons";
-import XConsole from "./XConsole.jsx";
-
+import WebTerminal from "../widget/WebTerminal";
 
 function Console(){
     const { t } = useTranslation();
@@ -13,10 +12,6 @@ function Console(){
     const [columns,setcolumns] = useState([]);
     const [datas,setdatas] = useState([]);
     const [Table_Visible, setTable_Visible] = useState(false);
-
-    // 处理输入值变化的回调函数
-    // 设置批量更新延迟（可以调整这个时间来平衡流畅度与性能）
-    const batchUpdateDelay = 10; // 100ms 以内的多次调用会合并为一次更新
     const showDialog = (data) => {
         // 第一行数据作为列名
         const columns_cahce = data[0].map((col, index) => ({
@@ -114,7 +109,7 @@ function Console(){
     function view_table(){
         send_command('sql').then(result => {
             send_command('--query_all_hub_info').then(result => {
-                send_command('exit');
+                send_command('exit').then();
             })
         })
     }
@@ -137,7 +132,7 @@ function Console(){
                 // 在这里使用局部状态的值
                 send_command('sql').then((result) => {
                     send_command('--lun-gu-info-model ' + value).then((result) => {
-                        send_command('exit');
+                        send_command('exit').then();
                     });
                 });
             },
@@ -163,7 +158,7 @@ function Console(){
 
                 send_command('sql').then((result) => {
                     send_command('--mo-ju-jinfo-model ' + value).then((result) => {
-                        send_command('exit');
+                        send_command('exit').then();
                     });
                 });
             },
@@ -187,35 +182,16 @@ function Console(){
             consol_insert_result(data);
             return data
         } catch (error) {
-            return error
+            return ("Server seems cannot connect:"+error.message)
         }
     }
 
-    const promptInfo = () => {
-        const date = new Date()
-        return `[${date.toLocaleTimeString()}] `
-    }
-
-    const initialMessage = `
-Welcome to the Enhanced Terminal!
-
-This terminal supports:
-- JSON formatting
-- Clickable links
-- Basic command processing
-
-Enter 'help' to view the help information, or enter '--help' after entering 'sql' to view the help for SQL commands.
-  `
     return (
         <>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <Content className={"semi-always-dark"}
-                >
-                    <XConsole onCommand={send_command}
-                              prompt={">"}
-                              promptInfo={promptInfo}
-                              initialMessage={initialMessage} >
-                    </XConsole>
+                <Content >
+                    <WebTerminal sendCommand={send_command} />
+
                 </Content>
                 <Card
                     bordered={false}

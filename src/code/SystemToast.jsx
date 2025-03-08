@@ -36,7 +36,7 @@ function getSystemToastPermissions() {
 }
 
 // 发送系统通知的函数
-export function sendSystemToast(title, message, icon = 'CCRS.png') {
+export function sendSystemToast(title, message, icon = 'logo.svg') {
     if (getSystemToastPermissions()) {
         new Notification(title, { body: message, icon: icon });
         return true;

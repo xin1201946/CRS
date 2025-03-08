@@ -4,9 +4,6 @@ import daisyui from "daisyui";
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
-  },
-  daisyui: {
     theme:{
       colors:{
         "semi-color-white": "var(--semi-color-white)",
@@ -119,6 +116,9 @@ export default {
         }
       }
     }
+  },
+  daisyui: {
+
   },
   plugins: [daisyui,],
 }
