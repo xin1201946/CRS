@@ -3,7 +3,7 @@ import { lazy, Suspense } from 'react';
 import './App.css';
 import { add_log } from './code/log.js';
 import { motion } from "framer-motion"
-
+import initializeSettings from "./code/QuickLoadingService.js";
 // 懒加载主要内容组件，优化首次加载性能
 const AppContent = lazy(() => import('./AppContent.jsx'));
 
@@ -66,7 +66,8 @@ function LoadingScreen() {
 function App() {
     // 记录应用启动日志
     add_log('UI was Start...', 'successfully', 'Start successfully');
-
+    // Register services and logs
+    initializeSettings();
     // 使用Suspense包装懒加载的内容，并显示加载屏幕
     return (
         <Suspense fallback={<LoadingScreen />}>

@@ -24,7 +24,7 @@ import {set_language} from "./code/language.js";
 import {emit} from "./code/PageEventEmitter.js";
 import RightClickMenu from "./Page/RightClickMenu.jsx";
 import Sider from "@douyinfe/semi-ui/lib/es/layout/Sider.js";
-import initializeSettings from "./code/QuickLoadingService.js";
+
 
 // 懒加载主要组件
 const Header1 = lazy(() => import("./Header/Header.jsx"))
@@ -37,8 +37,7 @@ const ServerInfo=lazy(() => import("./Page/info_Page/ServerInfo.jsx"))
 
 // 应用内容主组件
 function AppContent() {
-    // Register services and logs
-    initializeSettings();
+
     let theme_color = getSettings('theme_color');
     if (theme_color === 'auto') {
         setAutoTheme();
