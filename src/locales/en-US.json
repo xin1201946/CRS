@@ -181,5 +181,7 @@
   "Video memory used": "Video memory used",
   "Video memory available": "Video memory available",
   "Graphics load": "Graphics load",
-  "Temperature": "Temperature"
+  "Temperature": "Temperature",
+  "Image_OCR_Tool": "Casting word recognition",
+  "Click_or_Drag_to_Upload": "Click to upload"
 }

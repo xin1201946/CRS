@@ -182,5 +182,7 @@
   "Video memory used": "已用显存",
   "Video memory available": "可用显存",
   "Graphics load": "显卡负载",
-  "Temperature": "温度"
+  "Temperature": "温度",
+  "Image_OCR_Tool": "铸造字识别",
+  "Click_or_Drag_to_Upload": "点击上传图片"
 }

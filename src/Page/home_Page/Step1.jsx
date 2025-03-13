@@ -1,95 +1,128 @@
-import {Button, Col, Descriptions, Row, Spin, Upload} from '@douyinfe/semi-ui';
-import {IconPlus} from "@douyinfe/semi-icons";
-import {useState} from "react";
-import {getServer} from "../../code/get_server.js";
-import {getAPI} from "../../code/server_api_settings.js";
-import {useTranslation} from 'react-i18next';
-import {send_notify} from "../../code/SystemToast.jsx";
-import {add_log} from "../../code/log.js";
-import {getSettings} from "../../code/Settings.js";
+import { Button,Descriptions, Spin, Upload, Card, Space, Typography } from '@douyinfe/semi-ui';
+import { IconPlus } from "@douyinfe/semi-icons";
+import { useState } from "react";
+import { getServer } from "../../code/get_server.js";
+import { getAPI } from "../../code/server_api_settings.js";
+import { useTranslation } from 'react-i18next';
+import { send_notify } from "../../code/SystemToast.jsx";
+import { add_log } from "../../code/log.js";
+import { getSettings } from "../../code/Settings.js";
 
+const { Title } = Typography;
 
 function Step1() {
     const { t } = useTranslation();
-    const [b1en,setb1en]=useState(true);
-    const [datas,setdata]=useState([]);
+    const [b1en, setb1en] = useState(true);
+    const [datas, setdata] = useState([]);
     const [loading, toggleLoading] = useState(false);
-    let action = getServer()+getAPI('upload')+"?uuid="+getSettings('uuid');
-    let clearfile = getServer()+getAPI('clear');
-    let imageOnly = '.png,.jpeg,.jpg';
-    function setLoading(bool){
-        toggleLoading(bool);
-    }
-    function setEnable(bool){
-        setb1en(bool);
-    }
+
+    const action = `${getServer()}${getAPI('upload')}?uuid=${getSettings('uuid')}`;
+    const clearfile = `${getServer()}${getAPI('clear')}`;
+    const imageOnly = '.png,.jpeg,.jpg';
+
+    const setLoading = (bool) => toggleLoading(bool);
+    const setEnable = (bool) => setb1en(bool);
+
     async function get_result() {
-        setLoading(true)
+        setLoading(true);
         try {
-            const response = await fetch(getServer() + getAPI('start')+"?uuid="+getSettings('uuid'));
-            const data = await response.json(); // 根据需要解析数据
-            update(data); // 调用 update 函数处理数据
+            const response = await fetch(`${getServer()}${getAPI('start')}?uuid=${getSettings('uuid')}`);
+            const data = await response.json();
+            update(data);
         } catch (error) {
-            add_log('Fetch Error','error',error)
-            setLoading(false)
+            add_log('Fetch Error', 'error', error);
+            setLoading(false);
         }
     }
 
     function update(data) {
-        // 处理获取到的数据
-        let desiderata=[]
-        if ( data[0] === ""){
-            desiderata = [
-                { key: t('Failed_OCR'), value: data[0] },
-            ];
-            showTotst(t('Failed_OCR')+data[0])
-        }else{
-            desiderata = [
-                { key: t('Success_OCR_Text'), value: data[0] },
-            ];
-            showTotst(t('Success_OCR_Text')+data[0])
+        let desiderata = [];
+        if (data[0] === "") {
+            desiderata = [{ key: t('Failed_OCR'), value: data[0] }];
+            showTotst(`${t('Failed_OCR')}${data[0]}`);
+        } else {
+            desiderata = [{ key: t('Success_OCR_Text'), value: data[0] }];
+            showTotst(`${t('Success_OCR_Text')}${data[0]}`);
         }
-        setdata(desiderata)
-        setLoading(false)
-    }
-    function showTotst(message){
-        send_notify(t('New_Notify_Send'),message);
+        setdata(desiderata);
+        setLoading(false);
     }
 
+    function showTotst(message) {
+        send_notify(t('New_Notify_Send'), message);
+    }
 
-    return(
-        <>
-            <br/>
-            <div className="grid" style={{margin:"7px"}}>
-                <Row type="flex" justify="center">
-                    <Col>
-                        <Upload
-                            action={action}
-                            listType={'picture'}
-                            accept={imageOnly}
-                            enctype="multipart/form-data"
-                            limit={1}
-                            onError={function(){setEnable(true)}}
-                            onSuccess={function(){setEnable(false)}}
-                            onClear={function(){fetch(clearfile).then();setEnable(true);setdata({ key: '', value: '' })}}
-                            onRemove={function (e){fetch(clearfile+'?filename='+e.name).then();setEnable(true);setdata({ key: '', value: '' })}}
-                        >
-                            <IconPlus size="extra-large" />
-                        </Upload>
-                    </Col>
-                </Row>
-                <Row type="flex" justify="center">
+    return (
+        <div style={{ padding: '24px', maxWidth: '800px', margin: '0 auto' }}>
+            <Card
+                title={<Title heading={3}>{t('Image_OCR_Tool')}</Title>}
+                style={{
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+                }}
+            >
+                <Space vertical align="center" spacing="loose" style={{ width: '100%' }}>
+                    <Upload
+                        action={action}
+                        listType="picture"
+                        accept={imageOnly}
+                        enctype="multipart/form-data"
+                        limit={1}
+                        onError={() => setEnable(true)}
+                        onSuccess={() => setEnable(false)}
+                        onClear={() => {
+                            fetch(`${clearfile}?filename=${getSettings("uuid")}`).then();
+                            setEnable(true);
+                            setdata([]);
+                        }}
+                        onRemove={() => {
+                            fetch(`${clearfile}?filename=${getSettings("uuid")}`).then();
+                            setEnable(true);
+                            setdata([]);
+                        }}
+                    >
+                        <div style={{ textAlign: 'center' }}>
+                            <IconPlus size="extra-large" style={{ color: '#666' }} />
+                            <p style={{ margin: '8px 0 0', color: '#666' }}>
+                                {t('Click_or_Drag_to_Upload')}
+                            </p>
+                        </div>
+                    </Upload>
+
                     <Spin delay={100} spinning={loading}>
-                                <Button   style={{marginTop:'20px'}}  onClick={get_result} disabled={b1en}>{t('Start_OCR')}</Button>
+                        <Button
+                            theme="solid"
+                            type="primary"
+                            size="large"
+                            onClick={get_result}
+                            disabled={b1en}
+                            style={{
+                                marginTop: '16px',
+                                padding: '0 32px',
+                                borderRadius: '8px'
+                            }}
+                        >
+                            {t('Start_OCR')}
+                        </Button>
                     </Spin>
-                </Row>
-                <Row type="flex" justify="center">
-                    <Col>
-                        <Descriptions style={{marginTop:'20px'}}  data={datas} />
-                    </Col>
-                </Row>
-            </div>
-        </>
-    )
+
+                    {datas.length > 0 && (
+                        <Descriptions
+                            data={datas}
+                            style={{
+                                width: '100%',
+                                background: '#f5f5f5',
+                                padding: '16px',
+                                borderRadius: '8px',
+                                marginTop: '16px'
+                            }}
+                            row
+                        />
+                    )}
+                </Space>
+            </Card>
+        </div>
+    );
 }
-export default  Step1
+
+export default Step1;

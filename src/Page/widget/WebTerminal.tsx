@@ -311,7 +311,7 @@ function WebTerminal({sendCommand}) {
   <span>CCRS Terminal Build[${getSettings("buile_time")}], Type <b>Help</b> to see all supported commands.</span>
 </div>
 
-<div class="card bg-base-200 shadow-md mt-4">
+<div class="card semi-color-bg-2 shadow-md mt-4">
   <div class="card-body">
     <h2 class="card-title">This terminal supports:</h2>
     <ul class="space-y-2">
