@@ -406,7 +406,13 @@ function WebTerminal({sendCommand}) {
   };
 
   return (
-      <Terminal commands={commands} onExecCmd={handleExecCmd} initScript={initScript} />
+      <div>
+        <Terminal
+            commands={commands}
+            onExecCmd={handleExecCmd}
+            initScript={initScript}
+        />
+      </div>
   );
 }
 

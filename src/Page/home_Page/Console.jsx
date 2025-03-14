@@ -188,27 +188,22 @@ function Console(){
 
     return (
         <>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <Content >
+            <div style={{ display: 'flex', flexDirection: 'column', maxHeight: '100%' }}>
+                <Content style={{ flex: '9'}}>
                     <WebTerminal sendCommand={send_command} />
-
                 </Content>
                 <Card
                     bordered={false}
                     style={{
+                        flex: '1',
                         width: '100%',
                         display: 'flex',
-                        position: 'fixed',
-                        bottom: '7%',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        zIndex: 99,
                         alignItems: 'center',
                     }}>
                     <ButtonGroup>
                         <Button onClick={Search_history_Lungu}>{t('Search_history_Lungu')}</Button>
                         <Button onClick={Search_moju_Lungu}>{t('Search_moju_lungu')}</Button>
-                        <Button onClick={()=>{view_table()}}>{t('History')}</Button>
+                        <Button onClick={() => { view_table() }}>{t('History')}</Button>
                     </ButtonGroup>
                 </Card>
             </div>
@@ -221,6 +216,6 @@ function Console(){
                 <Table columns={columns} dataSource={datas} pagination={pagination} />
             </Modal>
         </>
-    )
+    );
 }
 export default Console

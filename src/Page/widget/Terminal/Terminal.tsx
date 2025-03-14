@@ -308,8 +308,8 @@ export const Terminal: React.FC<TerminalProps> = ({ commands, initScript, onExec
 
         <div
               ref={terminalRef}
-              className="h-[400px] overflow-y-auto p-4 font-mono text-sm"
-              style={{userSelect: 'text',cursor: 'default'}}
+              className="h-auto overflow-y-auto p-4 font-mono text-sm"
+              style={{ maxHeight: '60vh', overflowY: 'scroll', userSelect: 'text', cursor: 'default' }}
         >
             {messages.map((msg, idx) => (
                 <div key={idx} className="mb-2">

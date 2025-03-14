@@ -23,7 +23,6 @@ import {send_notify} from "./code/SystemToast.jsx";
 import {set_language} from "./code/language.js";
 import {emit} from "./code/PageEventEmitter.js";
 import RightClickMenu from "./Page/RightClickMenu.jsx";
-import Sider from "@douyinfe/semi-ui/lib/es/layout/Sider.js";
 
 
 // 懒加载主要组件
@@ -46,7 +45,7 @@ function AppContent() {
     }
 
     const { t } = useTranslation();
-    const { Header} = Layout;
+    const { Header,Content,Sider} = Layout;
     const [contextMenu, setContextMenu] = useState({
         visible: false,
         x: 0,
@@ -259,7 +258,7 @@ function AppContent() {
                 <Sider>
                     <Nav_T />
                 </Sider>
-                <Layout style={{ height: '100%', paddingTop: '68px'}}>
+                <Content style={{height:"90%",margin:"50px"}}>
                     <ResultPage />
                     {contextMenu.visible && (
                         <RightClickMenu
@@ -269,7 +268,7 @@ function AppContent() {
                             onClose={() => setContextMenu({ ...contextMenu, visible: false })}
                         />
                     )}
-                </Layout>
+                </Content>
             </Layout>
 
             <SideSheet

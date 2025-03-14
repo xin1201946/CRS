@@ -1,4 +1,4 @@
-import { Button,Descriptions, Spin, Upload, Card, Space, Typography } from '@douyinfe/semi-ui';
+import {Button, Descriptions, Spin, Upload, Card, Space, Typography, Banner} from '@douyinfe/semi-ui';
 import { IconPlus } from "@douyinfe/semi-icons";
 import { useState } from "react";
 import { getServer } from "../../code/get_server.js";
@@ -64,6 +64,8 @@ function Step1() {
                 <Space vertical align="center" spacing="loose" style={{ width: '100%' }}>
                     <Upload
                         action={action}
+                        picHeight={140}
+                        picWidth={140}
                         listType="picture"
                         accept={imageOnly}
                         enctype="multipart/form-data"
@@ -105,13 +107,12 @@ function Step1() {
                             {t('Start_OCR')}
                         </Button>
                     </Spin>
-
                     {datas.length > 0 && (
                         <Descriptions
                             data={datas}
                             style={{
                                 width: '100%',
-                                background: '#f5f5f5',
+                                backgroundColor:"var(--semi-color-bg-1)",
                                 padding: '16px',
                                 borderRadius: '8px',
                                 marginTop: '16px'
@@ -119,6 +120,19 @@ function Step1() {
                             row
                         />
                     )}
+                    <Banner style={{textAlign:"start",width:"100%",backgroundColor:"var(--semi-color-bg-1)"}} fullMode={false} icon={null} closeIcon={null}
+                            title={<div style={{ fontWeight: 600, fontSize: '14px', lineHeight: '20px' }}>使用方式:</div>}
+                            description={
+                                <div>
+                                    <ui>
+                                        <li>上传一张合法的PNG或者JPG格式的待识别图片</li>
+                                        <li>等待上传完毕</li>
+                                        <li>点击开始识别按钮</li>
+                                        <li>等待返回结果</li>
+                                    </ui>
+                                </div>
+                            }
+                    />
                 </Space>
             </Card>
         </div>
