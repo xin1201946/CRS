@@ -121,14 +121,14 @@ function Step1() {
                         />
                     )}
                     <Banner style={{textAlign:"start",width:"100%",backgroundColor:"var(--semi-color-bg-1)"}} fullMode={false} icon={null} closeIcon={null}
-                            title={<div style={{ fontWeight: 600, fontSize: '14px', lineHeight: '20px' }}>使用方式:</div>}
+                            title={<div style={{ fontWeight: 600, fontSize: '14px', lineHeight: '20px' }}>{t("How_use")}</div>}
                             description={
                                 <div>
                                     <ui>
-                                        <li>上传一张合法的PNG或者JPG格式的待识别图片</li>
-                                        <li>等待上传完毕</li>
-                                        <li>点击开始识别按钮</li>
-                                        <li>等待返回结果</li>
+                                        <li>{t("Tip_Step1_Upload")}</li>
+                                        <li>{t("Tip_Step1_wait")}</li>
+                                        <li>{t("Tip_Step1_Click_Button")}</li>
+                                        <li>{t("Tip_Step1_Wait_result")}</li>
                                     </ui>
                                 </div>
                             }

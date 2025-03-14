@@ -258,7 +258,7 @@ function AppContent() {
                 <Sider>
                     <Nav_T />
                 </Sider>
-                <Content style={{height:"90%",margin:"50px"}}>
+                <Content style={{height:"90%",marginTop:"50px"}}>
                     <ResultPage />
                     {contextMenu.visible && (
                         <RightClickMenu
