@@ -1,60 +1,86 @@
-//本API为前端的AI功能提供支持，但是请注意：
-//本功能仅支持Windows、MacOS 和 Linux 的操作系统的 Chrome Dev / Canary 浏览器，内核需满足129.0.6667.0+
-//受限与本功能不依赖任何服务器而是Google Chrome支持，本API功能可能会随时失效，请阅读开发者文档并进行修改：https://docs.google.com/document/d/1VG8HIyz361zGduWgNG7R_R8Xkv0OOJ8b5C9QKeCjU0c/edit?tab=t.0
-//使用该功能需要告知用户以下内容和条款：
-//[摘自开发者文档]
-//磁盘要有至少 22GB 空间用于存储（下载后可用空间不能低于 10GB）；具备集成或独立 GPU 且视频 RAM 为 6GB；使用非计量网络连接。
-//当前不支持 Chrome 的隐身模式和访客模式；在企业环境中，如果 GenAILocalFoundationalModelSettings 设置为 “Donotdownloadmodel”，API 将无法工作；
-//API 不支持 “after - download” 状态，该状态下 API 不会触发模型下载，模型下载由 Chrome 基于自身机制进行。
-//该 API 主要用于实验，输出质量可能无法达到与未来计划推出的特定任务 API 集成后的最终效果。
-//模型在处理某些任务时可能存在局限性，如回答知识类问题可能不准确，对于需要精准答案的任务也可能表现不佳，开发者在设计功能或用户体验时需考虑这些因素。
-//请严格遵守 https://policies.google.com/terms/generative-ai/use-policy 使用条款.
-//如果需要开启内置多语言支持，请关闭  Text Safety Classifier
+//This API provides support for front-end AI functionality, but please note:
+//This feature only supports Chrome Dev/Canary browsers for Windows, MacOS, and Linux operating systems, and the Chrome Browser kernel must meet 129.0.6667.0+
+//Restricted and this feature does not rely on any server but is supported by Google Chrome. This API feature may expire at any time. Please read the developer documentation and make the necessary modifications https://docs.google.com/document/d/1VG8HIyz361zGduWgNG7R_R8Xkv0OOJ8b5C9QKeCjU0c/edit?tab=t.0
+//To use this feature, users need to be informed of the following content and terms:
+//[Taken from developer documentation]
+//The disk should have at least 22GB of space for storage (the available space after downloading should not be less than 10GB); Equipped with a cluster or independent GPU and 6GB of video RAM; Use non metric network connections.
+//The API does not support Chrome's incognito mode and guest mode; In an enterprise environment, if GenAILocalFoundationlModelSettings is set to 'Donotdownloadmodel', the API will not work;
+//The API does not support the "after download" state, in which the API will not trigger model downloads. Model downloads are carried out by Chrome based on its own mechanism.
+//This API is mainly used for experiments, and the output quality may not achieve the final effect after integration with specific task APIs planned for future release.
+//Models may have limitations in handling certain tasks, such as inaccurate answers to knowledge-based questions and poor performance for tasks that require precise answers. Developers need to consider these factors when designing features or user experience.
+//Please strictly abide by it https://policies.google.com/terms/generative-ai/use-policy Terms of Use
+//The model only supports English language by default. If you need to enable built-in multilingual support, please turn off Text Safety Classifier and enable multilingual support in the AI model settings.
 
-import {add_log} from "./log.js";
-import {setSettings} from "./Settings.js";
+import { add_log } from "./log.js";
+import { getSettings, setSettings } from "./Settings.js";
 
-let session = null; // 先定义全局变量
+let session = null; // 定义全局变量
 
 export async function initAI() {
-    session = await ai.languageModel.create({
-        systemPrompt: "You are a Google Gemini named Canf, used to assist users in solving program problems.."
-    });
+    try {
+        if (typeof ai === "undefined") {
+            throw new Error("ai is not defined. The API may have changed or is not enabled in this browser.");
+        }
+        session = await ai.languageModel.create({
+            systemPrompt: "You are a Google Gemini named Canf, used to assist users in solving program problems."
+        });
+        return true;
+    } catch (error) {
+        add_log('Chrome_AI_Support', 'error', `Failed to initialize AI: ${error}`);
+        return false;
+    }
 }
+
 export async function clearAiHistory() {
-    session = await session.clone();
+    if (session) {
+        session = await session.clone();
+    } else {
+        add_log('Chrome_AI_Support', 'warning', 'Attempted to clear AI history, but session is not initialized.');
+    }
 }
 
 export async function checkAPIAvailability() {
     try {
+        if (typeof ai === "undefined") {
+            throw new Error("ai is not defined. The API may have changed or is not enabled in this browser.");
+        }
+
         const capabilities = await ai.languageModel.capabilities();
         if (capabilities.available === "readily") {
-            await initAI()
-            setSettings('ai_support','True')
-            add_log('Chrome_AI_Support','successfully','The browser environment meets the requirements')
-        } else if (capabilities.available === "no") {
-            setSettings('ai_support','False')
-            add_log('Chrome_AI_Support','warning','The browser environment does not meet the requirements')
+            const initSuccess = await initAI();
+            if (initSuccess) {
+                setSettings('ai_support', 'True');
+                add_log('Chrome_AI_Support', 'successfully', 'The browser environment meets the requirements');
+            }
+        } else {
+            setSettings('ai_support', 'False');
+            add_log('Chrome_AI_Support', 'warning', 'The browser environment does not meet the requirements');
         }
     } catch (error) {
-        setSettings('ai_support','False')
-        add_log('Chrome_AI_Support','warning','Error:'+error+',It may be an unsupported browser.')
+        setSettings('ai_support', 'False');
+        add_log('Chrome_AI_Support', 'error', `Error checking API availability: ${error}`);
     }
 }
+
 export async function tryAskAI(something) {
     try {
-        const {available} = await ai.languageModel.capabilities();
-        if (available!== "no") {
+        if (!session) {
+            add_log('Chrome_AI_Support', 'error', 'Session is not initialized.');
+            return 'AI session is not initialized.';
+        }
+
+        if (getSettings('ai_support') !== "False") {
             const result = await session.prompt(something);
             if (typeof result === 'string') {
                 return result;
             } else {
-                return 'Invalid result format from session.prompt:'+result;
+                return `Invalid result format from session.prompt: ${JSON.stringify(result)}`;
             }
         } else {
-            return 'something was wrong';
+            return 'AI support is disabled.';
         }
     } catch (error) {
-        return 'something was wrong:'+error;
+        add_log('Chrome_AI_Support', 'error', `Error in tryAskAI: ${error}`);
+        return `Something went wrong: ${error}`;
     }
 }

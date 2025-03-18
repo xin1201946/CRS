@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next"
 import "./Homepage.css"
 import "./animations.css"
 import {t} from "i18next";
+import {detectDevice} from "../../code/check_platform.js";
 
 function OcrDemo() {
     const [analysisState, setAnalysisState] = useState("initial") // initial, detecting, zoomed
@@ -274,7 +275,7 @@ function HomePage() {
         return (
             <section id="hero" className="min-h-screen flex items-center justify-between px-10">
                 {/* 左侧文本区域 */}
-                <div className="w-1/2 text-left">
+                <div className={`${detectDevice() === "PC" ? "w-1/2 text-left" : "text-center"} `}>
                     <h1 className="text-5xl md:text-6xl font-bold mb-6">
                         <span>{t("Tip_Homepage_title_1")}</span>
                         <p className="text-primary">{t("Tip_Homepage_title_2")}</p>
@@ -296,9 +297,11 @@ function HomePage() {
                 </div>
 
                 {/* 右侧 OCR 组件 */}
-                <div className="w-1/2 flex justify-end">
-                    <OcrDemo />
-                </div>
+                {
+                    detectDevice()==="PC" && <div className="w-1/2 flex justify-end">
+                        <OcrDemo />
+                    </div>
+                }
             </section>
         );
     });
