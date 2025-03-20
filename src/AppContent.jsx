@@ -23,6 +23,7 @@ import {send_notify} from "./code/SystemToast.jsx";
 import {set_language} from "./code/language.js";
 import {emit} from "./code/PageEventEmitter.js";
 import RightClickMenu from "./Page/RightClickMenu.jsx";
+import {Routes,Route} from "react-router-dom";
 
 
 // 懒加载主要组件
@@ -33,6 +34,7 @@ const BaseSettings = lazy(() => import("./Page/settings_page/BaseS.jsx"))
 const Advanced_Settings = lazy(() => import("./Page/settings_page/AdvancedSettings.jsx"))
 const Logs_Viewer = lazy(() => import("./Page/settings_page/Logs_Viewer.jsx"))
 const ServerInfo=lazy(() => import("./Page/info_Page/ServerInfo.jsx"))
+const NewSettings=lazy(() => import("./Page/NewSettings.jsx"))
 
 // 应用内容主组件
 function AppContent() {
@@ -250,26 +252,34 @@ function AppContent() {
 
     return (
         <>
+            <Routes>
+                {/* 主页 */}
+                <Route path="/" element={
+                    <Layout style={{ border: '1px solid var(--semi-color-border)' }}>
+                        <Header>
+                            <Header1 />
+                        </Header>
+                        <Sider>
+                            <Nav_T />
+                        </Sider>
+                        <Content style={{height:"90%",marginTop:"55px"}}>
+                            <ResultPage />
+                        </Content>
+                    </Layout>
+                } />
 
-            <Layout style={{ border: '1px solid var(--semi-color-border)' }}>
-                <Header>
-                    <Header1 />
-                </Header>
-                <Sider>
-                    <Nav_T />
-                </Sider>
-                <Content style={{height:"90%",marginTop:"55px"}}>
-                    <ResultPage />
-                    {contextMenu.visible && (
-                        <RightClickMenu
-                            items={contextMenu.menuItems}
-                            x={contextMenu.x}
-                            y={contextMenu.y}
-                            onClose={() => setContextMenu({ ...contextMenu, visible: false })}
-                        />
-                    )}
-                </Content>
-            </Layout>
+                {/* 设置页面，支持 /settings/xxx 形式 */}
+                <Route path="/settings/*" element={<NewSettings />} />
+            </Routes>
+
+            {contextMenu.visible && (
+                <RightClickMenu
+                    items={contextMenu.menuItems}
+                    x={contextMenu.x}
+                    y={contextMenu.y}
+                    onClose={() => setContextMenu({ ...contextMenu, visible: false })}
+                />
+            )}
 
             <SideSheet
                 closeOnEsc={true}

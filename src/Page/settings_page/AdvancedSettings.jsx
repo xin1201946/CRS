@@ -51,6 +51,7 @@ function AdvancedSettingsPage() {
     return (
         <>
             <Card
+                id={"HTTPS_Service_Setting"}
                 header={<Text>{t('HTTPS_Service_Setting')}</Text>}
             >
                 <Banner fullMode={false} type="info" bordered icon={null} closeIcon={null}
@@ -97,6 +98,7 @@ function AdvancedSettingsPage() {
             </Card>
             <br/>
             <Card
+                id={"API_Settings"}
                 header={<Text>{t('API_Settings')}</Text>}
             >
                 <Banner fullMode={false} icon={null} type="danger" bordered closeIcon={null}

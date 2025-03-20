@@ -180,7 +180,7 @@ function ServerInfo() {
 
     const GPUMonitor = () => {
         if (!gpu || typeof gpu !== "object" || Object.keys(gpu).length === 0) {
-            return <div>正在加载GPU信息...</div>;
+            return <div>Loading GPU info...</div>;
         }
         return (
             <Tabs type="line" activeKey={selectGpu || "0"} onChange={setselectGpu}>
@@ -221,7 +221,7 @@ function ServerInfo() {
         };
 
         if (!network || !Array.isArray(network) || network.length === 0) {
-            return <div>正在加载网卡信息...</div>;
+            return <div>Loading Network info...</div>;
         }
         return (
             <Tabs type="line" tabPosition="left" activeKey={selectNetwork || "0"} onChange={setselectNetwork}>
@@ -252,7 +252,7 @@ function ServerInfo() {
                         <ProcessorStats
                             mainColor="#6366f1"
                             content={cpuName || "Unknown"}
-                            icon={"./processor.webp"}
+                            icon={"/processor.webp"}
                             backgroundColors="var(--semi-color-bg-3)"
                             percentage={parseInt(cpu_percent[cpu_percent.length - 1] || 0)}
                             bottomStats={{
@@ -264,7 +264,7 @@ function ServerInfo() {
                         <ProcessorStats
                             mainColor="orange"
                             backgroundColors="var(--semi-color-bg-3)"
-                            icon={"./memory.webp"}
+                            icon={"/memory.webp"}
                             title="Memory"
                             content={platformR || "Unknown"}
                             percentage={parseInt(mem_percent[mem_percent.length - 1] || 0)}

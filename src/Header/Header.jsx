@@ -16,8 +16,10 @@ import {get_language, set_language} from "../code/language.js";
 import {getSettings} from "../code/Settings.js";
 import NotifyCenter from "../Page/NotifyCenter.jsx";
 import {emit} from "../code/PageEventEmitter.js";
+import {useNavigate} from "react-router-dom";
 
 function Header1 (){
+    const navigate = useNavigate();
     const { Text } = Typography;
     const { t } = useTranslation();
     const langmenu = [
@@ -38,7 +40,11 @@ function Header1 (){
     };
     const [settingP_visible, set_settingP_Visible] = useState(false);
     const s_side_sheet_change = () => {
-        set_settingP_Visible(!settingP_visible);
+        if (getSettings('use_new_setting_page')==="true" && detectDevice() === 'PC'){
+            navigate("/settings");
+        }else{
+            set_settingP_Visible(!settingP_visible);
+        }
     };
     const [settingThemeIcon, set_ThemeIcon] = useState(<MdHdrAuto style={{ width: '20px', height: '20px' }} />);
     const changeSelectKey = ()=>{

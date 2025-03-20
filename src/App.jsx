@@ -4,6 +4,7 @@ import './App.css';
 import { add_log } from './code/log.js';
 import { motion } from "framer-motion"
 import initializeSettings from "./code/QuickLoadingService.js";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // 懒加载主要内容组件，优化首次加载性能
 const AppContent = lazy(() => import('./AppContent.jsx'));
 
@@ -68,11 +69,20 @@ function App() {
     add_log('UI was Start...', 'successfully', 'Start successfully');
     // Register services and logs
     initializeSettings();
-    // 使用Suspense包装懒加载的内容，并显示加载屏幕
+
     return (
-        <Suspense fallback={<LoadingScreen />}>
-            <AppContent/>
-        </Suspense>
+        <BrowserRouter>
+            <Routes>
+                <Route
+                    path="/*"
+                    element={
+                        <Suspense fallback={<LoadingScreen />}>
+                            <AppContent/>
+                        </Suspense>
+                    }
+                />
+            </Routes>
+        </BrowserRouter>
     );
 }
 

@@ -26,11 +26,14 @@ import {send_notify} from "../../code/SystemToast.jsx";
 import Chrome_AI_Info from "../info_Page/Chrome_AI_Info.jsx";
 import CustomNotifyPanel from "../widget/CustomNotifyPanel.jsx";
 import {getServer} from "../../code/get_server.js";
+import {useNavigate} from "react-router-dom";
 
 function BaseSPage(){
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const { Text } = Typography;
     const [switchMenuPchecked, setswitchMenuPchecked] = useState('true'===getSettings('use_app_content_menu'));
+    const [newSettingsPchecked, setnewSettingsPchecked] = useState('true'===getSettings('use_new_setting_page'));
     const [use_ai_page_checked, set_use_ai_pagechecked] = useState('true'===getSettings('use_ai_page'))
     const [advanSvisible, setadvanSVisible] = useState(false);
     const advanSchange = () => {
@@ -43,6 +46,12 @@ function BaseSPage(){
     const onswitchMenuChange = checked => {
         setswitchMenuPchecked(checked);
         setSettings('use_app_content_menu',checked.toString());
+        window.location.reload();
+    };
+    const onsetnewSettingsPChange = checked => {
+        setnewSettingsPchecked(checked);
+        setSettings('use_new_setting_page',checked.toString());
+        navigate("/")
         window.location.reload();
     };
     const onchange_ai_page = checked => {
@@ -119,8 +128,9 @@ function BaseSPage(){
     }
     return(
         <>
-            <div id={'newSettings'}>
+            <div id={'newSettings'} >
                 <Card
+                    id={'server_ip'}
                     title={t('Server_IP')}
                 >
                     <Space>
@@ -142,7 +152,9 @@ function BaseSPage(){
                     </Space>
                 </Card>
                 <br/>
-                <Card title={t('Theme_color')}>
+                <Card
+                    id={'theme_color'}
+                    title={t('Theme_color')}>
                     <Space>
                         <RadioGroup
                             type='pureCard'
@@ -180,19 +192,32 @@ function BaseSPage(){
                     </Space>
                 </Card>
                 <br/>
-                <Card title={t('UI_set')}>
+                <Card
+                    id={'ui_set'}
+                    title={t('UI_set')}>
                     <div style={{display: 'flex', alignItems: 'center'}}>
                         <Title heading={6} style={{margin: 8, backgroundColor: 'transparent', width: '90%'}}>
                             <Space>
                                 {t('Use the built-in right-click menu')}
-                                <Tag size="small" shape='circle' color='blue'> New </Tag>
                             </Space>
                         </Title>
                         <Switch checked={switchMenuPchecked} onChange={onswitchMenuChange}/>
                     </div>
+                    <div style={{display: 'flex', alignItems: 'center'}}>
+                        <Title heading={6} style={{margin: 8, backgroundColor: 'transparent', width: '90%'}}>
+                            <Space>
+                                {t('Use the new settings page')}
+                                <Tag size="small" shape='circle' color='blue'> New </Tag>
+                            </Space>
+                        </Title>
+                        <Switch checked={newSettingsPchecked} onChange={onsetnewSettingsPChange}/>
+                    </div>
                 </Card>
                 <br/>
-                <Card title={t('Notify Settings')}>
+                <Card
+                    id={'Notify_Set'}
+                    title={t('Notify Settings')}
+                >
                     <h3>{t('Notify Style')}</h3>
                     <div
                         style={{
@@ -247,7 +272,9 @@ function BaseSPage(){
                     </div>
                 </Card>
                 <br/>
-                <Card title={t('AI Setting')}>
+                <Card title={t('AI Setting')}
+                      id={'AI_Setting'}
+                >
                     <Space vertical align={'left'}>
                         <Banner fullMode={false} type="success" bordered icon={null} closeIcon={null}
                                 title={<div style={{ fontWeight: 600, fontSize: '14px', lineHeight: '20px' }}>{t('Increase productivity with Gemini built into Chrome')}</div>}

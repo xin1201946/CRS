@@ -9,7 +9,7 @@
   @tailwind utilities;
 }
 #root {
-  text-align: center;
+  text-align: left;
   width: 100%;
   height: 100%;
 }

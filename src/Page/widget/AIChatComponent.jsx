@@ -90,6 +90,9 @@ const AIChatComponent = ({
                                             ? `${userBubbleColor} text-[ --semi-color-text-0]`
                                             : `${aiBubbleColor} ${textColor} border border-[--semi-color-tertiary-light-hover]`
                                     }`}
+                                    style={{
+                                        overflow:"auto",
+                                    }}
                                 >
                                     <ReactMarkdown>{message.content}</ReactMarkdown>
                                     <button
