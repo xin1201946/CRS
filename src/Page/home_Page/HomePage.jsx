@@ -273,9 +273,9 @@ function HomePage() {
 
     const CombinedPage = React.memo(function CombinedPage() {
         return (
-            <div className="flex flex-col">
+            <div className=" flex flex-col" style={{height:"100vh"}}>
                 {/* 上半部分：HeroSection */}
-                <section id="hero" className="flex-1 flex  justify-between px-5" style={{marginTop:"6%"}}>
+                <section id="hero" className=" flex-1 flex  justify-between px-5" style={{marginTop:"6%"}}>
                     <div className={" text-left"}>
                         <h1 className="text-5xl md:text-6xl font-bold mb-6">
                             <span>{t("Tip_Homepage_title_1")}</span>
@@ -309,74 +309,33 @@ function HomePage() {
                         </div>
                     )}
                 </section>
-                <footer className="footer footer-center p-10 semi-color-text-0">
-                    <aside>
-                        <p>Copyright © {new Date().getFullYear()} - All rights reserved by CCRS Team</p>
-                        <p className="textarea-sm text-gray-300 ">{t("Tip_Homepage_footer")}</p>
-                    </aside>
-                </footer>
             </div>
         );
     });
 
 
-    // const HeroSection = React.memo(function HeroSection() {
-    //     return (
-    //         <section id="hero" className="min-h-screen flex items-center justify-between px-10">
-    //             {/* 左侧文本区域 */}
-    //             <div className={`${detectDevice() === "PC" ? "w-1/2 text-left" : "text-center"} `}>
-    //                 <h1 className="text-5xl md:text-6xl font-bold mb-6">
-    //                     <span>{t("Tip_Homepage_title_1")}</span>
-    //                     <p className="text-primary">{t("Tip_Homepage_title_2")}</p>
-    //                 </h1>
-    //
-    //                 <p className="text-xl text-gray-500 mb-8">{t("Tip_Homepage_title_3")}</p>
-    //                 <div className="flex gap-4 " style={{marginTop: "20px"}}>
-    //                     <button className="btn btn-primary" onClick={changeSelectKey}>
-    //                         {t("Start_OCR")}
-    //                     </button>
-    //                     <button className="btn btn-ghost gap-2" onClick={setchange}>
-    //                         {t("Change_Settings")}
-    //                     </button>
-    //                     <button className="btn btn-ghost gap-2" onClick={logchange}>
-    //                         {t("Check_logs")}
-    //                     </button>
-    //                 </div>
-    //             </div>
-    //
-    //             {/* 右侧 OCR 组件 */}
-    //             {
-    //                 detectDevice()==="PC" && <div className="w-1/2 flex justify-end">
-    //                     <OcrDemo />
-    //                 </div>
-    //             }
-    //         </section>
-    //     );
-    // });
-    //
-    //
-    // // Features 区块
-    // const FeaturesSection = React.memo(function FeaturesSection() {
-    //     return (
-    //         <section id="features" className="py-20 bg-auto relative overflow-hidden">
-    //             <div className="max-w-6xl mx-auto px-4">
-    //                 <h2 className="text-4xl font-bold text-center mb-16">{t("Features")}</h2>
-    //                 <div className="grid md:grid-cols-3 gap-8">
-    //                     <FeatureCard title={t("Model tunable training")} icon="⚙️">
-    //                         {" "}
-    //                         {t("Tip_Homepage_1")}
-    //                     </FeatureCard>
-    //                     <FeatureCard title={t("High recognition accuracy")} icon="🎯">
-    //                         {t("Tip_Homepage_2")}
-    //                     </FeatureCard>
-    //                     <FeatureCard title={t("Fast image recognition")} icon="🚀">
-    //                         {t("Tip_Homepage_3")}
-    //                     </FeatureCard>
-    //                 </div>
-    //             </div>
-    //         </section>
-    //     )
-    // })
+    // Features 区块
+    const FeaturesSection = React.memo(function FeaturesSection() {
+        return (
+            <section id="features" className="py-20 bg-auto relative overflow-hidden">
+                <div className="max-w-6xl mx-auto px-4">
+                    <h2 className="text-4xl font-bold text-center mb-16">{t("Features")}</h2>
+                    <div className="grid md:grid-cols-3 gap-8">
+                        <Cards title={t("Advantage5")} icon="⚙️">
+                            {" "}
+                            {t("Tip_Homepage_1")}
+                        </Cards>
+                        <Cards title={t("Advantage6")} icon="🎯">
+                            {t("Tip_Homepage_2")}
+                        </Cards>
+                        <Cards title={t("Advantage7")} icon="🚀">
+                            {t("Tip_Homepage_3")}
+                        </Cards>
+                    </div>
+                </div>
+            </section>
+        )
+    })
 
     // 单个 Feature 卡片
     // eslint-disable-next-line react/prop-types
@@ -395,6 +354,19 @@ function HomePage() {
         );
     }
 
+    // eslint-disable-next-line react/prop-types
+    function Cards({ title, icon, children }) {
+        return (
+            <div className="card bg-[--semi-color-bg-1] shadow-xl p-4 w-80 flex flex-col items-center">
+                <div className="flex items-center justify-center p-4 text-[--semi-color-bg-1] rounded-full text-4xl">
+                    {icon}
+                </div>
+                <h2 className="card-title">{title}</h2>
+                <div className="mt-2 text-sm text-gray-600">{children}</div>
+            </div>
+        );
+    }
+
     function NewHomePage() {
         return (
             <div className="scroll-smooth">
@@ -402,14 +374,14 @@ function HomePage() {
                 <AnimatedBackground />
                 <CombinedPage/>
                 {/*<HeroSection />*/}
-                {/*<FeaturesSection />*/}
+                <FeaturesSection />
                 {/* 页脚 */}
-                {/*<footer className="footer footer-center p-10 semi-color-text-0">*/}
-                {/*    <aside>*/}
-                {/*        <p>Copyright © {new Date().getFullYear()} - All rights reserved by CCRS Team</p>*/}
-                {/*        <p className="textarea-sm text-gray-300 ">{t("Tip_Homepage_footer")}</p>*/}
-                {/*    </aside>*/}
-                {/*</footer>*/}
+                <footer className="footer footer-center p-10 semi-color-text-0">
+                    <aside>
+                        <p>Copyright © {new Date().getFullYear()} - All rights reserved by CCRS Team</p>
+                        <p className="textarea-sm text-gray-300 ">{t("Tip_Homepage_footer")}</p>
+                    </aside>
+                </footer>
             </div>
         )
     }
