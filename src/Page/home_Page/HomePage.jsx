@@ -1,4 +1,4 @@
-import { SideSheet } from "@douyinfe/semi-ui"
+import {SideSheet, Space} from "@douyinfe/semi-ui"
 import { emit } from "../../code/PageEventEmitter.js"
 import React, { useState, useEffect, useRef } from "react"
 import { Settings } from "../Settings.jsx"
@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next"
 import "./Homepage.css"
 import "./animations.css"
 import {t} from "i18next";
+import { Layers, Fingerprint,Puzzle, LayoutTemplate } from "lucide-react";
 import {detectDevice} from "../../code/check_platform.js";
 
 function OcrDemo() {
@@ -30,13 +31,12 @@ function OcrDemo() {
     }, [analysisState])
 
     return (
-        <div className="relative w-full max-w-lg mx-auto">
+        <div className="relative w-auto max-w-lg mx-auto">
             <div className="relative bg-[semi-color-bg-3] p-6 rounded-xl shadow-2xl">
                 {/* Background blobs */}
                 <div className="absolute -top-4 -right-4 w-72 h-72 bg-primary/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
                 <div className="absolute -bottom-8 -left-4 w-72 h-72 bg-secondary/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
                 <div className="absolute -bottom-8 right-20 w-72 h-72 bg-accent/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-
                 {/* Main content */}
                 <div className="relative">
                     <div className="aspect-square relative overflow-hidden rounded-lg">
@@ -271,77 +271,128 @@ function HomePage() {
         )
     })
 
-    const HeroSection = React.memo(function HeroSection() {
+    const CombinedPage = React.memo(function CombinedPage() {
         return (
-            <section id="hero" className="min-h-screen flex items-center justify-between px-10">
-                {/* 左侧文本区域 */}
-                <div className={`${detectDevice() === "PC" ? "w-1/2 text-left" : "text-center"} `}>
-                    <h1 className="text-5xl md:text-6xl font-bold mb-6">
-                        <span>{t("Tip_Homepage_title_1")}</span>
-                        <p className="text-primary">{t("Tip_Homepage_title_2")}</p>
-                    </h1>
-
-                    <p className="text-xl text-gray-500 mb-8">{t("Tip_Homepage_title_3")}</p>
-
-                    <div className="flex gap-4">
-                        <button className="btn btn-primary" onClick={changeSelectKey}>
-                            {t("Start_OCR")}
-                        </button>
-                        <button className="btn btn-ghost gap-2" onClick={setchange}>
-                            {t("Change_Settings")}
-                        </button>
-                        <button className="btn btn-ghost gap-2" onClick={logchange}>
-                            {t("Check_logs")}
-                        </button>
+            <div className="flex flex-col">
+                {/* 上半部分：HeroSection */}
+                <section id="hero" className="flex-1 flex  justify-between px-5" style={{marginTop:"6%"}}>
+                    <div className={" text-left"}>
+                        <h1 className="text-5xl md:text-6xl font-bold mb-6">
+                            <span>{t("Tip_Homepage_title_1")}</span>
+                            <p className="text-primary">{t("Tip_Homepage_title_2")}</p>
+                        </h1>
+                        <div className={"text-left"}>
+                            <Space wrap>
+                                <FeatureCard title={t("Advantage1")} icon={Puzzle} />
+                                <FeatureCard title={t("Advantage2")} icon={Layers} />
+                                <FeatureCard title={t("Advantage3")} icon={Fingerprint} />
+                                <FeatureCard title={t("Advantage4")} icon={LayoutTemplate} />
+                            </Space>
+                        </div>
+                        <div className="flex gap-4" style={{marginTop:"20px"}}>
+                            <Space wrap={true}>
+                                <button className="btn btn-primary" onClick={changeSelectKey}>
+                                    {t("Start_OCR")}
+                                </button>
+                                <button className="btn btn-ghost gap-2" onClick={setchange}>
+                                    {t("Change_Settings")}
+                                </button>
+                                <button className="btn btn-ghost gap-2" onClick={logchange}>
+                                    {t("Check_logs")}
+                                </button>
+                            </Space>
+                        </div>
                     </div>
-                </div>
-
-                {/* 右侧 OCR 组件 */}
-                {
-                    detectDevice()==="PC" && <div className="w-1/2 flex justify-end">
-                        <OcrDemo />
-                    </div>
-                }
-            </section>
+                    {detectDevice() === "PC" && (
+                        <div className="flex justify-end">
+                            <OcrDemo />
+                        </div>
+                    )}
+                </section>
+                <footer className="footer footer-center p-10 semi-color-text-0">
+                    <aside>
+                        <p>Copyright © {new Date().getFullYear()} - All rights reserved by CCRS Team</p>
+                        <p className="textarea-sm text-gray-300 ">{t("Tip_Homepage_footer")}</p>
+                    </aside>
+                </footer>
+            </div>
         );
     });
 
 
-    // Features 区块
-    const FeaturesSection = React.memo(function FeaturesSection() {
-        return (
-            <section id="features" className="py-20 bg-auto relative overflow-hidden">
-                <div className="max-w-6xl mx-auto px-4">
-                    <h2 className="text-4xl font-bold text-center mb-16">{t("Features")}</h2>
-                    <div className="grid md:grid-cols-3 gap-8">
-                        <FeatureCard title={t("Model tunable training")} icon="⚙️">
-                            {" "}
-                            {t("Tip_Homepage_1")}
-                        </FeatureCard>
-                        <FeatureCard title={t("High recognition accuracy")} icon="🎯">
-                            {t("Tip_Homepage_2")}
-                        </FeatureCard>
-                        <FeatureCard title={t("Fast image recognition")} icon="🚀">
-                            {t("Tip_Homepage_3")}
-                        </FeatureCard>
-                    </div>
-                </div>
-            </section>
-        )
-    })
+    // const HeroSection = React.memo(function HeroSection() {
+    //     return (
+    //         <section id="hero" className="min-h-screen flex items-center justify-between px-10">
+    //             {/* 左侧文本区域 */}
+    //             <div className={`${detectDevice() === "PC" ? "w-1/2 text-left" : "text-center"} `}>
+    //                 <h1 className="text-5xl md:text-6xl font-bold mb-6">
+    //                     <span>{t("Tip_Homepage_title_1")}</span>
+    //                     <p className="text-primary">{t("Tip_Homepage_title_2")}</p>
+    //                 </h1>
+    //
+    //                 <p className="text-xl text-gray-500 mb-8">{t("Tip_Homepage_title_3")}</p>
+    //                 <div className="flex gap-4 " style={{marginTop: "20px"}}>
+    //                     <button className="btn btn-primary" onClick={changeSelectKey}>
+    //                         {t("Start_OCR")}
+    //                     </button>
+    //                     <button className="btn btn-ghost gap-2" onClick={setchange}>
+    //                         {t("Change_Settings")}
+    //                     </button>
+    //                     <button className="btn btn-ghost gap-2" onClick={logchange}>
+    //                         {t("Check_logs")}
+    //                     </button>
+    //                 </div>
+    //             </div>
+    //
+    //             {/* 右侧 OCR 组件 */}
+    //             {
+    //                 detectDevice()==="PC" && <div className="w-1/2 flex justify-end">
+    //                     <OcrDemo />
+    //                 </div>
+    //             }
+    //         </section>
+    //     );
+    // });
+    //
+    //
+    // // Features 区块
+    // const FeaturesSection = React.memo(function FeaturesSection() {
+    //     return (
+    //         <section id="features" className="py-20 bg-auto relative overflow-hidden">
+    //             <div className="max-w-6xl mx-auto px-4">
+    //                 <h2 className="text-4xl font-bold text-center mb-16">{t("Features")}</h2>
+    //                 <div className="grid md:grid-cols-3 gap-8">
+    //                     <FeatureCard title={t("Model tunable training")} icon="⚙️">
+    //                         {" "}
+    //                         {t("Tip_Homepage_1")}
+    //                     </FeatureCard>
+    //                     <FeatureCard title={t("High recognition accuracy")} icon="🎯">
+    //                         {t("Tip_Homepage_2")}
+    //                     </FeatureCard>
+    //                     <FeatureCard title={t("Fast image recognition")} icon="🚀">
+    //                         {t("Tip_Homepage_3")}
+    //                     </FeatureCard>
+    //                 </div>
+    //             </div>
+    //         </section>
+    //     )
+    // })
 
     // 单个 Feature 卡片
     // eslint-disable-next-line react/prop-types
     function FeatureCard({ title, icon, children }) {
+        const IconComponent = icon; // 直接传入组件，避免额外的判断
         return (
-            <div className="card semi-color-bg-4 shadow-xl">
-                <div className="card-body items-center text-center">
-                    <div className="text-6xl mb-4">{icon}</div>
-                    <h3 className="card-title text-2xl mb-2">{title}</h3>
-                    <p>{children}</p>
+            <div className="card bg-[--semi-color-bg-1]  shadow-xl p-4 w-80">
+                <div className="flex items-center space-x-4">
+                    <div className="p-2 bg-primary text-[--semi-color-bg-1] rounded-full">
+                        <IconComponent className="w-6 h-6" />
+                    </div>
+                    <h2 className="card-title">{title}</h2>
                 </div>
+                <div className="mt-2 text-sm text-gray-600">{children}</div>
             </div>
-        )
+        );
     }
 
     function NewHomePage() {
@@ -349,15 +400,16 @@ function HomePage() {
             <div className="scroll-smooth">
                 {/* 页面内容 */}
                 <AnimatedBackground />
-                <HeroSection />
-                <FeaturesSection />
+                <CombinedPage/>
+                {/*<HeroSection />*/}
+                {/*<FeaturesSection />*/}
                 {/* 页脚 */}
-                <footer className="footer footer-center p-10 semi-color-text-0">
-                    <aside>
-                        <p>Copyright © {new Date().getFullYear()} - All rights reserved by CCRS Team</p>
-                        <p className="textarea-sm text-gray-300 ">{t("Tip_Homepage_footer")}</p>
-                    </aside>
-                </footer>
+                {/*<footer className="footer footer-center p-10 semi-color-text-0">*/}
+                {/*    <aside>*/}
+                {/*        <p>Copyright © {new Date().getFullYear()} - All rights reserved by CCRS Team</p>*/}
+                {/*        <p className="textarea-sm text-gray-300 ">{t("Tip_Homepage_footer")}</p>*/}
+                {/*    </aside>*/}
+                {/*</footer>*/}
             </div>
         )
     }

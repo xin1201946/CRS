@@ -94,7 +94,7 @@ function BaseSPage(){
                 content: (
                     <Space>
                         <Text>{t('Success_save_set')}</Text>
-                        <Text link={{ href: window.location.href }}>
+                        <Text onClick={() => window.location.reload()} link>
                             {t('Refresh')}
                         </Text>
                     </Space>
