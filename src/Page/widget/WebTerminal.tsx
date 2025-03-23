@@ -47,9 +47,9 @@ const commands: Command[] = [
     description: "You can enter SQL statements only when you enter the sqLite end point. After entering, enter --help to view the supported commands.",
   },
   {
-    key:"RExec",
+    key:"rexec",
     group:"server",
-    usage:"RExec <command>",
+    usage:"rexec <command>",
     description: "RExec is a tool for executing commands directly on the server, bypassing the frontend's command handling mechanism. For example, it can run SQLite commands or other commands that may conflict with the frontend.",
   },
   {
@@ -203,8 +203,8 @@ function WebTerminal({sendCommand}) {
         type:"normal",
         content: await sendCommand('sql')
       })
-    } else if (key.startsWith("RExec")) {
-      const prompt = command.substring(3);
+    } else if (key.startsWith("rexec")) {
+      const prompt = command.substring(6);
       success({
         type:"normal",
         content: await sendCommand(prompt)
