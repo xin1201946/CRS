@@ -115,31 +115,33 @@ const AIChatComponent = ({
     return (
         <div className={`flex flex-col h-full ${backgroundColor} relative`}>
             {/* DaisyUI 样式的 Modal */}
-            <dialog id="my_modal_3" className="modal">
-                <div className="modal-box">
-                    <form method="dialog">
-                        {/* if there is a button in form, it will close the modal */}
-                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-                    </form>
-                    {getSettings("ai_support") === "true" ? (
-                        <p>
-                            The AI function is not turned on, please go to {" "}
-                            <a href="/settings/basic/#AI_Setting" className="text-blue-500">
-                                {t("Settings")} &gt; {t("Base_Settings")}
-                            </a>{" "}
-                            and enable it.
-                        </p>
-                    ) : (
-                        <p>
-                            Please use a browser that meets the requirements and go to{" "}
-                            <a href="/settings/basic/#AI_Setting" className="text-blue-500">
-                                {t("Settings")} &gt; {t("Base_Settings")}
-                            </a>{" "}
-                            review the configuration requirements.
-                        </p>
-                    )}
-                </div>
-            </dialog>
+            {getSettings("ai_support") !== "True" || getSettings("use_gemini") !== "true" ? (
+                <dialog id="my_modal_3" className="modal">
+                    <div className="modal-box">
+                        <form method="dialog">
+                            {/* if there is a button in form, it will close the modal */}
+                            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                        </form>
+                        {getSettings("ai_support") !== "true" ? (
+                            <p>
+                                Please use a browser that meets the requirements and go to{" "}
+                                <a href="/settings/basic/#AI_Setting" className="text-blue-500">
+                                    {t("Settings")} &gt; {t("Base_Settings")}
+                                </a>{" "}
+                                review the configuration requirements.
+                            </p>
+                        ) : (
+                            <p>
+                                The AI function is not turned on, please go to{" "}
+                                <a href="/settings/basic/#AI_Setting" className="text-blue-500">
+                                    {t("Settings")} &gt; {t("Base_Settings")}
+                                </a>{" "}
+                                and enable it.
+                            </p>
+                        )}
+                    </div>
+                </dialog>
+            ) : null}
 
             <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
                 {messages.length === 0 && (

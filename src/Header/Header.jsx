@@ -35,13 +35,8 @@ function Header1 (){
             return(<MdHdrAuto style={{ width: '20px', height: '20px' }} />)
         }
     };
-    const [settingP_visible, set_settingP_Visible] = useState(false);
     const s_side_sheet_change = () => {
-        if (getSettings('use_new_setting_page')==="true" && detectDevice() === 'PC'){
-            navigate("/settings/home");
-        }else{
-            set_settingP_Visible(!settingP_visible);
-        }
+        navigate("/settings/home");
     };
     const [settingThemeIcon, set_ThemeIcon] = useState(<MdHdrAuto style={{ width: '20px', height: '20px' }} />);
     const changeSelectKey = ()=>{

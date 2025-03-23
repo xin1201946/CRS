@@ -13,6 +13,7 @@ import PageTitle from "../Page/widget/Settings/PageTitle";
 
 const { Sider, Content } = Layout;
 
+// eslint-disable-next-line react/prop-types
 function SettingsLayout({ backgroundColor = 'var(--semi-color-bg-0)', textColor = 'var(--semi-color-text-0)' }) {
     const navigate = useNavigate();
     const { t } = useTranslation();
@@ -22,39 +23,41 @@ function SettingsLayout({ backgroundColor = 'var(--semi-color-bg-0)', textColor 
     const [collapsed, setCollapsed] = useState(false);
     const toggleCollapse = () => setCollapsed(!collapsed);
     const currentPath = location.pathname.split('/settings/')[1]?.split('/')[0] || 'home';
-    const [indicatorStyle, setIndicatorStyle] = useState({ top: 0, height: 0 });
+    const [indicatorStyle] = useState({ top: 0, height: 0 });
     const navRef = useRef(null);
     const scrollWrapperRef = useRef(null);
 
     useEffect(() => {
-        // 定义处理函数
         const handleResize = () => {
             setWindowWidth(window.innerWidth);
         };
-        // 添加 resize 事件监听器
         window.addEventListener('resize', handleResize);
-
-        // 清理函数，在组件卸载时移除监听器
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, []); // 空依赖数组，只在挂载和卸载时运行
-    // 其他 useEffect 逻辑保持不变
+    }, []);
+
     useEffect(() => {
-        if (!location.hash) window.scrollTo(0, 0);
+        // 使用 scrollWrapperRef 内部的滚动容器
+        const scrollContainer = scrollWrapperRef.current;
+        if (!scrollContainer) return;
+        if (!location.hash) {
+            scrollContainer.scrollTo(0, 0);
+        }
         setTimeout(() => {
             if (location.hash) {
                 const id = location.hash.slice(1);
                 const element = document.getElementById(id);
-                if (element) element.scrollIntoView({ behavior: 'smooth' });
+                if (element) {
+                    // 这里可选使用 element.scrollIntoView() 来平滑滚动到目标元素
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             } else {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }, 50);
-        // ... 其他逻辑
     }, [location.pathname, location.hash]);
 
-    // 渲染逻辑保持不变
     const menuItems = settingsRoute.map(({ path, icon: Icon, text, description }) => ({
         itemKey: path,
         text,
@@ -65,26 +68,26 @@ function SettingsLayout({ backgroundColor = 'var(--semi-color-bg-0)', textColor 
 
     return (
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.3 }} className="h-full">
-            <Layout className="h-full">
-                <div className="h-14 bg-white flex items-center px-4 shadow-sm justify-between">
-                    <div className="flex items-center gap-2">
+            <Layout className="h-full ">
+                <div className="h-14 bg-[--semi-color-nav-bg] flex items-center px-4 shadow-sm justify-between">
+                    <div className="flex items-center gap-2 bg-[--semi-color-nav-bg]">
                         <button onClick={() => navigate(-1)} className="text-gray-600 hover:text-gray-900">
                             <ArrowLeft size={17} />
                         </button>
-                        <span className="text-sm">{t("Settings")}</span>
+                        <span className="text-sm"  style={{ height: '100%', display: detectDevice() === "Phone" ? "none" : "block" }}>{t("Settings")}</span>
                     </div>
                     <button onClick={() => navigate("/")} className="text-gray-600 hover:text-gray-900">
                         <X size={17} />
                     </button>
                 </div>
                 <Layout className="h-[calc(100%-3.5rem)]">
-                    <Sider className="bg-white relative">
+                    <Sider className="bg-[--semi-color-nav-bg] relative">
                         <div ref={navRef} className="h-full">
                             <Nav
                                 items={menuItems}
                                 selectedKeys={[currentPath]}
                                 onSelect={(data) => navigate(`/settings/${data.itemKey}`)}
-                                style={{ height: '100%' }}
+                                style={{ height: '100%', display: detectDevice() === "Phone" ? "none" : "block" }}
                                 isCollapsed={detectDevice() === 'PC' && windowWidth >= 1000 ? collapsed : true}
                                 footer={{
                                     children: (
@@ -111,13 +114,7 @@ function SettingsLayout({ backgroundColor = 'var(--semi-color-bg-0)', textColor 
                             overflow: 'hidden'
                         }}
                     >
-                        <div
-                        style={{
-                            overflow:'auto'
-                        }}
-                        ref={scrollWrapperRef}
-                        >
-
+                        <div style={{ overflow: 'auto' }} ref={scrollWrapperRef}>
                             <PageTitle title={currentRoute?.description || ''} scrollContainer={scrollWrapperRef} />
                             <div style={{ padding: '2rem', minHeight: 'calc(100% - 40vh)' }}>
                                 {currentRoute && (

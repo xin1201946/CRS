@@ -1,16 +1,16 @@
-import {SideSheet, Space} from "@douyinfe/semi-ui"
+import { Space} from "@douyinfe/semi-ui"
 import { emit } from "../../code/PageEventEmitter.js"
 import React, { useState, useEffect, useRef } from "react"
-import { Settings } from "../Settings.jsx"
-import Logs_Viewer from "../settings_page/Logs_Viewer.jsx"
 import { useTranslation } from "react-i18next"
 import "./Homepage.css"
 import "./animations.css"
 import {t} from "i18next";
 import { Layers, Fingerprint,Puzzle, LayoutTemplate } from "lucide-react";
 import {detectDevice} from "../../code/check_platform.js";
+import {useNavigate} from "react-router-dom";
 
 function OcrDemo() {
+
     const [analysisState, setAnalysisState] = useState("initial") // initial, detecting, zoomed
     const [showthird, setshowthird] = useState(false)
     const [showConfidence, setShowConfidence] = useState(false)
@@ -122,18 +122,10 @@ function OcrDemo() {
 
 function HomePage() {
     const { t } = useTranslation()
-    const [setPagevisible, setPagechange] = useState(false)
-    const setchange = () => {
-        setPagechange(!setPagevisible)
-    }
-    const [Logvisible, setlogPagechange] = useState(false)
-    const logchange = () => {
-        setlogPagechange(!Logvisible)
-    }
     function changeSelectKey() {
         emit("changePage", "vision")
     }
-
+    const navigate = useNavigate();
     // 动画背景组件
     const AnimatedBackground = React.memo(function AnimatedBackground() {
         const canvasRef = useRef(null)
@@ -289,10 +281,10 @@ function HomePage() {
                                 <button className="btn btn-primary" onClick={changeSelectKey}>
                                     {t("Start_OCR")}
                                 </button>
-                                <button className="btn btn-ghost gap-2" onClick={setchange}>
+                                <button className="btn btn-ghost gap-2" onClick={()=>{navigate("/settings/home")}}>
                                     {t("Change_Settings")}
                                 </button>
-                                <button className="btn btn-ghost gap-2" onClick={logchange}>
+                                <button className="btn btn-ghost gap-2" onClick={()=>{navigate("/settings/log")}}>
                                     {t("Check_logs")}
                                 </button>
                             </Space>
@@ -384,26 +376,6 @@ function HomePage() {
     return (
         <>
             <NewHomePage></NewHomePage>
-            <br />
-            <br />
-            <SideSheet
-                style={{ maxWidth: "100%" }}
-                title={t("Settings")}
-                visible={setPagevisible}
-                onCancel={setchange}
-                placement={"right"}
-            >
-                <Settings />
-            </SideSheet>
-            <SideSheet
-                style={{ width: "100%" }}
-                title={t("Log_viewer")}
-                visible={Logvisible}
-                onCancel={logchange}
-                placement={"right"}
-            >
-                <Logs_Viewer />
-            </SideSheet>
         </>
     )
 }

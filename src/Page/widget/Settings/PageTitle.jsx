@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion, useTransform, useMotionValue } from 'framer-motion';
+import {detectDevice} from "../../../code/check_platform.js";
 
 const PageTitle = ({ title, scrollContainer }) => {
     const scrollYValue = useMotionValue(0); // 使用 MotionValue 跟踪滚动位置
@@ -27,7 +28,14 @@ const PageTitle = ({ title, scrollContainer }) => {
     const stickyTitleOpacity = useTransform(scrollYValue, [50, 150], [0, 1], { clamp: true });
     // 容器高度：0-200px 从 40vh 缩小到 10vh
     const containerHeight = useTransform(scrollYValue, [0, 200], ['15vh', '10vh']);
-
+    const calculateLeftOffset = (title, device) => {
+        if (device === "Phone") {
+            return `calc(44% - ${title.length}px)`;
+        } else {
+            return "50%";
+        }
+    };
+    const leftOffset = calculateLeftOffset(title, detectDevice());
     return (
         <>
             {/* 占位容器 */}
@@ -61,13 +69,12 @@ const PageTitle = ({ title, scrollContainer }) => {
                 style={{
                     position: 'absolute', // 改为 absolute，相对于 Content 容器
                     top: 16, // 距离容器顶部 16px
-                    left: "50%", // 距离容器左侧 24px
+                    left: detectDevice() === "Phone" ?leftOffset:"50%", // 距离容器左侧 24px
                     margin: 0,
                     opacity: stickyTitleOpacity,
                     zIndex: 9999,
                     pointerEvents: 'none',
-                    color: 'black',
-                    textAlign: 'left' // 确保左对齐
+                    textAlign: 'center' // 确保左对齐
                 }}
                 className="text-sm"
             >

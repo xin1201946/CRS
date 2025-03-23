@@ -7,7 +7,6 @@ import {
     Input,
     Radio,
     RadioGroup,
-    SideSheet,
     Space,
     Switch,
     Tag,
@@ -19,8 +18,6 @@ import {useState} from "react";
 import {Title} from "@douyinfe/semi-ui/lib/es/skeleton/item.js";
 import {IconClock, IconDelete} from "@douyinfe/semi-icons";
 import {setAutoTheme, setDarkTheme, setLightTheme} from "../../code/theme_color.js";
-import AdvancedSettingsPage from "./AdvancedSettings.jsx";
-import Logs_Viewer from "./Logs_Viewer.jsx";
 import {useTranslation} from "react-i18next";
 import {send_notify} from "../../code/SystemToast.jsx";
 import Chrome_AI_Info from "../info_Page/Chrome_AI_Info.jsx";
@@ -33,30 +30,15 @@ function BaseSPage(){
     const navigate = useNavigate();
     const { Text } = Typography;
     const [switchMenuPchecked, setswitchMenuPchecked] = useState('true'===getSettings('use_app_content_menu'));
-    const [newSettingsPchecked, setnewSettingsPchecked] = useState('true'===getSettings('use_new_setting_page'));
-    const [use_ai_page_checked, set_use_ai_pagechecked] = useState('true'===getSettings('use_ai_page'))
-    const [advanSvisible, setadvanSVisible] = useState(false);
-    const advanSchange = () => {
-        setadvanSVisible(!advanSvisible);
-    };
-    const [LogsPvisible, setLogsPVisible] = useState(false);
-    const LogsPchange = () => {
-        setLogsPVisible(!LogsPvisible);
-    };
+    const [use_use_gemini_checked, set_use_gemini_checked] = useState('true'===getSettings('use_gemini'))
     const onswitchMenuChange = checked => {
         setswitchMenuPchecked(checked);
         setSettings('use_app_content_menu',checked.toString());
         window.location.reload();
     };
-    const onsetnewSettingsPChange = checked => {
-        setnewSettingsPchecked(checked);
-        setSettings('use_new_setting_page',checked.toString());
-        navigate("/")
-        window.location.reload();
-    };
-    const onchange_ai_page = checked => {
-        set_use_ai_pagechecked(checked);
-        setSettings('use_ai_page',checked.toString());
+    const onchange_use_gemini = checked => {
+        set_use_gemini_checked(checked);
+        setSettings('use_gemini',checked.toString());
         window.location.reload();
     }
     const [showChromeAIInfo, setShowChromeAIInfo] = useState(false);
@@ -203,15 +185,6 @@ function BaseSPage(){
                         </Title>
                         <Switch checked={switchMenuPchecked} onChange={onswitchMenuChange}/>
                     </div>
-                    <div style={{display: 'flex', alignItems: 'center'}}>
-                        <Title heading={6} style={{margin: 8, backgroundColor: 'transparent', width: '90%'}}>
-                            <Space>
-                                {t('Use the new settings page')}
-                                <Tag size="small" shape='circle' color='blue'> New </Tag>
-                            </Space>
-                        </Title>
-                        <Switch checked={newSettingsPchecked} onChange={onsetnewSettingsPChange}/>
-                    </div>
                 </Card>
                 <br/>
                 <Card
@@ -309,7 +282,7 @@ function BaseSPage(){
                             <Title heading={6} style={{margin: 8, backgroundColor: 'transparent', width: '90%'}}>
                                 {t('Using Generative AI')}
                             </Title>
-                            <Switch disabled={getSettings('ai_support')==='False'} checked={use_ai_page_checked} onChange={onchange_ai_page} aria-label={'使用生成式AI'}/>
+                            <Switch disabled={getSettings('ai_support')==='False'} checked={use_use_gemini_checked} onChange={onchange_use_gemini} aria-label={'使用生成式AI'}/>
                         </Space>
                     </Space>
                 </Card>
@@ -321,25 +294,17 @@ function BaseSPage(){
                             fontWeight: "bold",
                             color: "var( --semi-color-text-2)"
                         }}>{t('Look_other_set')}</Text>
-                        <Text onClick={advanSchange}
+                        <Text onClick={()=>{navigate("/settings/advanced#HTTPS_Service_Setting")}}
                               style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('HTTPS_Service')}</Text>
-                        <Text onClick={advanSchange}
+                        <Text onClick={()=>{navigate("/settings/advanced#API_Settings")}}
                               style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('API_Settings')}</Text>
-                        <Text onClick={LogsPchange}
+                        <Text onClick={()=>{navigate("/settings/logs")}}
                               style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('Log_viewer')}</Text>
                     </Space>
                 </Card>
             </div>
             <br/>
             <Chrome_AI_Info visible={showChromeAIInfo} handleOk={()=>{setShowChromeAIInfo(false)}} />
-            <SideSheet style={{maxWidth: "100%"}} closeOnEsc={true} title={t('Advanced_Settings')} visible={advanSvisible}
-                       onCancel={advanSchange}>
-                <AdvancedSettingsPage></AdvancedSettingsPage>
-            </SideSheet>
-            <SideSheet style={{width: "100%"}} closeOnEsc={true} title={t('Log_viewer')} visible={LogsPvisible}
-                       onCancel={LogsPchange}>
-                <Logs_Viewer></Logs_Viewer>
-            </SideSheet>
         </>
     )
 }

@@ -5,7 +5,6 @@ import {
     Input,
     Popconfirm,
     Popover,
-    SideSheet,
     Space,
     Switch,
     Typography
@@ -14,26 +13,18 @@ import {getSettings, setSettings} from "../../code/Settings.js";
 import {IconInfoCircle} from "@douyinfe/semi-icons";
 import {useState} from "react";
 import {getAPI, setAPIJ, setDefaultAPI} from "../../code/server_api_settings.js";
-import BaseSPage from "./BaseS.jsx";
-import Logs_Viewer from "./Logs_Viewer.jsx";
 import {useTranslation} from "react-i18next";
+import {useNavigate} from "react-router-dom";
 
 function AdvancedSettingsPage() {
     const { t } = useTranslation();
     const [httpschecked, sethttpsChecked] = useState(getSettings('use_https')==='true');
     const { Text } = Typography;
-    const [advanSvisible, setadvanSVisible] = useState(false);
-    const advanSchange = () => {
-        setadvanSVisible(!advanSvisible);
-    };
-    const [LogsPvisible, setLogsPVisible] = useState(false);
-    const LogsPchange = () => {
-        setLogsPVisible(!LogsPvisible);
-    };
     const onhttpschange = (e) =>{
         sethttpsChecked(e)
         setSettings('use_https',e);
     }
+    const navigate = useNavigate();
     const onsave_api=()=>{
         const resultJson={
             "api_upload":document.getElementById('upload').value,
@@ -155,25 +146,16 @@ function AdvancedSettingsPage() {
                         fontWeight: "bold",
                         color: "var( --semi-color-text-2)"
                     }}>{t('Look_other_set')}</Text>
-                    <Text onClick={advanSchange}
+                    <Text onClick={()=>{navigate("/settings/basic#server_ip")}}
                           style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('Server_IP')}</Text>
-                    <Text onClick={advanSchange}
+                    <Text onClick={()=>{navigate("/settings/basic#theme_color")}}
                           style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('Theme_color')}</Text>
-                    <Text onClick={advanSchange}
+                    <Text onClick={()=>{navigate("/settings/basic#ui_set")}}
                           style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('UI_set')}</Text>
-                    <Text onClick={LogsPchange}
+                    <Text onClick={()=>{navigate("/settings/log")}}
                           style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('Log_viewer')}</Text>
                 </Space>
             </Card>
-            <br/>
-            <SideSheet style={{maxWidth: "100%"}} closeOnEsc={true} title={t('Base_Settings')} visible={advanSvisible}
-                       onCancel={advanSchange}>
-                <BaseSPage></BaseSPage>
-            </SideSheet>
-            <SideSheet style={{width: "100%"}} closeOnEsc={true} title={t('Log_viewer')} visible={LogsPvisible}
-                       onCancel={LogsPchange}>
-                <Logs_Viewer></Logs_Viewer>
-            </SideSheet>
             <br/>
         </>
     )

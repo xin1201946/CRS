@@ -5,8 +5,8 @@ let session = null; // AI 会话
 
 export async function initAI() {
     try {
-        if (typeof ai === "undefined") {
-            throw new Error("ai is not defined. The API may have changed or is not enabled in this browser.");
+        if (typeof ai === "undefined" ) {
+            throw new Error("Ai is not defined. The API may have changed or is not enabled in this browser.");
         }
         session = await ai.languageModel.create({
             systemPrompt: "You are a Program developer, used to assist users in solving program problems.\n" +
@@ -74,7 +74,7 @@ export async function tryAskAI(something) {
             return 'AI session is not initialized.';
         }
 
-        if (getSettings('ai_support') !== "False") {
+        if (getSettings('ai_support') !== "False" && getSettings("use_gemini") !== "false") {
             const result = await session.prompt(something);
             return typeof result === 'string' ? result : `Invalid result format: ${JSON.stringify(result)}`;
         } else {
@@ -92,7 +92,7 @@ export async function tryAskAIStream(something, onChunk) {
             add_log('Chrome_AI_Support', 'error', 'Session is not initialized.');
             return 'AI session is not initialized.';
         }
-        if (getSettings('ai_support') !== "False") {
+        if (getSettings('ai_support') !== "False" && getSettings("use_gemini") !== "false") {
             const result = session.promptStreaming(something);
             let fullResponse = "";
             for await (const chunk of result) {

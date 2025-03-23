@@ -5,14 +5,12 @@ import {IconCode, IconHome, IconMailStroked1, IconScan, IconSidebar, IconTermina
 import {emit, off, on} from "../code/PageEventEmitter.js";
 import {useTranslation} from 'react-i18next';
 import NotifyCenter from "../Page/NotifyCenter.jsx";
-import {getSettings} from "../code/Settings.js";
 import {detectDevice} from "../code/check_platform.js";
-import {FooterPage} from "../Footer/Footer.jsx";
-import {Settings} from "../Page/Settings.jsx";
+import {useNavigate} from "react-router-dom";
 
 function Nav_T (){
     const [collapsed, setCollapsed] = useState(false);
-
+    const navigate = useNavigate();
     const toggleCollapse = () => {
         setCollapsed(!collapsed);
     };
@@ -21,10 +19,6 @@ function Nav_T (){
     const [NotifyCenter_visible, set_NotifyCenter_visible] = useState(false);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [selectItem, setselectItem] = useState(1);
-    const [settingP_visible, set_settingP_Visible] = useState(false);
-    const s_side_sheet_change = () => {
-        set_settingP_Visible(!settingP_visible);
-    };
     const NotifyCenter_change = () => {
         set_NotifyCenter_visible(!NotifyCenter_visible);
     };
@@ -50,7 +44,7 @@ function Nav_T (){
             emit('changePage', key.itemKey);
         } else if (key.itemKey === 'settings') {
             // 调用 s_side_sheet_change 函数
-            s_side_sheet_change();
+            navigate("/settings");
         } else {
 
             // 调用 NotifyCenter_change 函数
@@ -162,11 +156,6 @@ function Nav_T (){
                         <span className="dock-label">{t('Settings')}</span>
                     </button>
                 </div>
-                <SideSheet closeOnEsc={true} style={{maxWidth: "100%", fontFamily: "var(--Default-font)"}}
-                           title={t('Settings')}
-                           visible={settingP_visible} onCancel={s_side_sheet_change} footer={<FooterPage></FooterPage>}>
-                    <Settings></Settings>
-                </SideSheet>
             </>
         )
     }

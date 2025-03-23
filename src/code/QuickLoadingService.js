@@ -11,8 +11,7 @@ export default function initializeSettings(){
     const server_ip= "127.0.0.1:5000"
     const language= 2
     const use_https ='true'
-    const use_ai_page='false'
-    const use_new_setting_page='false'
+    const use_gemini='false'
     const theme_color= "auto" // theme_color 仅有三个值 light dark auto
     const api_service = {
         "api_isHTTPS" : '/isHTTPS',
@@ -32,9 +31,8 @@ export default function initializeSettings(){
     checkAPIAvailability().then();
     getSettings('Language')===null ? setSettings("Language",language):"";
     getSettings('notify_card')===null ? setSettings("notify_card",notify_card):"";
-    getSettings('use_ai_page')===null ? setSettings("use_ai_page",use_ai_page):"";
+    getSettings('use_gemini')===null ? setSettings("use_gemini",use_gemini):"";
     getSettings('use_app_content_menu')===null ? setSettings("use_app_content_menu",use_app_content_menu):"";
-    getSettings('use_new_setting_page')===null ? setSettings("use_new_setting_page",use_new_setting_page):"";
     getSettings('uuid')===null ? setSettings("uuid",uuid):"";
     getSettings('server_ip')===null ? setSettings("server_ip",server_ip):"";
     getSettings('theme_color')===null ? setSettings("theme_color",theme_color):"";
