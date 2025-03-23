@@ -38,7 +38,7 @@ function Header1 (){
     const [settingP_visible, set_settingP_Visible] = useState(false);
     const s_side_sheet_change = () => {
         if (getSettings('use_new_setting_page')==="true" && detectDevice() === 'PC'){
-            navigate("/settings");
+            navigate("/settings/home");
         }else{
             set_settingP_Visible(!settingP_visible);
         }
