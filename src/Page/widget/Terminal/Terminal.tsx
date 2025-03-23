@@ -17,7 +17,7 @@ interface TerminalProps {
 export const Terminal: React.FC<TerminalProps> = ({ commands, initScript, onExecCmd }) => {
   const [input, setInput] = useState('');
   const [waitingForInput, setWaitingForInput] = useState(false);
-  const { messages, context, customContext, addMessage } = useTerminalStore();
+  const { messages, context, customContext, addMessage, setInitializing } = useTerminalStore();
   const terminalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const initRef = useRef(false);
@@ -212,6 +212,7 @@ export const Terminal: React.FC<TerminalProps> = ({ commands, initScript, onExec
     const runInitScript = async () => {
       if (initScript && !initRef.current) {
         initRef.current = true;
+        setInitializing(true);
         addMessage({
           type: 'normal',
           class: 'info',
@@ -219,7 +220,6 @@ export const Terminal: React.FC<TerminalProps> = ({ commands, initScript, onExec
         });
 
         for (const cmd of initScript) {
-          addMessage({ type: 'normal', content: `${context} $ ${cmd}` });
           await executeCommand(cmd);
         }
 
@@ -228,6 +228,7 @@ export const Terminal: React.FC<TerminalProps> = ({ commands, initScript, onExec
           class: 'success',
           content: '✨ Initialization complete!'
         });
+        setInitializing(false);
       }
     };
 
@@ -303,7 +304,7 @@ export const Terminal: React.FC<TerminalProps> = ({ commands, initScript, onExec
       <div className="card-body p-0 ">
         <div className="p-2 flex items-center gap-2 rounded-t-xl">
             <TerminalIcon size={18} />
-            <span className="font-mono text-sm">React Web Terminal</span>
+            <span className="font-mono text-sm">CCRS Terminal</span>
         </div>
 
         <div

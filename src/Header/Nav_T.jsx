@@ -63,10 +63,11 @@ function Nav_T (){
             {itemKey: 'vision', text: t('Vision'), icon:<IconScan />},
             {itemKey: 'console', text: t('Console'), icon:<IconTerminal />},
             {itemKey: 'message', text: t('NotifyCenter'), icon:<IconMailStroked1 />},
+            {itemKey: 'ai', text: t('AI'), icon:<IconCode />}
         ]
-        if ('true'===getSettings('use_ai_page')){
-            items.push({itemKey: 'ai', text: t('AI'), icon:<IconCode />})
-        }
+        // if ('true'===getSettings('use_ai_page')){
+        //     items.push({itemKey: 'ai', text: t('AI'), icon:<IconCode />})
+        // }
         return items;
     }
     useEffect(() => {

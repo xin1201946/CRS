@@ -20,10 +20,25 @@ const commands: Command[] = [
     command_description: "Display help information for commands.\nUsage:\n  help - Show all available commands\n  help <command> - Show detailed help for a specific command"
   },
   {
-    key:"echo",
-    group:"system",
-    usage:"echo [something text]",
-    description: "Display help information for echo "
+    key: "echo",
+    group: "system",
+    usage: "echo [text] | echo on/off",
+    description: "Display text with variable expansion or control command feedback",
+    command_description: "Displays text and expands variables using $variable syntax, or controls command feedback with on/off",
+    example: [
+      {
+        cmd: "echo Hello $name",
+        des: "Displays 'Hello' followed by the value of variable 'name'"
+      },
+      {
+        cmd: "echo off",
+        des: "Disables command feedback messages"
+      },
+      {
+        cmd: "echo on",
+        des: "Enables command feedback messages"
+      }
+    ]
   },
   {
     key:"sqLite",
@@ -32,10 +47,10 @@ const commands: Command[] = [
     description: "You can enter SQL statements only when you enter the sqLite end point. After entering, enter --help to view the supported commands.",
   },
   {
-    key:"sl",
+    key:"RExec",
     group:"server",
-    usage:"sl <command>",
-    description: "This is for entering SQL commands.",
+    usage:"RExec <command>",
+    description: "RExec is a tool for executing commands directly on the server, bypassing the frontend's command handling mechanism. For example, it can run SQLite commands or other commands that may conflict with the frontend.",
   },
   {
     key:"exit",
@@ -148,15 +163,25 @@ const commands: Command[] = [
     group:"bash",
     usage:"open <url>",
     description:"Create a new window and open the URL"
+  },
+  {
+    key: "clear",
+    group: "system",
+    usage: "clear",
+    description: "Clear the terminal screen",
+    command_description: "Clears all output from the terminal screen."
   }
 ];
 
 function WebTerminal({sendCommand}) {
-  const { setContext, setVariable, getVariable, addMessage } = useTerminalStore();
+  const { setContext, setVariable, getVariable, addMessage, clearMessages, setEchoEnabled } = useTerminalStore();
   // 定义初始化脚本
-  const initScript = [
-    "info",
-    "exit"
+    const initScript = [
+      "echo off",
+      "clear",
+      "info",
+      "exit",
+      "echo on"
   ];
   // Function to expand variables in a string
   const expandVariables = (text: string): string => {
@@ -178,7 +203,7 @@ function WebTerminal({sendCommand}) {
         type:"normal",
         content: await sendCommand('sql')
       })
-    } else if (key.startsWith("sl")) {
+    } else if (key.startsWith("RExec")) {
       const prompt = command.substring(3);
       success({
         type:"normal",
@@ -196,13 +221,30 @@ function WebTerminal({sendCommand}) {
         class: "info",
         content: await sendCommand(command)
       })
-    } else if (key.startsWith("echo")) {
-      const text = command.substring(5) || pipeInput || '';
-      success({
-        type: "normal",
-        class: "info",
-        content: text.trim()
-      });
+    } else if (key === "echo") {
+      const args = command.substring(5).trim();
+      if (args === 'off') {
+        setEchoEnabled(false);
+        success({
+          type: "normal",
+          class: "info",
+          content: "Command feedback disabled"
+        });
+      } else if (args === 'on') {
+        setEchoEnabled(true);
+        success({
+          type: "normal",
+          class: "info",
+          content: "Command feedback enabled"
+        });
+      } else {
+        const text = args || pipeInput || '';
+        success({
+          type: "normal",
+          class: "info",
+          content: text.trim()
+        });
+      }
     } else if (key === "json") {
       success({
         type: "json",
@@ -330,72 +372,16 @@ function WebTerminal({sendCommand}) {
     </ul>
   </div>
 </div>
-
         `
       })
     }
-    // else if (key === "fail") {
-    //       failed("Command execution failed: Simulated error result");
-    // }else if (key === "code") {
-    //   success({
-    //     type: "code",
-    //     content:
-    //         'import React from "react"\n' +
-    //         'import ReactDOM from "react-dom/client"\n' +
-    //         'import App from "./App"\n' +
-    //         'import "./index.css"\n' +
-    //         '\n' +
-    //         'ReactDOM.createRoot(document.getElementById("root")!).render(\n' +
-    //         '  <React.StrictMode>\n' +
-    //         '    <App />\n' +
-    //         '  </React.StrictMode>,\n' +
-    //         ')\n',
-    //   });
-    // } else if (key === "table") {
-    //   success({
-    //     type: "table",
-    //     content: {
-    //       head: ["Title 1", "Title 2", "Title 3", "Title 4"],
-    //       rows: [
-    //         ["Name 1", "Hello world", "This is test 1", "XXXXX"],
-    //         ["Name 2", "Hello world", "This is test 2", "XXXXX"],
-    //       ],
-    //     },
-    //   });
-    // } else if (key === "html") {
-    //   success({
-    //     type: "html",
-    //     content: `
-    //       <div class="space-y-2">
-    //         <div class="text-success">● Directory 1</div>
-    //         <div class="text-success">● Directory 2</div>
-    //         <div class="text-info">○ File 1</div>
-    //         <div class="text-info">○ File 2</div>
-    //       </div>
-    //     `,
-    //   });
-    // }  else if (key === "greet") {
-    //   success({
-    //     type: "input",
-    //     class: "info",
-    //     inputPrompt: "What is your name?",
-    //     onInput: (value: string) => {
-    //       if (!value.trim()) {
-    //         addMessage({
-    //           type: "normal",
-    //           class: "error",
-    //           content: "Name cannot be empty!"
-    //         });
-    //         return;
-    //       }
-    //       addMessage({
-    //         type: "normal",
-    //         class: "success",
-    //         content: `? Hello, ${value}! Welcome to the terminal!`
-    //       });
-    //     }
-    //   });
-    // }
+    else if (key === "clear") {
+      clearMessages();
+      success({
+        type: "normal",
+        content: ""
+      });
+    }
     else {
       failed({
         type: "normal",

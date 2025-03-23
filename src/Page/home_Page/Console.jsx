@@ -188,25 +188,29 @@ function Console(){
 
     return (
         <>
-            <div style={{ display: 'flex', flexDirection: 'column', maxHeight: '100%' }}>
-                <Content style={{ flex: '9'}}>
+            <div style={{ display: 'flex', flexDirection: 'column', height: '89vh' }}>
+                <Content style={{ flex: 1 }}>
                     <WebTerminal sendCommand={send_command} />
                 </Content>
                 <Card
                     bordered={false}
                     style={{
-                        flex: '1',
                         width: '100%',
                         display: 'flex',
                         alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 -2px 6px rgba(0, 0, 0, 0.1)', // 轻微上方阴影
+                        borderRadius: '8px 8px 0 0', // 仅顶部圆角
+                        padding: '12px',
                     }}>
-                    <ButtonGroup>
-                        <Button onClick={Search_history_Lungu}>{t('Search_history_Lungu')}</Button>
-                        <Button onClick={Search_moju_Lungu}>{t('Search_moju_lungu')}</Button>
-                        <Button onClick={() => { view_table() }}>{t('History')}</Button>
+                    <ButtonGroup style={{ display: 'flex', gap: '12px' }}>
+                        <Button type="primary" onClick={Search_history_Lungu}>{t('Search_history_Lungu')}</Button>
+                        <Button type="default" onClick={Search_moju_Lungu}>{t('Search_moju_lungu')}</Button>
+                        <Button type="dashed" onClick={() => { view_table() }}>{t('History')}</Button>
                     </ButtonGroup>
                 </Card>
             </div>
+
             <Modal
                 title="Table"
                 visible={Table_Visible}

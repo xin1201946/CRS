@@ -14,10 +14,10 @@ function OcrDemo() {
     const [analysisState, setAnalysisState] = useState("initial") // initial, detecting, zoomed
     const [showthird, setshowthird] = useState(false)
     const [showConfidence, setShowConfidence] = useState(false)
+    const [isVisible, setIsVisible] = useState(window.innerWidth > 1200) // 初始判断
 
     useEffect(() => {
         if (analysisState === "detecting") {
-            // Simulate detection process
             setTimeout(() => {
                 setAnalysisState("zoomed")
                 setTimeout(() => {
@@ -30,6 +30,17 @@ function OcrDemo() {
         }
     }, [analysisState])
 
+    useEffect(() => {
+        // 监听窗口变化
+        const handleResize = () => {
+            setIsVisible(window.innerWidth > 1200)
+        }
+        window.addEventListener("resize", handleResize)
+        return () => window.removeEventListener("resize", handleResize) // 组件卸载时清理
+    }, [])
+
+    if (!isVisible) return null // 小于 1200px 时不渲染组件
+
     return (
         <div className="relative w-auto max-w-lg mx-auto">
             <div className="relative bg-[semi-color-bg-3] p-6 rounded-xl shadow-2xl">
@@ -41,31 +52,21 @@ function OcrDemo() {
                 <div className="relative">
                     <div className="aspect-square relative overflow-hidden rounded-lg">
                         {analysisState === "zoomed" ? (
-                            // zoomed 状态：先显示 HOME2.jpg，再覆盖 HOME3.jpg（二值化图层）
                             <>
-                                {/* 底图：HOME2.jpg */}
                                 <img
-                                    src={showthird?"./HOME3.jpg":"./HOME2.jpg"}
+                                    src={showthird ? "./HOME3.jpg" : "./HOME2.jpg"}
                                     alt="Mechanical part (zoomed)"
                                     className="w-full h-full object-cover"
                                 />
-
-                                {/* 在覆盖层上画检测框 */}
-                                <div className="absolute inset-0" style={{display:showConfidence?"grid":"none"}}>
-                                    <div
-                                        className="absolute top-[25%] left-[24%] w-[40%] h-[25%]
-                               border-2 border-success rounded-md"
-                                    >
+                                <div className="absolute inset-0" style={{ display: showConfidence ? "grid" : "none" }}>
+                                    <div className="absolute top-[25%] left-[24%] w-[40%] h-[25%] border-2 border-success rounded-md">
                                         {showConfidence && (
                                             <div className="absolute -top-8 left-0 bg-success/90 text-white px-2 py-1 rounded text-sm">
                                                 1 (99.8%)
                                             </div>
                                         )}
                                     </div>
-                                    <div
-                                        className="absolute top-[43%] left-[30%] w-[40%] h-[25%]
-                               border-2 border-success rounded-md"
-                                    >
+                                    <div className="absolute top-[43%] left-[30%] w-[40%] h-[25%] border-2 border-success rounded-md">
                                         {showConfidence && (
                                             <div className="absolute -top-8 left-0 bg-success/90 text-white px-2 py-1 rounded text-sm">
                                                 1 (99.5%)
@@ -75,7 +76,6 @@ function OcrDemo() {
                                 </div>
                             </>
                         ) : (
-                            // 非 zoomed 状态仍显示原图 HOME1.jpg
                             <img
                                 src="./HOME1.jpg"
                                 alt="Mechanical part"
@@ -85,46 +85,41 @@ function OcrDemo() {
                             />
                         )}
 
-                        {/* 检测中状态下显示的第一次检测框 */}
                         {analysisState === "detecting" && (
                             <div className="absolute inset-0">
-                                <div
-                                    className="absolute top-[23%] left-[33%] w-[40px] h-[30px]
-                             border-2 border-primary rounded-md transition-all duration-500 animate-pulse"
-                                ></div>
+                                <div className="absolute top-[23%] left-[33%] w-[40px] h-[30px] border-2 border-primary rounded-md transition-all duration-500 animate-pulse"></div>
                             </div>
                         )}
                     </div>
 
-                    {/* 进度条 */}
                     {analysisState === "detecting" && (
                         <div className="mt-4 h-2 bg-base-300 rounded-full overflow-hidden">
                             <div className="h-full bg-primary animate-progress"></div>
                         </div>
                     )}
 
-                    {/* 状态文字和按钮 */}
                     <div className="mt-4 flex items-center justify-between">
                         <div className="text-sm text-base-content/70">
                             {analysisState === "initial" && t("Tip_Homepage_jd_1")}
                             {analysisState === "detecting" && t("Tip_Homepage_jd_2")}
                             {analysisState === "zoomed" && t("Tip_Homepage_jd_3")}
-                            {showConfidence && t('Tip_Homepage_jd_4')}
+                            {showConfidence && t("Tip_Homepage_jd_4")}
                         </div>
                         {analysisState === "initial" && (
                             <button
                                 onClick={() => setAnalysisState("detecting")}
                                 className="btn btn-primary btn-sm gap-2"
                             >
-                                {t('Tip_Homepage_jd_button')}
+                                {t("Tip_Homepage_jd_button")}
                             </button>
                         )}
                     </div>
                 </div>
             </div>
         </div>
-    );
+    )
 }
+
 function HomePage() {
     const { t } = useTranslation()
     const [setPagevisible, setPagechange] = useState(false)

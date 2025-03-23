@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useState } from "react"
-import { tryAskAI } from "../code/chrome_gemini_support.js"
+import { tryAskAIStream} from "../code/chrome_gemini_support.js"
 import AIChatComponent from "./widget/AIChatComponent.jsx"
 
 const defaultMessage = []
@@ -35,24 +35,30 @@ function Chrome_ai_page() {
             id: getId(),
             createAt: Date.now(),
             content: content,
-        }
-        setMessage((prevMessages) => [...prevMessages, userMessage])
+        };
+        setMessage((prevMessages) => [...prevMessages, userMessage]);
 
-        // Get AI response
+        // 预创建一个空的 AI 消息对象
+        const aiMessageId = getId();
+        setMessage((prevMessages) => [
+            ...prevMessages,
+            { role: "assistant", id: aiMessageId, createAt: Date.now(), content: "" },
+        ]);
+
         try {
-            const result = await tryAskAI(content)
-            const newAssistantMessage = {
-                role: "assistant",
-                id: getId(),
-                createAt: Date.now(),
-                content: result,
-            }
-            setMessage((prevMessages) => [...prevMessages, newAssistantMessage])
+            await tryAskAIStream(content, (chunk, fullResponse) => {
+                setMessage((prevMessages) =>
+                    prevMessages.map((msg) =>
+                        msg.id === aiMessageId ? { ...msg, content: fullResponse } : msg
+                    )
+                );
+            });
         } catch (error) {
-            console.error("Error getting AI response:", error)
-            // You might want to add an error message to the chat here
+            console.error("Error getting AI response:", error);
         }
-    }, [])
+    }, []);
+
+
 
     return (
         <AIChatComponent
