@@ -1,8 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, {useEffect, useState} from 'react';
 import {Button, Dropdown, SideSheet, Space, Typography} from '@douyinfe/semi-ui';
-import {Settings} from "../Page/Settings.jsx";
-import {FooterPage} from "../Footer/Footer.jsx";
 import {MdHdrAuto, MdOutlineDarkMode, MdOutlineLightMode} from "react-icons/md";
 import {getSetTheme, setAutoTheme, setDarkTheme, setLightTheme} from "../code/theme_color.js";
 import {IconLanguage, IconMail, IconSetting} from "@douyinfe/semi-icons";
@@ -10,7 +8,6 @@ import {detectDevice} from "../code/check_platform.js";
 import {useTranslation} from 'react-i18next';
 import checkNetwork from "../code/NetWorkConnect.js";
 import {getServer} from "../code/get_server.js";
-import AdvancedSettingsPage from "../Page/settings_page/AdvancedSettings.jsx";
 import {send_notify} from "../code/SystemToast.jsx";
 import {get_language, set_language} from "../code/language.js";
 import {getSettings} from "../code/Settings.js";
@@ -50,10 +47,6 @@ function Header1 (){
     const changeSelectKey = ()=>{
         emit('changePage', "home")
     }
-    const [settingadv_visible, set_settingadv_Visible] = useState(false);
-    const adv_side_sheet_change = () => {
-        set_settingadv_Visible(!settingadv_visible);
-    };
     const [NotifyCenter_visible, set_NotifyCenter_visible] = useState(false);
     const NotifyCenter_change = () => {
         set_NotifyCenter_visible(!NotifyCenter_visible);
@@ -118,7 +111,7 @@ function Header1 (){
                                     <Button
                                         style={{ marginLeft: '5px' }}
                                         className="semi-button semi-button-warning"
-                                        onClick={s_side_sheet_change}
+                                        onClick={()=>{navigate('/settings/basic')}}
                                         type="button"
                                     >
                                         {t('Server_IP')}
@@ -126,7 +119,7 @@ function Header1 (){
                                     <Button
                                         style={{ marginLeft: '5px' }}
                                         className="semi-button semi-button-warning"
-                                        onClick={adv_side_sheet_change}
+                                        onClick={()=>{navigate('/settings/advanced#API_Settings')}}
                                         type="button"
                                     >
                                         {t('HTTPS_settings_API_settings')}
@@ -244,17 +237,6 @@ function Header1 (){
         <>
             {MyComponent()}
             <New_Nav/>
-            <SideSheet closeOnEsc={true} style={{maxWidth: "100%"}}
-                       title={t('Settings')}
-                       visible={settingP_visible} onCancel={s_side_sheet_change} footer={<FooterPage></FooterPage>}>
-                <Settings></Settings>
-            </SideSheet>
-            <SideSheet closeOnEsc={true} style={{maxWidth: "100%"}}
-                       title={t('Advanced_Settings')}
-                       visible={settingadv_visible} onCancel={adv_side_sheet_change}
-                       footer={<FooterPage></FooterPage>}>
-                <AdvancedSettingsPage></AdvancedSettingsPage>
-            </SideSheet>
             <SideSheet closeOnEsc={true} placement='left' style={{maxWidth: "100%"}}
                        title={t('NotifyCenter')}
                        visible={NotifyCenter_visible} onCancel={NotifyCenter_change}>

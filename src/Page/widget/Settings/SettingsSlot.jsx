@@ -27,7 +27,6 @@ class ErrorBoundary extends React.Component {
                 </div>
             );
         }
-
         return this.props.children;
     }
 }
@@ -60,26 +59,28 @@ const SettingsSlot = ({
     };
 
     return (
-        <ErrorBoundary>
-            <Suspense fallback={<LoadingFallback />}>
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        {...(transition ? pageTransition : {})}
-                        style={{
-                            backgroundColor,
-                            color: textColor,
-                            margin:"10px",
-                            height: '80vh',
-                            overflow: 'auto'       // 超出部分显示滚动条
-                        }}
-                        className="bg-white rounded-lg shadow-sm"
-                    >
-                        <Component />
-                    </motion.div>
-                </AnimatePresence>
-            </Suspense>
+        <div>
+            <ErrorBoundary>
+                <Suspense fallback={<LoadingFallback />}>
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            {...(transition ? pageTransition : {})}
+                            style={{
+                                backgroundColor,
+                                color: textColor,
+                                margin:"10px",
+                                height: '80vh',
+                            }}
+                            className="bg-white rounded-lg shadow-sm"
 
-        </ErrorBoundary>
+                        >
+                            <Component />
+                        </motion.div>
+                    </AnimatePresence>
+                </Suspense>
+
+            </ErrorBoundary>
+        </div>
     );
 };
 

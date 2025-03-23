@@ -21,3 +21,16 @@
     pointer-events: none;
     border-radius: 1.5px;
 }
+
+/* 确保滚动容器正确渲染 */
+.semi-layout-content {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* 修复motion.div的布局问题 */
+.motion-div-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}

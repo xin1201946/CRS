@@ -71,21 +71,6 @@ function HomeSettings() {
                     margin: "0 auto",
                 }}
             >
-                {/* Header with search bar */}
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        marginBottom: "32px",
-                        textAlign: "center",
-                    }}
-                >
-                    <Title heading={2} style={{ margin: "0 0 16px 0" }}>
-                        {t("Settings")}
-                    </Title>
-                </div>
-
                 {/* Settings cards */}
                 <Space vertical align="start" spacing={24} style={{ width: "100%" }}>
                     {settingsGroups.map((group, index) => (

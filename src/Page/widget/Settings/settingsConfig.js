@@ -19,7 +19,7 @@ export const useSettingsRoutes = () => {
             component: HomeSettings,
             icon: Home,
             text: t("Home"),
-            description: ''
+            description: t("Settings")
         },
         {
             path: 'basic',
