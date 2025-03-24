@@ -161,6 +161,7 @@ const AIChatComponent = ({
                             <div className="relative max-w-[70%]">
                                 <div
                                     style={{
+                                        userSelect:"text",
                                         overflowY: "auto",
                                     }}
                                     className={`rounded-lg p-3 group ${isUser ? userBubbleColor : aiBubbleColor} ${textColor} relative`}
