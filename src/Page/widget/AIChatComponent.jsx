@@ -5,20 +5,23 @@ import PropTypes from "prop-types";
 import { Send, Copy, ArrowDown } from "lucide-react";
 import { send_notify } from "../../code/SystemToast.jsx";
 import { t } from "i18next";
-import {Button, TextArea, Space, MarkdownRender} from "@douyinfe/semi-ui";
+import {Button, TextArea,HotKeys, Space, MarkdownRender} from "@douyinfe/semi-ui";
 import {getSettings} from "../../code/Settings.js";
+import {add_log} from "../../code/log.js";
+import {useNavigate} from "react-router-dom";
 
 class ErrorBoundary extends React.Component {
     state = { hasError: false };
 
     static getDerivedStateFromError(error) {
         // 如果需要可以在此处记录错误
+        add_log("Error in AI ChatComponent: ",'error', error.toString());
         return { hasError: true };
     }
 
     componentDidCatch(error, errorInfo) {
         // 这里可以用来记录错误日志，或者进行其他处理
-        console.error("Error caught in ErrorBoundary:", error, errorInfo);
+        add_log("Error caught in ErrorBoundary:",'error', errorInfo.toString());
     }
 
     render() {
@@ -27,6 +30,7 @@ class ErrorBoundary extends React.Component {
             return null; // 这里什么都不渲染，避免显示错误信息
         }
 
+        // eslint-disable-next-line react/prop-types
         return this.props.children;
     }
 }
@@ -44,22 +48,8 @@ const AIChatComponent = ({
     const [showScrollButton, setShowScrollButton] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const chatContainerRef = useRef(null);
-    const markdown_components = {};
-    markdown_components['daima'] = ({ children }) => {
-        return <div className="mockup-code w-full">
-            {children}
-        </div>
-    }
-    markdown_components['div'] = ({ children,className }) => {
-        return <div className={className}>
-            {children}
-        </div>
-    }
-    markdown_components['Alert'] = ({ children,className }) => {
-        return <div role="alert" className={className}>
-            {children}
-        </div>
-    }
+    const navgate = useNavigate();
+    const hotKeys = [HotKeys.Keys.Control, 'Enter'];
     // 如果未允许使用 AI，则自动弹出不可关闭的 modal
     useEffect(() => {
         if (getSettings("use_ai_page") !== "true") {
@@ -125,7 +115,7 @@ const AIChatComponent = ({
                         {getSettings("ai_support") !== "true" ? (
                             <p>
                                 Please use a browser that meets the requirements and go to{" "}
-                                <a href="/settings/basic/#AI_Setting" className="text-blue-500">
+                                <a className="link link-hover link-primary" onClick={()=>{navgate("/settings/basic/#AI_Setting")}}>
                                     {t("Settings")} &gt; {t("Base_Settings")}
                                 </a>{" "}
                                 review the configuration requirements.
@@ -133,7 +123,7 @@ const AIChatComponent = ({
                         ) : (
                             <p>
                                 The AI function is not turned on, please go to{" "}
-                                <a href="/settings/basic/#AI_Setting" className="text-blue-500">
+                                <a onClick={()=>{navgate("/settings/basic/#AI_Setting")}} className="link link-hover link-primary">
                                     {t("Settings")} &gt; {t("Base_Settings")}
                                 </a>{" "}
                                 and enable it.
@@ -176,7 +166,7 @@ const AIChatComponent = ({
                                     className={`rounded-lg p-3 group ${isUser ? userBubbleColor : aiBubbleColor} ${textColor} relative`}
                                 >
                                     <ErrorBoundary>
-                                        <MarkdownRender raw={message.content}  format="md" components={markdown_components}></MarkdownRender>
+                                        <MarkdownRender raw={message.content}  format="md"/>
                                     </ErrorBoundary>
 
                                     <button
@@ -218,12 +208,13 @@ const AIChatComponent = ({
                         justify="center" // 确保内容水平居中
                         style={{ width: "80%", margin: "0 auto" }}
                     >
+                        <HotKeys hotKeys={hotKeys} style={{display:"none"}} onHotKey={handleSubmit}/>
                         <TextArea
                             value={input}
-                            autosize={{ minRows: 5, maxRows: 10 }}
+                            autosize={{ minRows: 3, maxRows: 10 }}
                             onChange={(value, event) => setInput(event.target.value)}
                             disabled={isLoading}
-                            placeholder=""
+                            placeholder="Press Ctrl+Enter to send the message"
                         />
                         <Button type="submit" disabled={isLoading} onClick={handleSubmit}>
                             <Send size={20} />

@@ -15,6 +15,7 @@ import {
 
 import { useNavigate } from 'react-router-dom';
 import {useTranslation} from "react-i18next";
+import {detectDevice} from "../../code/check_platform.js";
 
 const { Title, Text } = Typography
 
@@ -25,6 +26,7 @@ function HomeSettings() {
     const settingsGroups = [
         {
             title: t("Recommended settings"),
+            linkTo:"/settings/home#reco",
             items: [
                 { name: t("Server_IP"), icon: <Server size={20} />, url: "/settings/basic/#server_ip" },
                 { name: t("Use_https"), icon: <ShieldCheck size={20} />, url: "/settings/advanced/#HTTPS_Service_Setting" },
@@ -33,6 +35,7 @@ function HomeSettings() {
         },
         {
             title: t("Base_Settings"),
+            linkTo:"/settings/basic",
             items: [
                 { name: t("Server_IP"), icon: <Server size={20} />, url: "/settings/basic/#server_ip" },
                 { name: t("Theme_color"), icon: <Palette size={20} />, url: "/settings/basic/#theme_color" },
@@ -43,6 +46,7 @@ function HomeSettings() {
         },
         {
             title: t("Advanced_Settings"),
+            linkTo:"/settings/advanced",
             items: [
                 { name: t("Use_https"), icon: <ShieldCheck size={20} />, url: "/settings/advanced/#HTTPS_Service_Setting" },
                 { name: t("API_Settings"), icon: <Cloud size={20} />, url: "/settings/advanced/#API_Settings" },
@@ -50,6 +54,7 @@ function HomeSettings() {
         },
         {
             title: t("Other settings"),
+            linkTo:"/settings/home#othe",
             items: [
                 { name: t("About"), icon: <Info size={20} />, url: "/settings/about" },
                 { name: t("Log_viewer"), icon: <FileText size={20} />, url: "/settings/logs/" },
@@ -60,14 +65,15 @@ function HomeSettings() {
     return (
         <div
             style={{
-                padding: "32px",
+                padding: detectDevice()==="PC"?"20px":"0px",
+                paddingBottom: detectDevice() === "PC" ? "0px" : "30px",
                 backgroundColor: "var(--semi-color-bg-0)",
                 minHeight: "100vh",
             }}
         >
             <div
                 style={{
-                    maxWidth: "600px",
+                    maxWidth: "100%",
                     margin: "0 auto",
                 }}
             >
@@ -76,6 +82,7 @@ function HomeSettings() {
                     {settingsGroups.map((group, index) => (
                         <Card
                             key={index}
+                            id={group.title.toString().toLowerCase().slice(0,4)}
                             shadows="hover"
                             style={{
                                 borderRadius: "12px",
@@ -91,7 +98,7 @@ function HomeSettings() {
                                 backgroundColor: "var(--semi-color-fill-0)",
                             }}
                             header={
-                                <Title heading={5} style={{ margin: 0 }}>
+                                <Title heading={5} style={{ margin: 0 }}  onClick={() => navigate(`${group.linkTo}`)}>
                                     {group.title}
                                 </Title>
                             }
