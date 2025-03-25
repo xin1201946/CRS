@@ -26,23 +26,69 @@ function Step1() {
     async function get_result() {
         setLoading(true);
         try {
-            const response = await fetch(`${getServer()}${getAPI('start')}?uuid=${getSettings('uuid')}`);
-            const data = await response.json();
-            update(data);
+            // 1. 提交任务
+            const startResponse = await fetch(`${getServer()}${getAPI('start')}?uuid=${getSettings('uuid')}`);
+            const startData = await startResponse.json();
+
+            if (!startResponse.ok) {
+                add_log('Start Error', 'error', startData.info);
+                setLoading(false);
+                return;
+            }
+
+            const task_uuid = startData.task_uuid;
+            add_log('Task Submitted', 'info', `Task UUID: ${task_uuid}`);
+
+            // 2. 轮询 /status 直到任务完成
+            let status = "waiting";
+            let result = null;
+
+            while (status === "waiting" || status === "processing") {
+                await new Promise((resolve) => setTimeout(resolve, 1000)); // 1秒轮询一次
+
+                const statusResponse = await fetch(`${getServer()}${getAPI('status')}?task=${task_uuid}`);
+                const statusData = await statusResponse.json();
+
+                if (!statusResponse.ok) {
+                    add_log('Status Error', 'error', statusData.info);
+                    setLoading(false);
+                    return;
+                }
+
+                // 解析正确的 status 和 text
+                status = statusData.status.status;  // 正确获取 status
+                result = statusData.status.text;   // 获取 OCR 结果
+
+                add_log('Task Status', 'info', `Task ${task_uuid}: ${status}`);
+
+                if (status === "completed") {
+                    break;
+                }
+            }
+
+            // 3. 任务完成，更新前端
+            if (result) {
+                update(result);
+            } else {
+                add_log('Task Failed', 'error', `Task ${task_uuid} failed or no result.`);
+            }
         } catch (error) {
             add_log('Fetch Error', 'error', error);
+        } finally {
             setLoading(false);
         }
     }
 
+
+
     function update(data) {
-        let desiderata = [];
-        if (data[0] === "") {
-            desiderata = [{ key: t('Failed_OCR'), value: data[0] }];
-            showTotst(`${t('Failed_OCR')}${data[0]}`);
+        let desiderata;
+        if (data === "") {
+            desiderata = [{ key: t('Failed_OCR'), value: data }];
+            showTotst(`${t('Failed_OCR')}${data}`);
         } else {
-            desiderata = [{ key: t('Success_OCR_Text'), value: data[0] }];
-            showTotst(`${t('Success_OCR_Text')}${data[0]}`);
+            desiderata = [{ key: t('Success_OCR_Text'), value: data }];
+            showTotst(`${t('Success_OCR_Text')}${data}`);
         }
         setdata(desiderata);
         setLoading(false);
