@@ -22,6 +22,7 @@ export default function initializeSettings(){
         "api_test":'/test',
         "api_info":'/info',
         "api_command":'/command',
+        "api_status":'/status',
     }
     const uuid = uuidv4()
     const notify_card=2

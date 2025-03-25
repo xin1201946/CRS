@@ -1,7 +1,8 @@
 // eslint-disable-next-line no-unused-vars
 import React, {useEffect, useState} from 'react';
 import {Button, Nav, SideSheet} from '@douyinfe/semi-ui';
-import {IconCode, IconHome, IconMailStroked1, IconScan, IconSidebar, IconTerminal} from "@douyinfe/semi-icons";
+import { IconHome, IconMailStroked1, IconScan, IconSidebar, IconTerminal} from "@douyinfe/semi-icons";
+import {Brain} from "lucide-react";
 import {emit, off, on} from "../code/PageEventEmitter.js";
 import {useTranslation} from 'react-i18next';
 import NotifyCenter from "../Page/NotifyCenter.jsx";
@@ -57,7 +58,7 @@ function Nav_T (){
             {itemKey: 'vision', text: t('Vision'), icon:<IconScan />},
             {itemKey: 'console', text: t('Console'), icon:<IconTerminal />},
             {itemKey: 'message', text: t('NotifyCenter'), icon:<IconMailStroked1 />},
-            {itemKey: 'ai', text: t('AI'), icon:<IconCode />}
+            {itemKey: 'ai', text: t('AI'), icon:<Brain style={{width:'80%'}} />}
         ]
         // if ('true'===getSettings('use_ai_page')){
         //     items.push({itemKey: 'ai', text: t('AI'), icon:<IconCode />})
