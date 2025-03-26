@@ -23,7 +23,7 @@ import {send_notify} from "./code/SystemToast.jsx";
 import {set_language} from "./code/language.js";
 import {emit} from "./code/PageEventEmitter.js";
 import RightClickMenu from "./Page/RightClickMenu.jsx";
-import {Routes,Route} from "react-router-dom";
+import {Routes, Route, Outlet} from "react-router-dom";
 
 
 // 懒加载主要组件
@@ -252,25 +252,17 @@ function AppContent() {
 
     return (
         <>
-            <Routes>
-                {/* 主页 */}
-                <Route path="/" element={
-                    <Layout style={{ border: '1px solid var(--semi-color-border)' }}>
-                        <Header>
-                            <Header1 />
-                        </Header>
-                        <Sider>
-                            <Nav_T />
-                        </Sider>
-                        <Content style={{height:"90%",marginTop:"55px"}}>
-                            <ResultPage />
-                        </Content>
-                    </Layout>
-                } />
-
-                {/* 设置页面，支持 /settings/xxx 形式 */}
-                <Route path="/settings/*" element={<NewSettings />} />
-            </Routes>
+            <Layout style={{ border: '1px solid var(--semi-color-border)' }}>
+                <Header>
+                    <Header1 />
+                </Header>
+                <Sider>
+                    <Nav_T />
+                </Sider>
+                <Content style={{height:"90%",marginTop:"55px"}}>
+                    <Outlet />
+                </Content>
+            </Layout>
 
             {contextMenu.visible && (
                 <RightClickMenu

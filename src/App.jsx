@@ -4,9 +4,11 @@ import './App.css';
 import { add_log } from './code/log.js';
 import { motion } from "framer-motion"
 import initializeSettings from "./code/QuickLoadingService.js";
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route, HashRouter} from 'react-router-dom';
 // 懒加载主要内容组件，优化首次加载性能
 const AppContent = lazy(() => import('./AppContent.jsx'));
+const NewSettings = lazy(() => import("./Page/NewSettings.jsx"));
+const ResultPage = lazy(() => import("./Page/home_Page/ResultPage.jsx"));
 
 // 加载屏幕组件，在主内容加载时显示
 function LoadingScreen() {
@@ -71,18 +73,19 @@ function App() {
     initializeSettings();
 
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route
-                    path="/*"
-                    element={
-                        <Suspense fallback={<LoadingScreen />}>
-                            <AppContent/>
-                        </Suspense>
-                    }
-                />
-            </Routes>
-        </BrowserRouter>
+        <HashRouter>
+            <Suspense fallback={<LoadingScreen />}>
+                <Routes>
+                    {/* 主页面 (包含 ResultPage) */}
+                    <Route path="/" element={<AppContent />}>
+                        <Route index element={<ResultPage />} />
+                    </Route>
+
+                    {/* 设置页面独立渲染 */}
+                    <Route path="/settings/*" element={<NewSettings />} />
+                </Routes>
+            </Suspense>
+        </HashRouter>
     );
 }
 
