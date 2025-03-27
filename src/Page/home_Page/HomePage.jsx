@@ -284,7 +284,7 @@ function HomePage() {
                                 <button className="btn btn-ghost gap-2" onClick={()=>{navigate("/settings/home")}}>
                                     {t("Change_Settings")}
                                 </button>
-                                <button className="btn btn-ghost gap-2" onClick={()=>{navigate("/settings/log")}}>
+                                <button className="btn btn-ghost gap-2" onClick={()=>{navigate("/settings/logs")}}>
                                     {t("Check_logs")}
                                 </button>
                             </Space>
