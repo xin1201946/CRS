@@ -108,7 +108,7 @@ function Console(){
     }
     function view_table(){
         send_command('sql').then(result => {
-            send_command('--query_all_hub_info').then(result => {
+            send_command('--query_all_recognition_record').then(result => {
                 send_command('exit').then();
             })
         })
@@ -131,7 +131,7 @@ function Console(){
             onOk: () => {
                 // 在这里使用局部状态的值
                 send_command('sql').then((result) => {
-                    send_command('--lun-gu-info-model ' + value).then((result) => {
+                    send_command('--history-records ' + value).then((result) => {
                         send_command('exit').then();
                     });
                 });

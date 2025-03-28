@@ -9,6 +9,8 @@ import {Button, TextArea,HotKeys, Space, MarkdownRender} from "@douyinfe/semi-ui
 import {getSettings} from "../../code/Settings.js";
 import {add_log} from "../../code/log.js";
 import {useNavigate} from "react-router-dom";
+import {get_Greeting} from "../../code/times.js";
+import {get_T_language} from "../../code/language.js";
 
 class ErrorBoundary extends React.Component {
     state = { hasError: false };
@@ -109,13 +111,12 @@ const AIChatComponent = ({
                 <dialog id="my_modal_3" className="modal">
                     <div className="modal-box">
                         <form method="dialog">
-                            {/* if there is a button in form, it will close the modal */}
                             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                         </form>
                         {getSettings("ai_support") !== "true" ? (
                             <p>
                                 Please use a browser that meets the requirements and go to{" "}
-                                <a className="link link-hover link-primary" onClick={()=>{navgate("/settings/basic/#AI_Setting")}}>
+                                <a className="link link-hover link-primary" onClick={() => { navgate("/settings/basic/#AI_Setting"); }}>
                                     {t("Settings")} &gt; {t("Base_Settings")}
                                 </a>{" "}
                                 review the configuration requirements.
@@ -123,7 +124,7 @@ const AIChatComponent = ({
                         ) : (
                             <p>
                                 The AI function is not turned on, please go to{" "}
-                                <a onClick={()=>{navgate("/settings/basic/#AI_Setting")}} className="link link-hover link-primary">
+                                <a onClick={() => { navgate("/settings/basic/#AI_Setting"); }} className="link link-hover link-primary">
                                     {t("Settings")} &gt; {t("Base_Settings")}
                                 </a>{" "}
                                 and enable it.
@@ -133,100 +134,135 @@ const AIChatComponent = ({
                 </dialog>
             ) : null}
 
-            <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
-                {messages.length === 0 && (
-                    <div className="absolute inset-0 flex items-center justify-center" style={{marginBottom: "20rem"}}>
-                        <span
-                            style={{
-                                backgroundImage: "linear-gradient(74deg, rgb(66, 133, 244) 0%, rgb(155, 114, 203) 100%)",
-                                WebkitBackgroundClip: "text",
-                                WebkitTextFillColor: "transparent",
-                                fontSize: "2rem",
-                                fontWeight: "bold",
-                            }}
-                        >
-                            Can I help you?
-                        </span>
-                    </div>
-                )}
-
-                {messages.map((message, index) => {
-                    const isUser = message.role === roleInfo.user.name;
-                    const avatar = isUser ? roleInfo.user.avatar : roleInfo.assistant.avatar;
-                    return (
-                        <div key={index} className={`flex items-start ${isUser ? "justify-end" : "justify-start"}`}>
-                            {!isUser && (
-                                <img src={avatar} alt={message.role} className="w-8 h-8 rounded-full mr-2" />
-                            )}
-                            <div className="relative max-w-[70%]">
-                                <div
-                                    style={{
-                                        userSelect:"text",
-                                        overflowY: "auto",
-                                    }}
-                                    className={`rounded-lg p-3 group ${isUser ? userBubbleColor : aiBubbleColor} ${textColor} relative`}
-                                >
-                                    <ErrorBoundary>
-                                        <MarkdownRender raw={message.content}  format="md"/>
-                                    </ErrorBoundary>
-
-                                    <button
-                                        onClick={() => copyToClipboard(message.content)}
-                                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                                    >
-                                        <Copy size={16} />
-                                    </button>
-                                </div>
-                                <div className={`text-xs mt-1 ${textColor} ${isUser ? "text-right" : "text-left"}`}>
-                                    {new Date(message.createAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                                </div>
-                            </div>
-                            {isUser && (
-                                <img src={avatar} alt={message.role} className="w-8 h-8 rounded-full ml-2" />
-                            )}
-                        </div>
-                    );
-                })}
-            </div>
-            {showScrollButton && (
-                <button
-                    onClick={() =>
-                        chatContainerRef.current.scrollTo({
-                            top: chatContainerRef.current.scrollHeight,
-                            behavior: "smooth",
-                        })
-                    }
-                    className="absolute bottom-20 right-4 bg-gray-300 text-gray-800 rounded-full p-2 shadow-lg transition-opacity hover:bg-gray-700"
-                >
-                    <ArrowDown size={20} />
-                </button>
-            )}
-            <form onSubmit={handleSubmit} className="p-4">
-                <div className="flex items-center">
-                    <Space
-                        spacing="loose"
-                        align="center"
-                        justify="center" // 确保内容水平居中
-                        style={{ width: "80%", margin: "0 auto" }}
+            {/* 条件渲染：无消息时显示居中布局，有消息时显示聊天布局 */}
+            {messages.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full p-4">
+                    {/* 标题 */}
+                    <span
+                        style={{
+                            fontSize: "1.7rem",
+                            fontWeight: "bold",
+                        }}
                     >
-                        <HotKeys hotKeys={hotKeys} style={{display:"none"}} onHotKey={handleSubmit}/>
-                        <TextArea
-                            value={input}
-                            autosize={{ minRows: 3, maxRows: 10 }}
-                            onChange={(value, event) => setInput(event.target.value)}
-                            disabled={isLoading}
-                            placeholder="Press Ctrl+Enter to send the message"
-                        />
-                        <Button type="submit" disabled={isLoading} onClick={handleSubmit}>
-                            <Send size={20} />
-                        </Button>
-                    </Space>
+                        {get_Greeting()}{" "}{getSettings("user_name")}{get_T_language() === "zh-CN" ? "。" : "."}
+                    </span>
 
+                    <span
+                        style={{
+                            fontSize: "1.6rem",
+                            fontWeight: "bold",
+                        }}
+                    >
+                        {t("Tip_Can_i_help_you")}
+                    </span>
+
+                    {/* 美化后的输入表单 */}
+                    <form onSubmit={handleSubmit} className="mt-6 w-3/4 bg-white rounded-lg shadow-md p-4">
+                        <Space spacing="loose" align="center" justify="center" style={{ width: "100%" }}>
+                            <HotKeys hotKeys={hotKeys} style={{ display: "none" }} onHotKey={handleSubmit} />
+                            <TextArea
+                                value={input}
+                                autosize={{ minRows: 3, maxRows: 10 }}
+                                onChange={(value, event) => setInput(event.target.value)}
+                                disabled={isLoading}
+                                placeholder={t("Tip_Send_message")}
+                                className="border-none focus:ring-2 focus:ring-blue-300"
+                            />
+                            <Button type="submit" disabled={isLoading} onClick={handleSubmit} className="btn btn-primary">
+                                <Send style={{color:"var(--semi-color-text-0)"}} size={20} />
+                            </Button>
+                        </Space>
+                    </form>
+
+                    {/* 免责声明 */}
+                    <span className="text-[--semi-color-text-2] text-center mt-6 text-sm">
+                        {t("Tip_AI_make_mistakes")}
+                    </span>
                 </div>
-            </form>
-            <span className="text-gray-400 text-center">
-                AI may make mistakes. Please use with discretion.
-            </span>
+            ) : (
+                <>
+                    {/* 消息列表 */}
+                    <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
+                        {messages.map((message, index) => {
+                            const isUser = message.role === roleInfo.user.name;
+                            const avatar = isUser ? roleInfo.user.avatar : roleInfo.assistant.avatar;
+                            return (
+                                <div key={index} className={`flex items-start ${isUser ? "justify-end" : "justify-start"}`}>
+                                    {!isUser && (
+                                        <img src={avatar} alt={message.role} className="w-8 h-8 rounded-full mr-2" />
+                                    )}
+                                    <div className="relative max-w-[70%]">
+                                        <div
+                                            style={{
+                                                userSelect: "text",
+                                                overflowY: "auto",
+                                            }}
+                                            className={`rounded-lg p-3 group ${isUser ? userBubbleColor : aiBubbleColor} ${textColor} relative`}
+                                        >
+                                            <ErrorBoundary>
+                                                <MarkdownRender raw={message.content} format="md" />
+                                            </ErrorBoundary>
+                                            <button
+                                                onClick={() => copyToClipboard(message.content)}
+                                                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                <Copy size={16} />
+                                            </button>
+                                        </div>
+                                        <div className={`text-xs mt-1 ${textColor} ${isUser ? "text-right" : "text-left"}`}>
+                                            {new Date(message.createAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                                        </div>
+                                    </div>
+                                    {isUser && (
+                                        <img src={avatar} alt={message.role} className="w-8 h-8 rounded-full ml-2" />
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {/* 滚动按钮 */}
+                    {showScrollButton && (
+                        <button
+                            onClick={() =>
+                                chatContainerRef.current.scrollTo({
+                                    top: chatContainerRef.current.scrollHeight,
+                                    behavior: "smooth",
+                                })
+                            }
+                            style={{right:"50%",bottom:"23%"}}
+                            className="absolute bg-semi-color-bg-2 text-gray-800 rounded-full p-2 shadow-lg transition-opacity hover:bg-gray-700"
+                        >
+                            <ArrowDown size={20} />
+                        </button>
+                    )}
+
+                    {/* 美化后的输入表单 */}
+                    <form onSubmit={handleSubmit} className="p-4">
+                        <div className="bg-white rounded-lg shadow-md p-4 w-80% mx-auto">
+                            <Space spacing="loose" align="center" justify="center" style={{ width: "100%" }}>
+                                <HotKeys hotKeys={hotKeys} style={{ display: "none" }} onHotKey={handleSubmit} />
+                                <TextArea
+                                    value={input}
+                                    autosize={{ minRows: 3, maxRows: 10 }}
+                                    onChange={(value, event) => setInput(event.target.value)}
+                                    disabled={isLoading}
+                                    placeholder={t("Tip_Send_message")}
+                                    className="border-none focus:ring-2 focus:ring-blue-300"
+                                />
+                                <Button type="submit" disabled={isLoading} onClick={handleSubmit} className="btn btn-primary">
+                                    <Send style={{color:"var(--semi-color-text-0)"}} size={20} />
+                                </Button>
+                            </Space>
+                        </div>
+                    </form>
+
+                    {/* 免责声明 */}
+                    <span className="text-[--semi-color-text-2] text-center text-sm p-1">
+                       {t("Tip_AI_make_mistakes")}
+                    </span>
+                </>
+            )}
         </div>
     );
 };

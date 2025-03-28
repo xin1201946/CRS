@@ -213,21 +213,9 @@ export const Terminal: React.FC<TerminalProps> = ({ commands, initScript, onExec
       if (initScript && !initRef.current) {
         initRef.current = true;
         setInitializing(true);
-        addMessage({
-          type: 'normal',
-          class: 'info',
-          content: '🚀 Executing initialization script...'
-        });
-
         for (const cmd of initScript) {
           await executeCommand(cmd);
         }
-
-        addMessage({
-          type: 'normal',
-          class: 'success',
-          content: '✨ Initialization complete!'
-        });
         setInitializing(false);
       }
     };
@@ -310,7 +298,7 @@ export const Terminal: React.FC<TerminalProps> = ({ commands, initScript, onExec
         <div
               ref={terminalRef}
               className="h-auto overflow-y-auto p-4 font-mono text-sm"
-              style={{ maxHeight: '60vh', overflowY: 'scroll', userSelect: 'text', cursor: 'default' }}
+              style={{ height: '60vh', overflowY: 'scroll', userSelect: 'text', cursor: 'default' }}
         >
             {messages.map((msg, idx) => (
                 <div key={idx} className="mb-2">

@@ -27,10 +27,12 @@ export default function initializeSettings(){
     const uuid = uuidv4()
     const notify_card=2
     const use_app_content_menu='true'
+    const user_name = 'user'
     subscribeToServerNotifications();
     Notification.config({top:30})
     checkAPIAvailability().then();
     getSettings('Language')===null ? setSettings("Language",language):"";
+    getSettings('user_name')===null ? setSettings("user_name",user_name):"";
     getSettings('notify_card')===null ? setSettings("notify_card",notify_card):"";
     getSettings('use_gemini')===null ? setSettings("use_gemini",use_gemini):"";
     getSettings('use_app_content_menu')===null ? setSettings("use_app_content_menu",use_app_content_menu):"";
@@ -44,6 +46,6 @@ export default function initializeSettings(){
     add_log('QuickLoadingService:api_service','successfully',api_map().toString());
     add_log('QuickLoadingService:use_https','successfully',getSettings('use_https'));
     add_log('QuickLoadingService:theme_color','successfully',getSettings('theme_color'));
-    add_log('QuickLoadingService:尝试订阅服务器通知','successfully');
+    add_log('QuickLoadingService:Try subscribing to the server notifications','successfully');
     return true
 }

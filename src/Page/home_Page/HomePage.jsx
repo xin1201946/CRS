@@ -262,14 +262,14 @@ function HomePage() {
         return (
             <div className=" flex flex-col" style={{height:"100vh"}}>
                 {/* 上半部分：HeroSection */}
-                <section id="hero" className=" flex-1 flex  justify-between px-5" style={{marginTop:"6%"}}>
+                <section id="hero" className=" flex-1 flex  justify-between px-14" style={{marginTop:"6%"}}>
                     <div className={" text-left"}>
                         <h1 className="text-5xl md:text-6xl font-bold mb-6">
                             <span>{t("Tip_Homepage_title_1")}</span>
                             <p className="text-primary">{t("Tip_Homepage_title_2")}</p>
                         </h1>
                         <div className={"text-left"}>
-                            <Space wrap>
+                            <Space wrap style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
                                 <FeatureCard title={t("Advantage1")} icon={Puzzle} />
                                 <FeatureCard title={t("Advantage2")} icon={Layers} />
                                 <FeatureCard title={t("Advantage3")} icon={Fingerprint} />
@@ -291,7 +291,7 @@ function HomePage() {
                         </div>
                     </div>
                     {detectDevice() === "PC" && (
-                        <div className="flex justify-end">
+                        <div className="flex">
                             <OcrDemo />
                         </div>
                     )}
@@ -329,7 +329,7 @@ function HomePage() {
     function FeatureCard({ title, icon, children }) {
         const IconComponent = icon; // 直接传入组件，避免额外的判断
         return (
-            <div className="card bg-[--semi-color-bg-1]  shadow-xl p-4 w-80">
+            <div className="card bg-[--semi-color-bg-1]  shadow-xl p-4 w-80" style={{height:"110px"}}>
                 <div className="flex items-center space-x-4">
                     <div className="p-2 bg-primary text-[--semi-color-bg-1] rounded-full">
                         <IconComponent className="w-6 h-6" />

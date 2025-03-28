@@ -5,7 +5,6 @@ import {
     Server,       // 服务器IP
     ShieldCheck,  // HTTPS服务
     Palette,      // 主题色
-    Bell,         // 通知样式
     MenuSquare,   // 内建右键菜单
     Bot,          // 生成式AI
     Cloud,        // API设置
@@ -39,7 +38,6 @@ function HomeSettings() {
             items: [
                 { name: t("Server_IP"), icon: <Server size={20} />, url: "/settings/basic/#server_ip" },
                 { name: t("Theme_color"), icon: <Palette size={20} />, url: "/settings/basic/#theme_color" },
-                { name: t("Notify Style"), icon: <Bell size={20} />, url: "/settings/basic/#Notify_Set" },
                 { name: t("UI_set"), icon: <MenuSquare size={20} />, url: "/settings/basic/#UI_set" },
                 { name: t("Using Generative AI"), icon: <Bot size={20} />, url: "/settings/basic/#AI_Setting" },
             ],

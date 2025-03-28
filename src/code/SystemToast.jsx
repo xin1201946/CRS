@@ -7,30 +7,30 @@ let message_list = [];
 // 存储每种通知内容的上一次发送时间，用于限制发送频率
 const lastSendTimeMap = {};
 let id=1
-const FIVE_MINUTES_IN_MS = 15 * 1000;
+const notification_rate_limit = 5 * 1000;
 // message_list=[{id=id+1,time=get_Time(),title="",content:widget}]
 function getSystemToastPermissions() {
     if (!("Notification" in window)) {
-        add_log('getSystemToastPermissions', 'warning', '您的浏览器不支持系统通知');
+        add_log('getSystemToastPermissions', 'warning', 'Your browser does not support system notifications');
         return false;
     }
 
     if (Notification.permission === "granted") {
         // 用户已经授权
-        add_log('getSystemToastPermissions', 'successfully', '用户已授权系统通知权限');
+        add_log('getSystemToastPermissions', 'successfully', 'The user has been authorized to be notified by the system');
         return true;
     } else if (Notification.permission !== 'denied') {
         // 用户尚未授权，请求权限
         Notification.requestPermission().then(permission => {
             if (permission === "granted") {
-                add_log('getSystemToastPermissions', 'successfully', '用户已授权系统通知权限');
+                add_log('getSystemToastPermissions', 'successfully', 'The user has been authorized to be notified by the system');
             } else {
-                add_log('getSystemToastPermissions', 'warning', '通知权限被拒绝');
+                add_log('getSystemToastPermissions', 'warning', 'Notification permission denied');
             }
         });
         return false; // 由于权限请求是异步的，这里返回false
     } else {
-        add_log('getSystemToastPermissions', 'warning', '通知权限被拒绝');
+        add_log('getSystemToastPermissions', 'warning', 'Notification permission denied');
         return false;
     }
 }
@@ -61,7 +61,7 @@ export function send_notify(
     const lastSendTime = lastSendTimeMap[content];
     let Notify_id;
     // 检查是否距离上一次发送时间超过 5 分钟
-    if (lastSendTime && now - lastSendTime < FIVE_MINUTES_IN_MS && notify_id===null) {
+    if (lastSendTime && now - lastSendTime < notification_rate_limit && notify_id===null) {
         return false;
     }
     id=id+1

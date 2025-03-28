@@ -39,14 +39,14 @@ function Step1() {
             const task_uuid = startData.task_uuid;
             add_log('Task Submitted', 'info', `Task UUID: ${task_uuid}`);
 
-            // 2. 轮询 /status 直到任务完成
+            // 2. 轮询任务状态
             let status = "waiting";
             let result = null;
 
             while (status === "waiting" || status === "processing") {
-                await new Promise((resolve) => setTimeout(resolve, 1000)); // 1秒轮询一次
+                await new Promise((resolve) => setTimeout(resolve, 1000)); // 每秒轮询一次
 
-                const statusResponse = await fetch(`${getServer()}${getAPI('status')}?task=${task_uuid}`);
+                const statusResponse = await fetch(`${getServer()}/status?task=${task_uuid}`);
                 const statusData = await statusResponse.json();
 
                 if (!statusResponse.ok) {
@@ -55,25 +55,36 @@ function Step1() {
                     return;
                 }
 
-                // 解析正确的 status 和 text
-                status = statusData.status.status;  // 正确获取 status
-                result = statusData.status.text;   // 获取 OCR 结果
+                // 解析状态
+                if (typeof statusData.status === "string") {
+                    status = statusData.status; // "waiting" 或 "processing"
+                    result = null;
+                } else if (typeof statusData.status === "object" && statusData.status.status) {
+                    status = statusData.status.status; // "completed" 或 "error"
+                    result = statusData.status.text;
+                } else {
+                    add_log('Invalid Status Data', 'error', 'Unexpected status data structure');
+                    setLoading(false);
+                    return;
+                }
 
                 add_log('Task Status', 'info', `Task ${task_uuid}: ${status}`);
 
-                if (status === "completed") {
+                if (status === "completed" || status === "error") {
                     break;
                 }
             }
 
-            // 3. 任务完成，更新前端
-            if (result) {
-                update(result);
+            // 3. 处理结果
+            if (status === "completed" && result) {
+                update(result); // 更新前端显示结果
+            } else if (status === "error") {
+                add_log('Task Error', 'error', `Task ${task_uuid} failed: ${result}`);
             } else {
-                add_log('Task Failed', 'error', `Task ${task_uuid} failed or no result.`);
+                add_log('Task Failed', 'error', `Task ${task_uuid} failed or no result`);
             }
         } catch (error) {
-            add_log('Fetch Error', 'error', error);
+            add_log('Fetch Error', 'error', error.message);
         } finally {
             setLoading(false);
         }
