@@ -10,9 +10,7 @@ import { detectDevice } from "../code/check_platform.js";
 import { IconSidebar } from "@douyinfe/semi-icons";
 import { useTranslation } from "react-i18next";
 import PageTitle from "../Page/widget/Settings/PageTitle";
-import {getSettings} from "../code/Settings.js";
-import {queck_change_theme, setAutoTheme} from "../code/theme_color.js";
-
+import ErrorPage from "./error_page/ErrorPage.jsx";
 const { Sider, Content } = Layout;
 
 // eslint-disable-next-line react/prop-types
@@ -121,13 +119,22 @@ function SettingsLayout({ backgroundColor = 'var(--semi-color-bg-0)', textColor 
                         }}
                     >
                         <div style={{ overflow: 'auto' }} ref={scrollWrapperRef}>
-                            <PageTitle title={currentRoute?.description || ''} scrollContainer={scrollWrapperRef} />
+                            <PageTitle title={currentRoute?.description || t("Page Not Found")} scrollContainer={scrollWrapperRef} />
+
                             <div style={{ padding: '2rem', minHeight: 'calc(100% - 40vh)' }}>
-                                {currentRoute && (
+                                {currentRoute ? (
                                     <SettingsSlot component={currentRoute.component} backgroundColor={backgroundColor} textColor={textColor} />
+                                ) : (
+                                    <ErrorPage
+                                        code={404}
+                                        title={t("Page Not Found")}
+                                        description={t("The page you are looking for does not exist.")}
+                                        homeUrl={"/settings/home"}
+                                    />
                                 )}
                             </div>
                         </div>
+
                     </Content>
                 </Layout>
             </Layout>

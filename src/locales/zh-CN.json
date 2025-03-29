@@ -206,6 +206,7 @@
   "Image_OCR_Tool": "轮毂铸造字识别",
   "Click_or_Drag_to_Upload": "点击上传图片",
   "Other settings": "其他设置",
-  "404_Description": "嘿，别灰心！点击这里返回首页，继续你的探索之旅！",
+  "404_Description": "没关系，让我们返回主页或上一页，继续探索吧！",
+  "404_Page_not_found": "糟糕，我们好像迷路了！",
   "Go_Back": "返回"
 }

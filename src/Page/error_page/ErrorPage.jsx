@@ -1,13 +1,15 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { AlertCircle, ArrowLeft, Home } from 'lucide-react';
+import { Ghost, ArrowLeft, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+
 import {t} from "i18next";
+import PropTypes from "prop-types";
 
 const ErrorPage = ({
                        code = 404,
                        title = "Page Not Found",
-                       description = "The page you're looking for doesn't exist or has been moved."
+                       description = "The page you're looking for doesn't exist or has been moved.",
+                       homeUrl = "/"
                    }) => {
     const navigate = useNavigate();
 
@@ -28,6 +30,17 @@ const ErrorPage = ({
         visible: { opacity: 1, y: 0 }
     };
 
+    const ghostVariants = {
+        float: {
+            y: [0, -20, 0],
+            transition: {
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+            }
+        }
+    };
+
     return (
         <div className="min-h-screen bg-[semi-color-bg-2] flex items-center justify-center p-4">
             <motion.div
@@ -36,16 +49,21 @@ const ErrorPage = ({
                 initial="hidden"
                 animate="visible"
             >
-                <motion.div variants={itemVariants} className="mb-8">
-                    <AlertCircle className="w-24 h-24 mx-auto text-error" />
-                </motion.div>
-
-                <motion.h1
-                    variants={itemVariants}
-                    className="text-7xl font-bold text-error mb-4"
+                <motion.div
+                    variants={ghostVariants}
+                    animate="float"
+                    className="mb-8 relative"
                 >
-                    {code}
-                </motion.h1>
+                    <Ghost className="w-32 h-32 mx-auto text-primary" />
+                    <motion.div
+                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl font-bold"
+                        animate={{
+                            rotate: [0, 10],
+                        }}
+                    >
+                        {code}
+                    </motion.div>
+                </motion.div>
 
                 <motion.h2
                     variants={itemVariants}
@@ -56,7 +74,7 @@ const ErrorPage = ({
 
                 <motion.p
                     variants={itemVariants}
-                    className="text-base-content/70 mb-8"
+                    className="text-base-content/70 mb-8 text-semi-color-text-3"
                 >
                     {description}
                 </motion.p>
@@ -74,7 +92,7 @@ const ErrorPage = ({
                     </button>
 
                     <button
-                        onClick={() => navigate('/')}
+                        onClick={() => navigate(homeUrl)}
                         className="btn btn-primary gap-2"
                     >
                         <Home size={20} />
@@ -84,6 +102,13 @@ const ErrorPage = ({
             </motion.div>
         </div>
     );
+};
+
+ErrorPage.propTypes = {
+    code: PropTypes.number,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    homeUrl: PropTypes.string
 };
 
 export default ErrorPage;

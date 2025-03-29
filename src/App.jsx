@@ -290,7 +290,7 @@ function App() {
                 {/* 设置页面独立渲染 */}
                 <Route path="/settings/*" element={<NewSettings />} />
 
-                <Route path="*" element={<ErrorPage code={404} title={"Page Not Found"} description={t("404_Description")}/>} />
+                <Route path="*" element={<ErrorPage code={404} title={t("404_Page_not_found")} description={t("404_Description")}/>} />
 
             </Routes>
             {contextMenu.visible && (

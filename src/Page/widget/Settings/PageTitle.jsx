@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, useTransform, useMotionValue } from 'framer-motion';
 import {detectDevice} from "../../../code/check_platform.js";
+import {t} from "i18next";
 
 const PageTitle = ({ title, scrollContainer }) => {
     const scrollYValue = useMotionValue(0); // 使用 MotionValue 跟踪滚动位置
@@ -39,47 +40,69 @@ const PageTitle = ({ title, scrollContainer }) => {
     return (
         <>
             {/* 占位容器 */}
-            <motion.div
-                style={{
-                    height: containerHeight,
-                    position: 'relative',
-                    pointerEvents: 'none',
-                    zIndex: 10
-                }}
-            >
-                {/* 主标题：居中显示 */}
-                <motion.h1
+            {title ===  t("Page Not Found") ? (
+                <h1
                     style={{
                         position: 'absolute',
-                        top: '60%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
+                        top: 16,
+                        left: detectDevice() === "Phone" ? leftOffset : "50%",
                         margin: 0,
-                        fontSize: '2rem',
-                        opacity: normalTitleOpacity,
-                        whiteSpace: 'nowrap',
-                        textAlign: 'left' // 可选，确保文字左对齐
+                        opacity: stickyTitleOpacity,
+                        zIndex: 9999,
+                        pointerEvents: 'none',
+                        textAlign: 'center'
                     }}
+                    className="text-sm"
                 >
                     {title}
-                </motion.h1>
-            </motion.div>
-            {/* 次级标题：相对于容器左上角定位 */}
-            <motion.h1
-                style={{
-                    position: 'absolute', // 改为 absolute，相对于 Content 容器
-                    top: 16, // 距离容器顶部 16px
-                    left: detectDevice() === "Phone" ?leftOffset:"50%", // 距离容器左侧 24px
-                    margin: 0,
-                    opacity: stickyTitleOpacity,
-                    zIndex: 9999,
-                    pointerEvents: 'none',
-                    textAlign: 'center' // 确保左对齐
-                }}
-                className="text-sm"
-            >
-                {title}
-            </motion.h1>
+                </h1>
+            ) : (
+                <>
+                    <motion.div
+                        style={{
+                            height: containerHeight,
+                            position: 'relative',
+                            pointerEvents: 'none',
+                            zIndex: 10
+                        }}
+                    >
+                        {/* 主标题：居中显示 */}
+                        <motion.h1
+                            style={{
+                                position: 'absolute',
+                                top: '60%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                margin: 0,
+                                fontSize: '2rem',
+                                opacity: normalTitleOpacity,
+                                whiteSpace: 'nowrap',
+                                textAlign: 'left'
+                            }}
+                        >
+                            {title}
+                        </motion.h1>
+                    </motion.div>
+
+                    {/* 次级标题 */}
+                    <motion.h1
+                        style={{
+                            position: 'absolute',
+                            top: 16,
+                            left: detectDevice() === "Phone" ? leftOffset : "50%",
+                            margin: 0,
+                            opacity: stickyTitleOpacity,
+                            zIndex: 9999,
+                            pointerEvents: 'none',
+                            textAlign: 'center'
+                        }}
+                        className="text-sm"
+                    >
+                        {title}
+                    </motion.h1>
+                </>
+            )}
+
         </>
     );
 };
