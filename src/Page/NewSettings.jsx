@@ -10,6 +10,8 @@ import { detectDevice } from "../code/check_platform.js";
 import { IconSidebar } from "@douyinfe/semi-icons";
 import { useTranslation } from "react-i18next";
 import PageTitle from "../Page/widget/Settings/PageTitle";
+import {getSettings} from "../code/Settings.js";
+import {queck_change_theme, setAutoTheme} from "../code/theme_color.js";
 
 const { Sider, Content } = Layout;
 
@@ -26,7 +28,6 @@ function SettingsLayout({ backgroundColor = 'var(--semi-color-bg-0)', textColor 
     const [indicatorStyle] = useState({ top: 0, height: 0 });
     const navRef = useRef(null);
     const scrollWrapperRef = useRef(null);
-
     useEffect(() => {
         const handleResize = () => {
             setWindowWidth(window.innerWidth);
@@ -57,6 +58,11 @@ function SettingsLayout({ backgroundColor = 'var(--semi-color-bg-0)', textColor 
             }
         }, 50);
     }, [location.pathname, location.hash]);
+    useEffect(() => {
+        return () => {
+            window.dispatchEvent(new CustomEvent('themeChange'));
+        }
+    })
 
     const menuItems = settingsRoute.map(({ path, icon: Icon, text, description }) => ({
         itemKey: path,

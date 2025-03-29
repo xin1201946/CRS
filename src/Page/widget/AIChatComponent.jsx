@@ -140,8 +140,9 @@ const AIChatComponent = ({
                     {/* 标题 */}
                     <span
                         style={{
+                            fontFamily:"Noto Sans SC",
                             fontSize: "1.7rem",
-                            fontWeight: "bold",
+                            fontWeight: "400",
                         }}
                     >
                         {get_Greeting()}{" "}{getSettings("user_name")}{get_T_language() === "zh-CN" ? "。" : "."}
@@ -149,28 +150,60 @@ const AIChatComponent = ({
 
                     <span
                         style={{
-                            fontSize: "1.6rem",
-                            fontWeight: "bold",
+                            fontFamily:"Noto Sans SC",
+                            fontSize: "1.7rem",
+                            color:"var(--semi-color-text-1)",
+                            fontWeight: "400",
                         }}
                     >
                         {t("Tip_Can_i_help_you")}
                     </span>
 
                     {/* 美化后的输入表单 */}
-                    <form onSubmit={handleSubmit} className="mt-6 w-3/4 bg-white rounded-lg shadow-md p-4">
-                        <Space spacing="loose" align="center" justify="center" style={{ width: "100%" }}>
-                            <HotKeys hotKeys={hotKeys} style={{ display: "none" }} onHotKey={handleSubmit} />
-                            <TextArea
-                                value={input}
-                                autosize={{ minRows: 3, maxRows: 10 }}
-                                onChange={(value, event) => setInput(event.target.value)}
-                                disabled={isLoading}
-                                placeholder={t("Tip_Send_message")}
-                                className="border-none focus:ring-2 focus:ring-blue-300"
-                            />
-                            <Button type="submit" disabled={isLoading} onClick={handleSubmit} className="btn btn-primary">
-                                <Send style={{color:"var(--semi-color-text-0)"}} size={20} />
-                            </Button>
+                    <form onSubmit={handleSubmit} className="mt-6 w-3/4 rounded-2xl shadow-md p-4 bg-semi-color-bg-1">
+                        <Space vertical={true} align={"start"} style={{ width: "100%" }}>
+                            <Space spacing="loose" align="center" justify="center" style={{ width: "100%" }}>
+                                <HotKeys hotKeys={hotKeys} style={{ display: "none" }} onHotKey={handleSubmit} />
+                                <TextArea
+                                    value={input}
+                                    autosize={{ minRows: 3, maxRows: 10 }}
+                                    onChange={(value, event) => setInput(event.target.value)}
+                                    disabled={isLoading}
+                                    placeholder={t("Tip_Send_message")}
+                                    className="border-none focus:ring-2 focus:ring-blue-300"
+                                    style={{
+                                        backgroundColor: "transparent",
+                                    }}
+                                />
+
+                            </Space>
+                            <div style={{width:"100%",display:"flex",justifyContent: "flex-end" }} >
+                                <div style={{ width: "100%", display: "flex", alignItems: "center" }}>
+                                    <Space>
+                                        <Button type="submit" onClick={()=>{setInput("Help me ")}} disabled={isLoading} style={{ borderRadius: "50px" }} className="btn btn-primary">
+                                            <Space>
+                                                <span className="icon-[iconoir--code]" style={{fontSize:20}}></span>
+                                                <span>Code</span>
+                                            </Space>
+                                        </Button>
+                                        <Button type="submit" onClick={()=>{setInput("How ")}} disabled={isLoading} style={{ borderRadius: "50px" }} className="btn btn-primary">
+                                            <Space>
+                                                <span className="icon-[tabler--help]" style={{fontSize:20}} />
+                                                <span>How to</span>
+                                            </Space>
+                                        </Button>
+                                    </Space>
+                                    <Button
+                                        type="submit"
+                                        onClick={handleSubmit}
+                                        disabled={isLoading}
+                                        style={{ borderRadius: "50px", marginLeft: "auto" }} // 关键：marginLeft: "auto" 推到右边
+                                        className="btn btn-primary"
+                                    >
+                                        <Send style={{ color: "var(--semi-color-text-0)" }} size={20} />
+                                    </Button>
+                                </div>
+                            </div>
                         </Space>
                     </form>
 
@@ -249,6 +282,9 @@ const AIChatComponent = ({
                                     disabled={isLoading}
                                     placeholder={t("Tip_Send_message")}
                                     className="border-none focus:ring-2 focus:ring-blue-300"
+                                    style={{
+                                        backgroundColor: "transparent",
+                                    }}
                                 />
                                 <Button type="submit" disabled={isLoading} onClick={handleSubmit} className="btn btn-primary">
                                     <Send style={{color:"var(--semi-color-text-0)"}} size={20} />

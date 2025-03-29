@@ -9,9 +9,14 @@ import en_US from '@douyinfe/semi-ui/lib/es/locale/source/en_US';
 import zhCN from './locales/zh-CN.json';
 import enUS from './locales/en-US.json';
 import {LocaleProvider} from '@douyinfe/semi-ui';
-import {get_language} from './code/language.js'; // 引入语言设置函数
+import {get_language} from './code/language.js';
+import {initVChartSemiTheme} from "@visactor/vchart-semi-theme";
+import {HashRouter} from "react-router-dom"; // 引入语言设置函数
 
-
+initVChartSemiTheme({
+    isWatchingThemeSwitch: true,
+    isWatchingMode:true,
+});
 // 初始化 i18next
 i18n
     .use(initReactI18next) // 绑定 React
@@ -33,7 +38,9 @@ const currentLocale = get_language() === 1 ? zh_CN : en_US;
 createRoot(document.getElementById('root')).render(
     <StrictMode>
         <LocaleProvider locale={currentLocale}>
-            <App />
+            <HashRouter> {/* 包裹整个应用 */}
+                <App />
+            </HashRouter>
         </LocaleProvider>
     </StrictMode>
 );

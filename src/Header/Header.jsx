@@ -48,12 +48,9 @@ function Header1 (){
     };
     useEffect(() => {
         window.addEventListener('themeChange', initialThemeIcon);
-        // 清理事件监听器
         return () => {
-            // off('changePage', handleChangePage);
             window.removeEventListener('themeChange', initialThemeIcon);
-        };
-
+        }
     }, []);
     function switchDarkMode() {
         if (getSetTheme() === 'dark') {

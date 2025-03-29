@@ -92,6 +92,49 @@ function Logs_Viewer(){
         get_error_logs().length;
 
     function get_logs_pie(){
+        const theme = {
+            background:"transparent",
+            colorScheme: {
+                default: [
+                    '#5383F4',
+                    '#7BCF8E',
+                    '#FF9D2C',
+                    '#FFDB26',
+                    '#7568D9',
+                    '#80D8FB',
+                    '#1857A3',
+                    '#CAB0E8',
+                    '#FF8867',
+                    '#B9E493',
+                    '#2CB4A8',
+                    '#B9E4E3'
+                ]
+            },
+            series: {
+                bar: {
+                    barMaxWidth: 15,
+                    label: {
+                        visible: true,
+                        position: 'top',
+                        formatMethod: text => text + '%'
+                    }
+                }
+            },
+            component: {
+                axis: {
+                    label: {
+                        style: { fontFamily: 'Times New Roman' }
+                    }
+                }
+            },
+            markByName: {
+                bar: {
+                    style: {
+                        cornerRadius: 15
+                    }
+                }
+            }
+        };
         const commonSpec = {
             type: 'pie',
             data: [
@@ -104,6 +147,7 @@ function Logs_Viewer(){
                     ]
                 }
             ],
+            theme,
             valueField: 'value',
             categoryField: 'type',
             label: {

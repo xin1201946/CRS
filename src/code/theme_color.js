@@ -1,9 +1,5 @@
 import {getSettings, setSettings} from "./Settings.js";
 import {add_log} from "./log.js";
-import {initVChartSemiTheme} from '@visactor/vchart-semi-theme';
-
-// initialization
-initVChartSemiTheme();
 const mql = window.matchMedia('(prefers-color-scheme: dark)');
 const body = document.body;
 
