@@ -180,15 +180,15 @@ const AIChatComponent = ({
                             <div style={{width:"100%",display:"flex",justifyContent: "flex-end" }} >
                                 <div style={{ width: "100%", display: "flex", alignItems: "center" }}>
                                     <Space>
-                                        <Button type="submit" onClick={()=>{setInput("Help me ")}} disabled={isLoading} style={{ borderRadius: "50px" }} className="btn btn-primary">
+                                        <Button type="submit" onClick={()=>{setInput("Help me ")}} disabled={isLoading} style={{ borderRadius: "50px" }} >
                                             <Space>
                                                 <span className="icon-[iconoir--code]" style={{fontSize:20}}></span>
                                                 <span>Code</span>
                                             </Space>
                                         </Button>
-                                        <Button type="submit" onClick={()=>{setInput("How ")}} disabled={isLoading} style={{ borderRadius: "50px" }} className="btn btn-primary">
+                                        <Button type="submit" onClick={()=>{setInput("How ")}} disabled={isLoading} style={{ borderRadius: "50px" }}>
                                             <Space>
-                                                <span className="icon-[tabler--help]" style={{fontSize:20}} />
+                                                <span className="icon-[iconamoon--lightning-1-fill]"  style={{fontSize:20}}/>
                                                 <span>How to</span>
                                             </Space>
                                         </Button>
