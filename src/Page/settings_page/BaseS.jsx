@@ -2,7 +2,6 @@ import {
     Banner,
     Button,
     Card,
-    // Collapse,
     Divider,
     Input,
     Radio,
@@ -15,19 +14,17 @@ import {
 } from "@douyinfe/semi-ui";
 import {getSettings, setSettings} from "../../code/Settings.js";
 import {useState} from "react";
-import {Title} from "@douyinfe/semi-ui/lib/es/skeleton/item.js";
 import {setAutoTheme, setDarkTheme, setLightTheme} from "../../code/theme_color.js";
 import {useTranslation} from "react-i18next";
 import {send_notify} from "../../code/SystemToast.jsx";
 import Chrome_AI_Info from "../info_Page/Chrome_AI_Info.jsx";
-// import CustomNotifyPanel from "../widget/CustomNotifyPanel.jsx";
-// import {IconClock, IconDelete} from "@douyinfe/semi-icons";
 import {getServer} from "../../code/get_server.js";
 import {useNavigate} from "react-router-dom";
 
 function BaseSPage(){
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { Title } = Typography;
     const { Text } = Typography;
     const [switchMenuPchecked, setswitchMenuPchecked] = useState('true'===getSettings('use_app_content_menu'));
     const [use_use_gemini_checked, set_use_gemini_checked] = useState('true'===getSettings('use_gemini'))
@@ -193,66 +190,6 @@ function BaseSPage(){
                     </div>
                 </Card>
                 <br/>
-
-                {/*<Card*/}
-                {/*    id={'Notify_Set'}*/}
-                {/*    title={t('Notify Settings')}*/}
-                {/*>*/}
-                {/*    <h3>{t('Notify Style')}</h3>*/}
-                {/*    <div*/}
-                {/*        style={{*/}
-                {/*            padding: 20,*/}
-                {/*            width:'100%'*/}
-                {/*        }}*/}
-                {/*    >*/}
-                {/*        <RadioGroup type='pureCard' defaultValue={getSettings('notify_card')==='1'?1:2} onChange={(e)=>{setSettings('notify_card',e.target.value)}} direction='vertical' style={{width: '100%'}}>*/}
-                {/*            <Radio value={1} extra={t('Native style')} style={{width: '100%'}}>*/}
-                {/*                <Collapse accordion style={{width: '100%'}}>*/}
-                {/*                    <Collapse.Panel header={t('Native style')} itemKey={1} key={1} showArrow={false}*/}
-                {/*                                    style={{width: '100%'}}*/}
-                {/*                                    extra={*/}
-                {/*                                        <Space>*/}
-                {/*                                            <Tag color="violet" type={'ghost'} style={{ margin: 0 }}>*/}
-                {/*                                                {' '}*/}
-                {/*                                                warnning*/}
-                {/*                                                {' '}*/}
-                {/*                                            </Tag>*/}
-                {/*                                            <Tag color="cyan" prefixIcon={<IconClock style={{color:'cyan'}} />} type={'ghost'} style={{ margin: 0 }}>*/}
-                {/*                                                {' '}*/}
-                {/*                                                18:50:10*/}
-                {/*                                                {' '}*/}
-                {/*                                            </Tag>*/}
-                {/*                                        </Space>*/}
-                {/*                                    }*/}
-                {/*                    >*/}
-                {/*                        <Banner*/}
-                {/*                            key={1}*/}
-                {/*                            fullMode={false}*/}
-                {/*                            onClose={()=>{}}*/}
-                {/*                            title={t('New_Notify_Send')}*/}
-                {/*                            description={<Space vertical={true}>{t('Native style')}</Space>}*/}
-                {/*                            type={"warning"}*/}
-                {/*                            style={{ marginBottom: '12px', transition: 'all 0.3s ease' }}*/}
-                {/*                        />*/}
-                {/*                    </Collapse.Panel>*/}
-                {/*                </Collapse>*/}
-                {/*            </Radio>*/}
-                {/*            <Radio value={2} extra={t('Notify refactoring style') } style={{width: '100%'}}>*/}
-                {/*                <CustomNotifyPanel*/}
-                {/*                    title={t('New_Notify_Send')}*/}
-                {/*                    message={t('Notify refactoring style')}*/}
-                {/*                    showTime={'18:00:00'}*/}
-                {/*                    type={'success'}*/}
-                {/*                    onClose={close_newNotify}*/}
-                {/*                    newTagList={[{msg:'Slide to delete',icon:<IconDelete/>,color:'red',type:'ghost'}]}*/}
-                {/*                    noOffsetScreen*/}
-                {/*                />*/}
-                {/*            </Radio>*/}
-                {/*        </RadioGroup>*/}
-                {/*    </div>*/}
-                {/*</Card>*/}
-
-                <br/>
                 <Card title={t('AI Setting')}
                       id={'AI_Setting'}
                 >
@@ -293,6 +230,9 @@ function BaseSPage(){
                             <Switch disabled={getSettings('ai_support')==='False'} checked={use_use_gemini_checked} onChange={onchange_use_gemini} aria-label={'使用生成式AI'}/>
                         </Space>
                         <Space>
+                            <Title heading={6} style={{margin: 8, backgroundColor: 'transparent', width: '90%'}}>
+                                {t('UserName')}
+                            </Title>
                             <Input defaultValue={user_name} onChange={set_user_name_change}  disabled={getSettings('ai_support')==='False'}></Input>
                             <Button type='primary' onClick={submit_user_name} disabled={getSettings('ai_support')==='False'}>{t("Done")}</Button>
                         </Space>

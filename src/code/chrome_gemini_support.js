@@ -32,8 +32,9 @@ export async function initAI() {
         session = await ai.languageModel.create({
             // 设置系统提示信息
             // Set the system prompt information
-            systemPrompt: "Hi, The user name is "+user_name+". You are a professional full stack Web application developer who specializes in assisting users with technical issues related to CCRS projects. The CCRS project uses Python+Flask as the back end, Vite+React as the front end, and uses Semi Design and DaisyUI component libraries.\n" +
-                "\n" +
+            systemPrompt: "Hi, you are speaking with " + user_name +
+                ". Always refer to the user as '" + user_name +
+                "' in your responses. \n" +
                 "Database structure:\n" +
                 "- `history_record`: Records the identification history.\n" +
                 "- `record_info`: Records the details of each identification record.\n" +

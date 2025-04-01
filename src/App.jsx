@@ -199,11 +199,11 @@ function App() {
                             subItems: [
                                 {
                                     label: t('Base_Settings'),
-                                    onClick: () => { navigate() },
+                                    onClick: () => { navigate("/settings/basic") },
                                 },
                                 {
                                     label: t('Advanced_Settings'),
-                                    onClick: () => { navigate("/advanced") },
+                                    onClick: () => { navigate("/settings/advanced") },
                                 },
                                 {
                                     icon: <Languages className="w-4 h-4 text-purple-400" />,
@@ -226,7 +226,7 @@ function App() {
                                         {
                                             icon: <Notebook className="w-4 h-4 text-purple-400" />,
                                             label: t('Check_logs'),
-                                            onClick: () => {  navigate("/logs") },
+                                            onClick: () => {  navigate("/settings/logs") },
                                         },
                                         {
                                             icon: <CloudDownload className="w-4 h-4 text-purple-400" />,
@@ -238,7 +238,7 @@ function App() {
                                 {
                                     icon: <Server className="w-4 h-4 text-purple-400" />,
                                     label: t('Server detail'),
-                                    onClick: () => {  navigate("/about") },
+                                    onClick: () => {  navigate("/settings/about") },
                                 },
                             ],
                         },

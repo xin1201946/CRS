@@ -37,7 +37,6 @@ function AppContent() {
                 </Content>
             </Layout>
 
-
         </>
     );
 }

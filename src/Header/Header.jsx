@@ -1,79 +1,85 @@
-// eslint-disable-next-line no-unused-vars
-import React, {useEffect, useState} from 'react';
-import {Button, Dropdown, SideSheet, Space, Typography} from '@douyinfe/semi-ui';
-import {MdHdrAuto, MdOutlineDarkMode, MdOutlineLightMode} from "react-icons/md";
-import {getSetTheme, setAutoTheme, setDarkTheme, setLightTheme} from "../code/theme_color.js";
-import {IconLanguage, IconMail, IconSetting} from "@douyinfe/semi-icons";
-import {detectDevice} from "../code/check_platform.js";
-import {useTranslation} from 'react-i18next';
+import { useEffect, useState } from 'react';
+import { Button, Dropdown, SideSheet, Space, Typography } from '@douyinfe/semi-ui';
+import { MdHdrAuto, MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
+import { getSetTheme, setAutoTheme, setDarkTheme, setLightTheme } from "../code/theme_color.js";
+import { IconLanguage, IconMail, IconSetting } from "@douyinfe/semi-icons";
+import { detectDevice } from "../code/check_platform.js";
+import { useTranslation } from 'react-i18next';
 import checkNetwork from "../code/NetWorkConnect.js";
-import {getServer} from "../code/get_server.js";
-import {send_notify} from "../code/SystemToast.jsx";
-import {get_language, set_language} from "../code/language.js";
-import {getSettings} from "../code/Settings.js";
+import { getServer } from "../code/get_server.js";
+import { send_notify } from "../code/SystemToast.jsx";
+import { get_language, set_language } from "../code/language.js";
+import { getSettings } from "../code/Settings.js";
 import NotifyCenter from "../Page/NotifyCenter.jsx";
-import {emit} from "../code/PageEventEmitter.js";
-import {useNavigate} from "react-router-dom";
+import { emit } from "../code/PageEventEmitter.js";
+import { useNavigate } from "react-router-dom";
 
-function Header1 (){
+function Header1() {
     const navigate = useNavigate();
     const { Text } = Typography;
     const { t } = useTranslation();
     const langmenu = [
-        { node: 'item', name: '中文', type: 'primary',active: get_language() === 1 , onClick: () => set_language(1) },
-        { node: 'item', name: 'English', type: 'primary',active: get_language() === 2 , onClick: () => set_language(2)},
+        { node: 'item', name: '中文', type: 'primary', active: get_language() === 1, onClick: () => set_language(1) },
+        { node: 'item', name: 'English', type: 'primary', active: get_language() === 2, onClick: () => set_language(2) },
     ];
-    const initialThemeIcon = () => {
-        if (getSettings('theme_color') === 'light') {
-            set_ThemeIcon(<MdOutlineLightMode style={{ width: '20px', height: '20px' }} />)
-            return(<MdOutlineLightMode style={{ width: '20px', height: '20px' }} />)
-        } else if (getSettings('theme_color') === 'dark') {
-            set_ThemeIcon(<MdOutlineDarkMode style={{ width: '20px', height: '20px' }} />)
-            return(<MdOutlineDarkMode style={{ width: '20px', height: '20px' }} />)
-        } else if (getSettings('theme_color') === 'auto'){
-            set_ThemeIcon(<MdHdrAuto style={{ width: '20px', height: '20px' }} />)
-            return(<MdHdrAuto style={{ width: '20px', height: '20px' }} />)
+
+    // 获取初始主题图标的函数
+    const getInitialThemeIcon = () => {
+        const theme = getSettings('theme_color');
+        if (theme === 'light') {
+            return <MdOutlineLightMode style={{ width: '20px', height: '20px' }} />;
+        } else if (theme === 'dark') {
+            return <MdOutlineDarkMode style={{ width: '20px', height: '20px' }} />;
+        } else {
+            return <MdHdrAuto style={{ width: '20px', height: '20px' }} />;
         }
     };
+
+    // 初始化状态时动态计算主题图标
+    const [settingThemeIcon, set_ThemeIcon] = useState(getInitialThemeIcon);
+
     const s_side_sheet_change = () => {
         navigate("/settings/home");
     };
-    const [settingThemeIcon, set_ThemeIcon] = useState(<MdHdrAuto style={{ width: '20px', height: '20px' }} />);
-    const changeSelectKey = ()=>{
-        emit('changePage', "home")
-    }
+
+    const changeSelectKey = () => {
+        emit('changePage', "home");
+    };
+
     const [NotifyCenter_visible, set_NotifyCenter_visible] = useState(false);
     const NotifyCenter_change = () => {
         set_NotifyCenter_visible(!NotifyCenter_visible);
     };
+
+    // 监听主题变化事件以实时更新图标
     useEffect(() => {
-        window.addEventListener('themeChange', initialThemeIcon);
+        const handleThemeChange = () => {
+            set_ThemeIcon(getInitialThemeIcon());
+        };
+        window.addEventListener('themeChange', handleThemeChange);
         return () => {
-            window.removeEventListener('themeChange', initialThemeIcon);
-        }
+            window.removeEventListener('themeChange', handleThemeChange);
+        };
     }, []);
+
+    // 切换主题模式并更新图标
     function switchDarkMode() {
         if (getSetTheme() === 'dark') {
-            setAutoTheme(); // 确保调用函数
-            const body = document.body;
-            if (!body.hasAttribute('theme-mode')){
-                set_ThemeIcon(<MdHdrAuto style={{width:'20px',height:'20px'}} />);
-            }else{
-                set_ThemeIcon(<MdHdrAuto style={{width:'20px',height:'20px'}} />);
-            }
+            setAutoTheme();
+            set_ThemeIcon(<MdHdrAuto style={{ width: '20px', height: '20px' }} />);
         } else if (getSetTheme() === 'light') {
-            setDarkTheme(); // 确保调用函数
-            set_ThemeIcon(<MdOutlineDarkMode style={{width:'20px',height:'20px'}}/>);
+            setDarkTheme();
+            set_ThemeIcon(<MdOutlineDarkMode style={{ width: '20px', height: '20px' }} />);
         } else if (getSetTheme() === 'auto') {
-            setLightTheme(); // 确保调用函数
-            set_ThemeIcon(<MdOutlineLightMode style={{width:'20px',height:'20px'}}/>);
+            setLightTheme();
+            set_ThemeIcon(<MdOutlineLightMode style={{ width: '20px', height: '20px' }} />);
         }
     }
-    // 网络检查组件
+
+    // 网络检查组件（保持不变）
     function MyComponent() {
         const [networkCheckResult, setNetworkCheckResult] = useState([null, null, null]);
 
-        // 检查服务器连接状态
         function checkNetworks() {
             return new Promise((resolve) => {
                 checkNetwork(getServer()).then((result) => {
@@ -81,29 +87,23 @@ function Header1 (){
                     if (result) {
                         duration = 3;
                         type = 'info';
-                        children = (
-                            <Text>{t('Server_connection_successful')}</Text>
-                        );
+                        children = <Text>{t('Server_connection_successful')}</Text>;
                     } else {
                         duration = 0;
                         type = 'error';
                         children = (
                             <>
                                 <Text>{t('Server_connection_failed')}</Text>
-                                <br/>
-                                <br/>
+                                <br />
+                                <br />
                                 <Space wrap={true} vertical={false}>
-                                    <Button
-                                        onClick={() => {
-                                            window.location.reload();
-                                        }}
-                                    >
+                                    <Button onClick={() => window.location.reload()}>
                                         {t('Refresh')}
                                     </Button>
                                     <Button
                                         style={{ marginLeft: '5px' }}
                                         className="semi-button semi-button-warning"
-                                        onClick={()=>{navigate('/settings/basic')}}
+                                        onClick={() => navigate('/settings/basic')}
                                         type="button"
                                     >
                                         {t('Server_IP')}
@@ -111,7 +111,7 @@ function Header1 (){
                                     <Button
                                         style={{ marginLeft: '5px' }}
                                         className="semi-button semi-button-warning"
-                                        onClick={()=>{navigate('/settings/advanced#API_Settings')}}
+                                        onClick={() => navigate('/settings/advanced#API_Settings')}
                                         type="button"
                                     >
                                         {t('HTTPS_settings_API_settings')}
@@ -125,45 +125,44 @@ function Header1 (){
             });
         }
 
-        // 触发通知函数
         function build_toast(lists) {
-            if (!lists || lists.includes(null)) return; // 确保列表不为空或未定义
-            send_notify(t('Server Status Check'), lists[2],null, lists[0],  lists[1]);
+            if (!lists || lists.includes(null)) return;
+            send_notify(t('Server Status Check'), lists[2], null, lists[0], lists[1]);
         }
 
-        // 使用 useEffect 检测网络并显示通知
         useEffect(() => {
             checkNetworks().then((result) => {
-                setNetworkCheckResult(result); // 更新网络检查结果
+                setNetworkCheckResult(result);
             });
-        }, []); // 空依赖数组表示只在组件挂载时运行一次
+        }, []);
 
-        // 监听 networkCheckResult 变化并触发通知
         useEffect(() => {
             build_toast(networkCheckResult);
-        }, [networkCheckResult]); // 当 networkCheckResult 改变时触发
+        }, [networkCheckResult]);
 
-        return <></>
+        return <></>;
     }
 
-    function New_Nav(){
-        return <>
-            <div  className="navbar bg-[--semi-color-nav-bg] backdrop-blur-3xl"
+    // 导航栏组件（保持不变）
+    function New_Nav() {
+        return (
+            <div className="navbar bg-[--semi-color-nav-bg] backdrop-blur-3xl"
                  style={{
                      position: 'fixed',
                      width: '100%',
                      zIndex: 1,
-                }}
+                 }}
             >
-                <div className="flex-0" >
-                    <button onClick={changeSelectKey} style={{borderRadius:'7px'}} className="btn btn-ghost text-2xl">
+                <div className="flex-0">
+                    <button onClick={changeSelectKey} style={{ borderRadius: '7px' }} className="btn btn-ghost text-2xl">
                         <Space>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="h-6 w-6"
                                 fill="none"
                                 viewBox="0 0 142 141"
-                                stroke="currentColor">
+                                stroke="currentColor"
+                            >
                                 <g clipPath="url(#a)">
                                     <g
                                         clipPath="url(#b)"
@@ -175,16 +174,15 @@ function Header1 (){
                                             strokeWidth="10.667"
                                             strokeLinecap="round"
                                         />
-
                                         <path d="m47 78 28-42v28h20l-28 42V78H47Z" strokeWidth="8" />
                                     </g>
                                 </g>
                                 <defs>
                                     <clipPath id="a">
-                                        <path  d="M0 0h142v141H0z" />
+                                        <path d="M0 0h142v141H0z" />
                                     </clipPath>
                                     <clipPath id="b">
-                                        <path  d="M0 0h142v141H0z" />
+                                        <path d="M0 0h142v141H0z" />
                                     </clipPath>
                                 </defs>
                             </svg>
@@ -193,49 +191,45 @@ function Header1 (){
                     </button>
                 </div>
                 <div className="flex-1"></div>
-                <div className="flex-2 ">
+                <div className="flex-2">
                     <Space>
-
-                        <Button style={{margin: "10px"}} theme='borderless' icon={settingThemeIcon}
+                        <Button style={{ margin: "10px" }} theme='borderless' icon={settingThemeIcon}
                                 onClick={switchDarkMode}
-                                aria-label="切换颜色"/>
-                        <Button style={{margin: "10px",display: detectDevice() === 'PC' ? "none" : ''}} theme='borderless' icon={<IconMail />}
+                                aria-label="切换颜色" />
+                        <Button style={{ margin: "10px", display: detectDevice() === 'PC' ? "none" : '' }} theme='borderless' icon={<IconMail />}
                                 onClick={NotifyCenter_change}
-                                aria-label="NotifyCenter"/>
-                        {/*onClick={LanguagePage_change}*/}
+                                aria-label="NotifyCenter" />
                         <Dropdown trigger={'click'} showTick position={'bottomLeft'} menu={langmenu}>
                             <Button style={{
                                 color: 'var(--semi-color-text-0)',
                                 display: detectDevice() === 'Phone' ? "none" : ''
                             }} theme='borderless'>
-                                <IconLanguage/>
+                                <IconLanguage />
                             </Button>
                         </Dropdown>
                         <Button onClick={s_side_sheet_change} style={{
                             color: 'var(--semi-color-text-0)',
                             display: detectDevice() === 'Phone' ? "none" : ''
                         }} theme='borderless'>
-                            <IconSetting/>
+                            <IconSetting />
                         </Button>
                     </Space>
                 </div>
-
             </div>
-        </>
-
+        );
     }
 
     return (
         <>
             {MyComponent()}
-            <New_Nav/>
-            <SideSheet closeOnEsc={true} placement='left' style={{maxWidth: "100%"}}
+            <New_Nav />
+            <SideSheet closeOnEsc={true} placement='left' style={{ maxWidth: "100%" }}
                        title={t('NotifyCenter')}
                        visible={NotifyCenter_visible} onCancel={NotifyCenter_change}>
                 <NotifyCenter></NotifyCenter>
             </SideSheet>
-
         </>
-    )
+    );
 }
-export default Header1
+
+export default Header1;
