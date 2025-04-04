@@ -56,7 +56,6 @@ function ServerInfo() {
                 console.warn("Invalid data received:", data);
                 return;
             }
-
             setcpuname(typeof data.cpu_name === "string" ? data.cpu_name : "");
             setCurrent_time(Array.isArray(data.currentTime) ? data.currentTime : []);
             setUsercount(typeof data.userCount === "number" ? data.userCount : 0);
@@ -106,8 +105,9 @@ function ServerInfo() {
         xField: "type",
         yField: "value",
         line: { style: { curveType: "monotone" } },
-        seriesField: "country",
+        seriesField: "total",
         legends: { visible: true },
+        point: { visible: false }, // 隐藏顶点的蓝色点
         tooltip: {
             dimension: {
                 updateContent: (data) => {
@@ -130,8 +130,9 @@ function ServerInfo() {
         xField: "type",
         yField: "value",
         line: { style: { curveType: "monotone" } },
-        seriesField: "country",
+        seriesField: "total",
         legends: { visible: true },
+        point: { visible: false }, // 隐藏顶点的蓝色点
         tooltip: {
             dimension: {
                 updateContent: (data) => {
@@ -260,6 +261,7 @@ function ServerInfo() {
                                 center: `${Usercount || 0} Devices`,
                                 right: "64-bit",
                             }}
+                            UsageData={cpu_datas}
                         />
                         <ProcessorStats
                             mainColor="orange"
@@ -273,6 +275,7 @@ function ServerInfo() {
                                 center: "64-bit",
                                 right: runTime || "Unknown",
                             }}
+                            UsageData={mem_datas}
                         />
                         <Card className="col-span-2 lg:col-span-1" title="Swap">
                             <Progress
