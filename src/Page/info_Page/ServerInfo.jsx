@@ -147,17 +147,17 @@ function ServerInfo() {
 
     const cpu_value = cpu_percent.length > 0 ? cpu_percent : [0];
     const mem_value = mem_percent.length > 0 ? mem_percent : [0];
-    const time = current_time.length > 0 ? current_time : ["0"];
+    const time = current_time.length > 0 ? current_time : ["00:00:00"];
 
     const cpu_datas = {
         values: time.map((t, index) => ({
-            type: t || "0",
+            type: t || "00:00:00",
             value: Array.isArray(cpu_value[index]) ? cpu_value[index] : [0],
         })),
     };
     const mem_datas = {
         values: time.map((t, index) => ({
-            type: t || "0",
+            type: t || "00:00:00",
             value: Array.isArray(mem_value[index]) ? mem_value[index] : [0],
         })),
     };
@@ -261,7 +261,6 @@ function ServerInfo() {
                                 center: `${Usercount || 0} Devices`,
                                 right: "64-bit",
                             }}
-                            UsageData={cpu_datas}
                         />
                         <ProcessorStats
                             mainColor="orange"
@@ -275,7 +274,6 @@ function ServerInfo() {
                                 center: "64-bit",
                                 right: runTime || "Unknown",
                             }}
-                            UsageData={mem_datas}
                         />
                         <Card className="col-span-2 lg:col-span-1" title="Swap">
                             <Progress
