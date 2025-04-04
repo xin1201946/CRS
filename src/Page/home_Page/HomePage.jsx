@@ -33,7 +33,7 @@ function OcrDemo() {
     useEffect(() => {
         // 监听窗口变化
         const handleResize = () => {
-            setIsVisible(window.innerWidth > 1200)
+            setIsVisible(window.innerWidth > 1300)
         }
         window.addEventListener("resize", handleResize)
         return () => window.removeEventListener("resize", handleResize) // 组件卸载时清理
@@ -42,7 +42,7 @@ function OcrDemo() {
     if (!isVisible) return null // 小于 1200px 时不渲染组件
 
     return (
-        <div className="relative w-auto max-w-lg mx-auto">
+        <div className="relative w-[84%] mx-auto">
             <div className="relative bg-[semi-color-bg-3] p-6 rounded-xl shadow-2xl">
                 {/* Background blobs */}
                 <div className="absolute -top-4 -right-4 w-72 h-72 bg-primary/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
@@ -268,13 +268,19 @@ function HomePage() {
                             <span>{t("Tip_Homepage_title_1")}</span>
                             <p className="text-primary">{t("Tip_Homepage_title_2")}</p>
                         </h1>
-                        <div className={"text-left"}>
-                            <Space wrap style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
+                        <div className="text-left">
+                            <div style={{
+                                display: "grid",
+                                gridTemplateColumns: detectDevice() === "PC" ?"repeat(2, minmax(280px, 1fr))":"repeat(1, minmax(280px, 1fr))", // 强制 2 列
+                                gap: "16px",
+                                maxWidth: "1200px",
+                                margin: "0 auto"
+                            }}>
                                 <FeatureCard title={t("Advantage1")} icon={Puzzle} />
                                 <FeatureCard title={t("Advantage2")} icon={Layers} />
                                 <FeatureCard title={t("Advantage3")} icon={Fingerprint} />
                                 <FeatureCard title={t("Advantage4")} icon={LayoutTemplate} />
-                            </Space>
+                            </div>
                         </div>
                         <div className="flex gap-4" style={{marginTop:"20px"}}>
                             <Space wrap={true}>
@@ -327,9 +333,17 @@ function HomePage() {
     // 单个 Feature 卡片
     // eslint-disable-next-line react/prop-types
     function FeatureCard({ title, icon, children }) {
-        const IconComponent = icon; // 直接传入组件，避免额外的判断
+        const IconComponent = icon;
         return (
-            <div className="card bg-[--semi-color-bg-1]  shadow-xl p-4 w-80" style={{height:"110px"}}>
+            <div
+                className="card bg-[--semi-color-bg-1] shadow-xl p-4"
+                style={{
+                    height: "110px",
+                    width: "100%", // 改为100%以适应容器宽度
+                    maxWidth: "400px", // 设置最大宽度限制
+                    minWidth: "280px"  // 设置最小宽度
+                }}
+            >
                 <div className="flex items-center space-x-4">
                     <div className="p-2 bg-primary text-[--semi-color-bg-1] rounded-full">
                         <IconComponent className="w-6 h-6" />
