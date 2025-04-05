@@ -209,5 +209,6 @@
   "Other settings": "其他设置",
   "404_Description": "没关系，让我们返回主页或上一页，继续探索吧！",
   "404_Page_not_found": "糟糕，我们好像迷路了！",
-  "Go_Back": "返回"
+  "Go_Back": "返回",
+  "error_stackTrace": "还有！这是我们通过栈跟踪找到的错误信息，希望能帮到你。"
 }

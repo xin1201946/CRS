@@ -1,17 +1,20 @@
 import { motion } from 'framer-motion';
-import { Ghost, ArrowLeft, Home } from 'lucide-react';
+import { Ghost, ArrowLeft, Home, Copy,ArrowBigDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
+import { useState } from 'react';
 import {t} from "i18next";
 import PropTypes from "prop-types";
+import {add_log, saveLogsToTxt} from "../../code/log.js";
 
 const ErrorPage = ({
                        code = 404,
                        title = "Page Not Found",
                        description = "The page you're looking for doesn't exist or has been moved.",
-                       homeUrl = "/"
+                       homeUrl = "/",
+                       stackTrace = null // 新增可选的调用堆栈参数
                    }) => {
     const navigate = useNavigate();
+    const [copied, setCopied] = useState(false);
 
     const containerVariants = {
         hidden: { opacity: 0, y: 20 },
@@ -41,10 +44,25 @@ const ErrorPage = ({
         }
     };
 
+    const handleCopy = () => {
+        if (stackTrace) {
+            navigator.clipboard.writeText(stackTrace);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
+    };
+
+    const download_logs = () => {
+        add_log("Error:","error","===========================================")
+        add_log("userDownloadLogs:","info")
+        add_log("stackTrace:","error",stackTrace?stackTrace:"NO ANY STACKTRACE FOUND")
+        saveLogsToTxt()
+    }
+
     return (
         <div className="min-h-screen bg-[semi-color-bg-2] flex items-center justify-center p-4">
             <motion.div
-                className="max-w-md w-full text-center"
+                className="max-w-2xl w-full text-center"
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
@@ -79,6 +97,33 @@ const ErrorPage = ({
                     {description}
                 </motion.p>
 
+                {stackTrace && (
+                    <motion.div
+                        variants={itemVariants}
+                        className="mb-8 max-w-xl mx-auto"
+                    >
+                        <div>
+                            <p className="text-semi-color-text-3 mb-2">
+                                {t("error_stackTrace")}
+                            </p>
+                        </div>
+                        <div className="relative bg-gray-100  p-4 rounded-lg">
+                            <div className="mockup-code w-full">
+                                <pre data-prefix="$"><code>{stackTrace}</code></pre>
+                            </div>
+                            <button
+                                onClick={handleCopy}
+                                className="absolute top-2 right-2 btn btn-ghost btn-sm"
+                            >
+                                <Copy size={16} style={{color:"white"}}/>
+                                {copied && (
+                                    <span className="ml-1 text-xs">{t("Copied!")}</span>
+                                )}
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
+
                 <motion.div
                     variants={itemVariants}
                     className="flex gap-4 justify-center"
@@ -98,6 +143,14 @@ const ErrorPage = ({
                         <Home size={20} />
                         {t("Home")}
                     </button>
+
+                    <button
+                        onClick={download_logs}
+                        className="btn btn-primary gap-2"
+                    >
+                        <ArrowBigDown size={20} />
+                        {t("Log_download")}
+                    </button>
                 </motion.div>
             </motion.div>
         </div>
@@ -108,7 +161,8 @@ ErrorPage.propTypes = {
     code: PropTypes.number,
     title: PropTypes.string,
     description: PropTypes.string,
-    homeUrl: PropTypes.string
+    homeUrl: PropTypes.string,
+    stackTrace: PropTypes.string // 添加 stackTrace 的 prop 类型
 };
 
 export default ErrorPage;

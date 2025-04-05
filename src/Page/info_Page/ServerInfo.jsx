@@ -4,26 +4,71 @@ import React, { useEffect, useState } from "react";
 import getServerInfoSnapshot from "../../code/get_server_info.js";
 import { t } from "i18next";
 import ProcessorStats from "../widget/ProcessorStats.jsx";
+import ErrorPage from "../error_page/ErrorPage.jsx";
 
-// Error Boundary Component
 class ErrorBoundary extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { hasError: false };
+        this.state = {
+            hasError: false,
+            error: null,
+            errorInfo: null,
+        };
     }
 
-    static getDerivedStateFromError() {
-        return { hasError: true };
+    static getDerivedStateFromError(error) {
+        // 更新状态以便下次渲染显示错误页面
+        return { hasError: true, error };
     }
 
     componentDidCatch(error, errorInfo) {
+        // 捕获错误并记录详细信息
+        this.setState({ errorInfo });
         console.error("Error caught by ErrorBoundary:", error, errorInfo);
     }
 
     render() {
         if (this.state.hasError) {
-            return <div>组件渲染出错，请稍后重试。</div>;
+            const { error } = this.state;
+
+            // 默认错误信息
+            let code = 500;
+            let title = "Something Went Wrong";
+            let description = "An unexpected error occurred. Please try again later.";
+
+            // 动态分析错误原因
+            if (error) {
+                if (error.message.includes('Network') || error.message.includes('fetch')) {
+                    code = 200;
+                    title = "Network Error";
+                    description = "Failed to connect to the server. Check your network.";
+                } else if (error.message.includes('undefined') || error.message.includes('null')) {
+                    code = 102;
+                    title = "Data Binding Error";
+                    description = "Invalid data encountered. Please refresh the page.";
+                } else if (error instanceof TypeError) {
+                    code = 101;
+                    title = "Component Failure";
+                    description = "A component failed to load properly.";
+                } else if (error.message.includes('timeout')) {
+                    code = 200;
+                    title = "Request Timeout";
+                    description = "The request took too long. Please try again.";
+                }
+            }
+
+            return (
+                <ErrorPage
+                    code={code}
+                    title={title}
+                    description={description}
+                    homeUrl={"/settings/about"}
+                    stackTrace={error.message}
+                />
+            );
         }
+
+        // 如果没有错误，渲染子组件
         // eslint-disable-next-line react/prop-types
         return this.props.children;
     }

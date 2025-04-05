@@ -208,5 +208,6 @@
   "Other settings": "Other settings",
   "404_Description": "But don`t worries, Return to the homepage or the previous page and keep exploring!",
   "404_Page_not_found": "Oops, We are Lost in the void!",
+  "error_stackTrace": "And! Here is the error message we found through the stack trace, hope it helps you.",
   "Go_Back": "Go Back"
 }
