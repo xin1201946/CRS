@@ -11,6 +11,7 @@
     "start": "vite --host 0.0.0.0"
   },
   "dependencies": {
+    "@ant-design/plots": "^2.3.3",
     "@douyinfe/semi-icons": "^2.67.1",
     "@douyinfe/semi-icons-lab": "^2.68.4",
     "@douyinfe/semi-ui": "^2.67.1",

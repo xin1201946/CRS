@@ -151,13 +151,13 @@ function ServerInfo() {
 
     const cpu_datas = {
         values: time.map((t, index) => ({
-            type: t || "00:00:00",
+            type: [t],
             value: Array.isArray(cpu_value[index]) ? cpu_value[index] : [0],
         })),
     };
     const mem_datas = {
         values: time.map((t, index) => ({
-            type: t || "00:00:00",
+            type:[t],
             value: Array.isArray(mem_value[index]) ? mem_value[index] : [0],
         })),
     };
@@ -251,29 +251,33 @@ function ServerInfo() {
                 <div className="col-span-2 space-y-6">
                     <div className="grid grid-cols-2 gap-6">
                         <ProcessorStats
-                            mainColor="#6366f1"
+                            mainColor="rgba(50,149,251,1)"
                             content={cpuName || "Unknown"}
                             icon={"/processor.webp"}
                             backgroundColors="var(--semi-color-bg-3)"
+                            chart_color="#3295fb"
                             percentage={parseInt(cpu_percent[cpu_percent.length - 1] || 0)}
                             bottomStats={{
                                 left: `${Cpucount || 0} Cores`,
                                 center: `${Usercount || 0} Devices`,
                                 right: "64-bit",
                             }}
+                            chart_data={cpu_datas}
                         />
                         <ProcessorStats
-                            mainColor="orange"
+                            mainColor="var(--semi-color-warning)"
                             backgroundColors="var(--semi-color-bg-3)"
-                            icon={"/memory.webp"}
+                            icon="/memory.webp"
                             title="Memory"
                             content={platformR || "Unknown"}
+                            chart_color="#FF6B00"
                             percentage={parseInt(mem_percent[mem_percent.length - 1] || 0)}
                             bottomStats={{
                                 left: `${(mem_total / 1024).toFixed(1) || 0} GiB RAM`,
                                 center: "64-bit",
                                 right: runTime || "Unknown",
                             }}
+                            chart_data={mem_datas}
                         />
                         <Card className="col-span-2 lg:col-span-1" title="Swap">
                             <Progress
