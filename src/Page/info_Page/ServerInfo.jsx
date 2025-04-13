@@ -1,5 +1,4 @@
 import { Card, Descriptions, Progress, Space, TabPane, Tabs } from "@douyinfe/semi-ui";
-import { VChart } from "@visactor/react-vchart";
 import React, { useEffect, useState } from "react";
 import getServerInfoSnapshot from "../../code/get_server_info.js";
 import { t } from "i18next";
@@ -140,55 +139,6 @@ function ServerInfo() {
         return () => clearInterval(intervalId);
     }, []);
 
-    const CPUcommonSpec = {
-        type: "area",
-        stack: true,
-        title: {
-            visible: true,
-            text: `${t("CPU usage")} ${cpu_percent.length > 0 ? cpu_percent[cpu_percent.length - 1] : 0}%`,
-        },
-        xField: "type",
-        yField: "value",
-        line: { style: { curveType: "monotone" } },
-        seriesField: "total",
-        legends: { visible: true },
-        point: { visible: false }, // 隐藏顶点的蓝色点
-        tooltip: {
-            dimension: {
-                updateContent: (data) => {
-                    let sum = 0;
-                    data.forEach((datum) => (sum += +datum.value || 0));
-                    data.push({ hasShape: "false", key: "Total", value: sum });
-                    return data;
-                },
-            },
-        },
-    };
-
-    const memorycommonSpec = {
-        type: "area",
-        stack: true,
-        title: {
-            visible: true,
-            text: `${t("memory usage")} ${mem_percent.length > 0 ? mem_percent[mem_percent.length - 1] : 0}%`,
-        },
-        xField: "type",
-        yField: "value",
-        line: { style: { curveType: "monotone" } },
-        seriesField: "total",
-        legends: { visible: true },
-        point: { visible: false }, // 隐藏顶点的蓝色点
-        tooltip: {
-            dimension: {
-                updateContent: (data) => {
-                    let sum = 0;
-                    data.forEach((datum) => (sum += +datum.value || 0));
-                    data.push({ hasShape: "false", key: "Total", value: sum });
-                    return data;
-                },
-            },
-        },
-    };
 
     const cpu_value = cpu_percent.length > 0 ? cpu_percent : [0];
     const mem_value = mem_percent.length > 0 ? mem_percent : [0];
@@ -346,12 +296,7 @@ function ServerInfo() {
                         </Card>
                     </div>
                     <div className="grid grid-cols-2 gap-6">
-                        <div className="col-span-2 lg:col-span-1">
-                            <VChart spec={{ ...CPUcommonSpec, data: cpu_datas }} option={{ mode: "desktop-browser" }} />
-                        </div>
-                        <div className="col-span-2 lg:col-span-1">
-                            <VChart spec={{ ...memorycommonSpec, data: mem_datas }} option={{ mode: "desktop-browser" }} />
-                        </div>
+
                     </div>
                 </div>
                 <div className="lg:col-span-1">

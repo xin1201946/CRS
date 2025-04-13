@@ -10,13 +10,8 @@ import zhCN from './locales/zh-CN.json';
 import enUS from './locales/en-US.json';
 import {LocaleProvider} from '@douyinfe/semi-ui';
 import {get_language} from './code/language.js';
-import {initVChartSemiTheme} from "@visactor/vchart-semi-theme";
 import {HashRouter} from "react-router-dom"; // 引入语言设置函数
 
-initVChartSemiTheme({
-    isWatchingThemeSwitch: true,
-    isWatchingMode:true,
-});
 // 初始化 i18next
 i18n
     .use(initReactI18next) // 绑定 React
