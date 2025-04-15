@@ -23,6 +23,47 @@ function Step1() {
     const setLoading = (bool) => toggleLoading(bool);
     const setEnable = (bool) => setb1en(bool);
 
+    const beforeUpload = ({ file }) => {
+        return new Promise((resolve) => {
+            const img = new Image();
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                img.src = e.target.result;
+            };
+            img.onload = () => {
+                if (img.width > 640 || img.height > 640) {
+                    send_notify(t("Tip_Image_too_large"), t("Tip_Image_upload_in_640"));
+                    resolve({
+                        status: 'validateFail',
+                        shouldUpload: false,
+                        autoRemove: true,
+                        validateMessage: t("Tip_Image_too_large"),
+                    });
+                } else {
+                    resolve({
+                        status: 'success',
+                        shouldUpload: true,
+                        fileInstance: file.fileInstance,
+                    });
+                }
+            };
+            img.onerror = () => {
+                send_notify(t("Tip_Image_load_failed"), t('Tip_Image_please_check'));
+                resolve({
+                    status: 'validateFail',
+                    shouldUpload: false,
+                    autoRemove: true,
+                    validateMessage: t("Tip_Image_load_failed"),
+                });
+            };
+
+            reader.readAsDataURL(file.fileInstance);
+        });
+    };
+
+
+
     async function get_result() {
         setLoading(true);
         try {
@@ -90,8 +131,6 @@ function Step1() {
         }
     }
 
-
-
     function update(data) {
         let desiderata;
         if (data === "") {
@@ -127,6 +166,7 @@ function Step1() {
                         accept={imageOnly}
                         enctype="multipart/form-data"
                         limit={1}
+                        beforeUpload={beforeUpload}
                         onError={() => setEnable(true)}
                         onSuccess={() => setEnable(false)}
                         onClear={() => {
