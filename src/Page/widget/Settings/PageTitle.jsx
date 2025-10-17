@@ -3,7 +3,7 @@ import { motion, useTransform, useMotionValue } from 'framer-motion';
 import {detectDevice} from "../../../code/check_platform.js";
 import {t} from "i18next";
 
-const PageTitle = ({ title, scrollContainer }) => {
+const PageTitle = ({ title, scrollContainer,showTitle }) => {
     const scrollYValue = useMotionValue(0); // 使用 MotionValue 跟踪滚动位置
 
     React.useEffect(() => {
@@ -37,6 +37,9 @@ const PageTitle = ({ title, scrollContainer }) => {
         }
     };
     const leftOffset = calculateLeftOffset(title, detectDevice());
+    if (!showTitle){
+        return
+    }
     return (
         <>
             {/* 占位容器 */}

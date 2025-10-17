@@ -33,7 +33,7 @@ const NewSettings = lazy(() => import("./Page/NewSettings.jsx"));
 const ResultPage = lazy(() => import("./Page/home_Page/ResultPage.jsx"));
 const ErrorPage = lazy(() => import("./Page/error_page/ErrorPage.jsx"));
 
-// 加载屏幕组件，在主内容加载时显示
+// 加载屏幕组件,在主内容加载时显示
 function LoadingScreen() {
     let theme_color=getSettings('theme_color')
 
@@ -87,10 +87,51 @@ function LoadingScreen() {
                         />
                     </svg>
                 </div>
-
-                {/* 进度条区域，位于页面下方 */}
-                <div className="flex items-center justify-center flex-1">
-                    <progress className="progress w-56 h-2 text-blue-700"></progress>
+                {/* 美观的进度条区域 */}
+                <div className="w-64 space-y-8">
+                    {/* 进度条容器 */}
+                    <div className="relative h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden shadow-inner">
+                        {/* 渐变进度条 */}
+                        <motion.div
+                            className="absolute top-0 left-0 h-full rounded-full"
+                            style={{
+                                background: 'linear-gradient(90deg, #415CF7 0%, #874AEF 50%, #415CF7 100%)',
+                                backgroundSize: '200% 100%',
+                            }}
+                            initial={{ width: '0%', backgroundPosition: '0% 0%' }}
+                            animate={{
+                                width: ['0%', '100%', '100%'],
+                                backgroundPosition: ['0% 0%', '200% 0%', '200% 0%'],
+                            }}
+                            transition={{
+                                width: {
+                                    duration: 2,
+                                    repeat: Number.POSITIVE_INFINITY,
+                                    ease: "easeInOut",
+                                },
+                                backgroundPosition: {
+                                    duration: 1.5,
+                                    repeat: Number.POSITIVE_INFINITY,
+                                    ease: "linear",
+                                },
+                            }}
+                        />
+                        {/* 光泽效果 */}
+                        <motion.div
+                            className="absolute top-0 left-0 h-full w-full"
+                            style={{
+                                background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)',
+                            }}
+                            initial={{ x: '-100%' }}
+                            animate={{ x: '200%' }}
+                            transition={{
+                                duration: 1.5,
+                                repeat: Number.POSITIVE_INFINITY,
+                                ease: "easeInOut",
+                            }}
+                        />
+                    </div>
+                
                 </div>
             </div>
         </div>

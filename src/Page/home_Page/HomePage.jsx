@@ -379,8 +379,8 @@ function HomePage() {
                 {/* 页脚 */}
                 <footer className="footer footer-center p-10 semi-color-text-0">
                     <aside>
-                        <p>Copyright © {new Date().getFullYear()} - All rights reserved by CCRS Team</p>
-                        <p className="textarea-sm text-gray-300 ">{t("Tip_Homepage_footer")}</p>
+                        <p style={{color:"gray"}}>Powered & Designed by Canfeng</p>
+                        <p style={{color:"gray"}}>{t("Tip_Homepage_footer")}</p>
                     </aside>
                 </footer>
             </div>

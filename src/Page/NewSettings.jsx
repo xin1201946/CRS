@@ -119,7 +119,7 @@ function SettingsLayout({ backgroundColor = 'var(--semi-color-bg-0)', textColor 
                         }}
                     >
                         <div style={{ overflow: 'auto' }} ref={scrollWrapperRef}>
-                            <PageTitle title={currentRoute?.description || t("Page Not Found")} scrollContainer={scrollWrapperRef} />
+                            <PageTitle title={currentRoute?.description || t("Page Not Found")} showTitle={currentRoute?.showTilte} scrollContainer={scrollWrapperRef} />
 
                             <div style={{ padding: '2rem', minHeight: 'calc(100% - 40vh)' }}>
                                 {currentRoute ? (

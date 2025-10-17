@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { send_notify } from "../../code/SystemToast.jsx";
 import { add_log } from "../../code/log.js";
 import { getSettings } from "../../code/Settings.js";
+import { Dot } from 'lucide-react';
 
 const { Title } = Typography;
 
@@ -221,7 +222,7 @@ function Step1() {
                             title={<div style={{ fontWeight: 600, fontSize: '14px', lineHeight: '20px' }}>{t("How_use")}</div>}
                             description={
                                 <div>
-                                    <ui>
+                                    <ui style={{listStyleType:"None"}}>
                                         <li>{t("Tip_Step1_Upload")}</li>
                                         <li>{t("Tip_Step1_wait")}</li>
                                         <li>{t("Tip_Step1_Click_Button")}</li>

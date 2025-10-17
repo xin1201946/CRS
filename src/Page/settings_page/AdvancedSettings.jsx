@@ -152,7 +152,7 @@ function AdvancedSettingsPage() {
                           style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('Theme_color')}</Text>
                     <Text onClick={()=>{navigate("/settings/basic#ui_set")}}
                           style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('UI_set')}</Text>
-                    <Text onClick={()=>{navigate("/settings/log")}}
+                    <Text onClick={()=>{navigate("/settings/logs")}}
                           style={{color: 'var( --semi-color-link)', cursor: 'pointer'}}>{t('Log_viewer')}</Text>
                 </Space>
             </Card>

@@ -19,42 +19,48 @@ export const useSettingsRoutes = () => {
             component: HomeSettings,
             icon: Home,
             text: t("Home"),
-            description: t("Home")
+            description: t("Home"),
+            showTilte:true
         },
         {
             path: 'basic',
             component: BasicSettings,
             icon: Server,
             text: t("Base_Settings"),
-            description: t("Base_Settings")
+            description: t("Base_Settings"),
+            showTilte:true
         },
         {
             path: 'advanced',
             component: AdvancedSettings,
             icon: Sliders,
             text: t("Advanced_Settings"),
-            description: t("Advanced_Settings")
+            description: t("Advanced_Settings"),
+            showTilte:true
         },
         {
             path: 'language',
             component: LanguageSettings,
             icon: Languages,
             text: '语言/Language',
-            description: '语言/Language'
+            description: '语言/Language',
+            showTilte:true
         },
         {
             path: 'logs',
             component: LogViewer,
             icon: FileText,
             text: t("Log_viewer"),
-            description: t("Log_viewer")
+            description: t("Log_viewer"),
+            showTilte:true
         },
         {
             path: 'about',
             component: About,
             icon: Info,
             text: t("About"),
-            description: t("About")
+            description: t("About"),
+            showTilte:false
         }
     ];
 };

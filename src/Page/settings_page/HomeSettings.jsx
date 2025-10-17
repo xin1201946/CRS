@@ -10,12 +10,12 @@ import {
     Cloud,        // API设置
     Info,         // 关于
     FileText,     // 日志查看器
+    Languages,
 } from "lucide-react";
 
 import { useNavigate } from 'react-router-dom';
 import {useTranslation} from "react-i18next";
 import {detectDevice} from "../../code/check_platform.js";
-
 const { Title, Text } = Typography
 
 function HomeSettings() {
@@ -37,6 +37,7 @@ function HomeSettings() {
             linkTo:"/settings/basic",
             items: [
                 { name: t("Server_IP"), icon: <Server size={20} />, url: "/settings/basic/#server_ip" },
+                { name: t("language"), icon: <Languages size={20} />, url: "/settings/language" },
                 { name: t("Theme_color"), icon: <Palette size={20} />, url: "/settings/basic/#theme_color" },
                 { name: t("UI_set"), icon: <MenuSquare size={20} />, url: "/settings/basic/#UI_set" },
                 { name: t("Using Generative AI"), icon: <Bot size={20} />, url: "/settings/basic/#AI_Setting" },
