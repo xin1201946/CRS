@@ -20,43 +20,57 @@ let user_name = getSettings('user_name');
  */
 export async function initAI() {
     try {
-        // 检查 ai 对象是否未定义
-        // Check if the ai object is undefined
-        if (typeof ai === "undefined" ) {
+        // 检查 LanguageModel 对象是否未定义 (新版 Chrome API)
+        // Check if the LanguageModel object is undefined (new Chrome API)
+        if (typeof LanguageModel === "undefined") {
             // 若未定义，抛出错误
             // If undefined, throw an error
-            throw new Error("Ai is not defined. The API may have changed or is not enabled in this browser.");
+            throw new Error("LanguageModel is not defined. The API may have changed or is not enabled in this browser.");
         }
-        // 创建 AI 会话
-        // Create an AI session
-        session = await ai.languageModel.create({
-            // 设置系统提示信息
-            // Set the system prompt information
-            systemPrompt: "Hi, you are speaking with " + user_name +
-                ". Always refer to the user as '" + user_name +
-                "' in your responses. \n" +
-                "Database structure:\n" +
-                "- `history_record`: Records the identification history.\n" +
-                "- `record_info`: Records the details of each identification record.\n" +
-                "\n" +
-                "The user may ask how to query database information. Please follow these steps to guide the user:\n" +
-                "\n" +
-                "1. **Quick Query**: Inform the user that there is a quick query button at the bottom of the Terminal page, and recommend using this method as the simplest and safest option.\n" +
-                "2. **Command Line Query**: If the user prefers using the command line, guide them as follows:\n" +
-                "   - Open the Terminal at the top of the Terminal page.\n" +
-                "   - Use the `rexec` prefix to send SQL commands to the server, as the frontend intercepts all commands and considers direct SQL statements (e.g., Ascending/descending) illegal.\n" +
-                "   - Format: `rexec <SQL statement>;` (e.g., `rexec select * from history_record;`).\n" +
-                "   - The SQL statement must end with a semicolon (`;`).\n" +
-                "   - Note: `rexec` is required to bypass frontend interception and send the command to the server for execution.\n" +
-                "3. **Prohibited Operations**: Explicitly inform the user that any command to delete or modify database records (e.g., `rexec delete * from history_record;`) is strictly prohibited to ensure data safety.\n" +
-                "4. **Examples of Illegal Commands**:\n" +
-                "   - `select * from history_record;` (without `rexec` prefix) is illegal because the frontend will intercept it.\n" +
-                "   - `rexec sqlite select * from history_record;` is illegal because `rexec` does not require additional prefixes like `sqlite`.\n" +
-                "\n" +
-                "Example scenario:\n" +
-                "If the user asks how to query recognition history, respond:\n" +
-                "'You can use the quick query button at the bottom of the Terminal page, which is the recommended method. If you prefer the command line, open the Terminal at the top of the page and type: `rexec select * from history_record;`. Note that commands to delete or modify database records are prohibited.'"
+        
+        // 创建 AI 会话，使用新版 API 结构
+        // Create an AI session using the new API structure
+        session = await LanguageModel.create({
+            // 设置系统提示信息作为初始提示
+            // Set system prompt as initial prompts
+            initialPrompts: [
+                {
+                    role: "system",
+                    content: "Hi, you are speaking with " + user_name +
+                        ". Always refer to the user as '" + user_name +
+                        "' in your responses. \n" +
+                        "Database structure:\n" +
+                        "- `history_record`: Records the identification history.\n" +
+                        "- `record_info`: Records the details of each identification record.\n" +
+                        "\n" +
+                        "The user may ask how to query database information. Please follow these steps to guide the user:\n" +
+                        "\n" +
+                        "1. **Quick Query**: Inform the user that there is a quick query button at the bottom of the Terminal page, and recommend using this method as the simplest and safest option.\n" +
+                        "2. **Command Line Query**: If the user prefers using the command line, guide them as follows:\n" +
+                        "   - Open the Terminal at the top of the Terminal page.\n" +
+                        "   - Use the `rexec` prefix to send SQL commands to the server, as the frontend intercepts all commands and considers direct SQL statements (e.g., Ascending/descending) illegal.\n" +
+                        "   - Format: `rexec <SQL statement>;` (e.g., `rexec select * from history_record;`).\n" +
+                        "   - The SQL statement must end with a semicolon (`;`).\n" +
+                        "   - Note: `rexec` is required to bypass frontend interception and send the command to the server for execution.\n" +
+                        "3. **Prohibited Operations**: Explicitly inform the user that any command to delete or modify database records (e.g., `rexec delete * from history_record;`) is strictly prohibited to ensure data safety.\n" +
+                        "4. **Examples of Illegal Commands**:\n" +
+                        "   - `select * from history_record;` (without `rexec` prefix) is illegal because the frontend will intercept it.\n" +
+                        "   - `rexec sqlite select * from history_record;` is illegal because `rexec` does not require additional prefixes like `sqlite`.\n" +
+                        "\n" +
+                        "Example scenario:\n" +
+                        "If the user asks how to query recognition history, respond:\n" +
+                        "'You can use the quick query button at the bottom of the Terminal page, which is the recommended method. If you prefer the command line, open the Terminal at the top of the page and type: `rexec select * from history_record;`. Note that commands to delete or modify database records are prohibited.'"
+                }
+            ],
+            // 可选: 监视下载进度
+            // Optional: monitor download progress
+            monitor(m) {
+                m.addEventListener("downloadprogress", e => {
+                    add_log('Chrome_AI_Support', 'info', `下载进度: ${e.loaded} / ${e.total} 字节`);
+                });
+            }
         });
+        
         // 初始化成功，返回 true
         // Initialization successful, return true
         return true;
@@ -78,8 +92,8 @@ export async function clearAiHistory() {
     // 检查会话是否已初始化
     // Check if the session is initialized
     if (session) {
-        // 克隆会话以清除历史
-        // Clone the session to clear the history
+        // 使用新版API的clone方法清除历史
+        // Use the new API's clone method to clear history
         session = await session.clone();
     } else {
         // 记录会话未初始化警告
@@ -96,21 +110,22 @@ export async function clearAiHistory() {
  */
 export async function checkAPIAvailability() {
     try {
-        // 检查 ai 对象是否未定义
-        // Check if the ai object is undefined
-        if (typeof ai === "undefined") {
+        // 检查 LanguageModel 对象是否未定义
+        // Check if the LanguageModel object is undefined
+        if (typeof LanguageModel === "undefined") {
             // 若未定义，抛出错误
             // If undefined, throw an error
-            throw new Error("ai is not defined. The API may have changed or is not enabled in this browser.");
+            throw new Error("LanguageModel is not defined. The API may have changed or is not enabled in this browser.");
         }
 
-        try{
-            // 获取 AI 语言模型的能力信息
-            // Get the capabilities information of the AI language model
-            const capabilities = await ai.languageModel.capabilities();
-            // 检查 API 是否随时可用
-            // Check if the API is readily available
-            if (capabilities.available === "readily") {
+        try {
+            // 获取 AI 语言模型的可用性信息 (新版API)
+            // Get the availability information of the AI language model (new API)
+            const { available } = await LanguageModel.availability();
+            
+            // 检查 API 是否可用
+            // Check if the API is available
+            if (available !== "no") {
                 // 设置 AI 支持为可用
                 // Set AI support to available
                 setSettings('ai_support', 'True');
@@ -121,7 +136,7 @@ export async function checkAPIAvailability() {
                 // Return true directly
                 return true;
             }
-        }catch {
+        } catch {
             // 尝试初始化 AI
             // Try to initialize the AI
             if (await initAI()){
@@ -139,7 +154,6 @@ export async function checkAPIAvailability() {
         // API 不可用，返回 false
         // API is unavailable, return false
         return false;
-
 
     } catch (error) {
         // 设置 AI 支持为不可用
@@ -178,8 +192,9 @@ export async function tryAskAI(something) {
         // 检查 AI 支持和使用 Gemini 是否启用
         // Check if AI support and use of Gemini are enabled
         if (getSettings('ai_support') !== "False" && getSettings("use_gemini") !== "false") {
-            // 向 AI 提问
-            // Ask the AI a question
+            // 向 AI 提问 (使用新的 API 结构)
+            // Ask the AI a question (using new API structure)
+            console.log("Asking AI:", something);
             const result = await session.prompt(something);
             // 返回 AI 的回答或错误信息
             // Return the AI's answer or an error message
@@ -223,19 +238,22 @@ export async function tryAskAIStream(something, onChunk) {
         }
         // 检查 AI 支持和使用 Gemini 是否启用
         // Check if AI support and use of Gemini are enabled
+        console.log("AI Support:", getSettings('ai_support'), "Use Gemini:", getSettings("use_gemini"));
         if (getSettings('ai_support') !== "False" && getSettings("use_gemini") !== "false") {
-            // 以流式方式向 AI 提问
-            // Ask the AI a question in a streaming manner
+            // 以流式方式向 AI 提问 (使用新的 API 结构)
+            // Ask the AI a question in a streaming manner (using new API structure)
             const result = session.promptStreaming(something);
             // 存储完整回答
             // Store the full answer
             let fullResponse = "";
+            console.log("Streaming AI response for:", something);
             // 遍历流式回答的每一部分
             // Iterate through each part of the streaming answer
             for await (const chunk of result) {
                 // 拼接完整回答
                 // Concatenate the full answer
                 fullResponse += chunk;
+                console.log("Received chunk:", chunk);
                 // 每收到一部分就调用回调更新 UI
                 // Call the callback to update the UI when each part is received
                 if (typeof onChunk === 'function') {
@@ -253,9 +271,39 @@ export async function tryAskAIStream(something, onChunk) {
     } catch (error) {
         // 记录提问错误日志
         // Record the question error log
-        add_log('Chrome_AI_Support', 'error', `Error in tryAskAI: ${error}`);
+        add_log('Chrome_AI_Support', 'error', `Error in tryAskAIStream: ${error}`);
         // 返回错误信息
         // Return the error message
         return `Something went wrong: ${error}`;
+    }
+}
+
+/**
+ * 获取AI会话信息，如当前已用的令牌数和最大令牌数。
+ * Get AI session information, such as the current number of tokens used and the maximum number of tokens.
+ * @returns {Object|null} 返回包含令牌信息的对象，如果会话未初始化则返回 null。
+ * @returns {Object|null} Returns an object containing token information, or null if the session is not initialized.
+ */
+export function getSessionInfo() {
+    if (!session) {
+        return null;
+    }
+    
+    return {
+        tokensSoFar: session.tokensSoFar || 0,
+        maxTokens: session.maxTokens || 0,
+        tokensLeft: session.tokensLeft || 0
+    };
+}
+
+/**
+ * 销毁当前会话并释放资源。
+ * Destroy the current session and free resources.
+ */
+export function destroySession() {
+    if (session) {
+        session.destroy();
+        session = null;
+        add_log('Chrome_AI_Support', 'info', 'Session destroyed and resources freed.');
     }
 }

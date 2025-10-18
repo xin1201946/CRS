@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState ,Suspense} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, Layout, Nav } from '@douyinfe/semi-ui';
 import { motion } from 'framer-motion';
@@ -11,6 +11,8 @@ import { IconSidebar } from "@douyinfe/semi-icons";
 import { useTranslation } from "react-i18next";
 import PageTitle from "../Page/widget/Settings/PageTitle";
 import ErrorPage from "./error_page/ErrorPage.jsx";
+import LoadingScreen from "../App.jsx";
+import { Settings } from 'lucide-react';
 const { Sider, Content } = Layout;
 
 // eslint-disable-next-line react/prop-types
@@ -71,6 +73,7 @@ function SettingsLayout({ backgroundColor = 'var(--semi-color-bg-0)', textColor 
     const currentRoute = settingsRoute.find(route => currentPath.startsWith(route.path));
 
     return (
+        <Suspense fallback={<LoadingScreen logo={<Settings />} />}>
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.3 }} className="h-full">
             <Layout className="h-full ">
                 <div className="h-14 bg-[--semi-color-nav-bg] flex items-center px-4 shadow-sm justify-between">
@@ -139,6 +142,8 @@ function SettingsLayout({ backgroundColor = 'var(--semi-color-bg-0)', textColor 
                 </Layout>
             </Layout>
         </motion.div>
+        </Suspense>
+        
     );
 }
 

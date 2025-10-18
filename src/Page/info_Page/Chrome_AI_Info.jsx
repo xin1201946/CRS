@@ -123,8 +123,8 @@ function Chrome_AI_Info({visible,handleOk}){
                             <li>Relaunch Chrome</li>
                             <li>Go to <Text style={{color:"var( --semi-color-link)"}}>chrome://flags/#optimization-guide-on-device-model</Text> and turn on the Enables optimization guide on device option.</li>
                             <li>Go to <Text style={{color:"var( --semi-color-link)"}}>chrome://components/</Text> and check or download the latest version of Optimization Guide On Device Model.</li>
-                            <li>Open DevTools and send <Text style={{color:"var( --semi-color-link)"}} copyable={true}>(await ai.languageModel.capabilities()).available;</Text> in the console.</li>
-                            <li>If this returns <Text style={{color:"var( --semi-color-link)"}}>“readily”</Text>, then you are all set.</li>
+                            <li>Open DevTools and send <Text style={{color:"var( --semi-color-link)"}} copyable={true}>(await LanguageModel.availability()).available;</Text> in the console.</li>
+                            <li>If this returns a value other than <Text style={{color:"var( --semi-color-link)"}}>"no"</Text>, then you are all set.</li>
                         </ol>
                     </div>
                 </div>
@@ -146,7 +146,7 @@ function Chrome_AI_Info({visible,handleOk}){
                         </p>
                         <p style={{ lineHeight: 1.8, color: 'var(--semi-color-text-1)' }}>
                             <ol>
-                                <li>Force Chrome to recognize that you want to use this API. To do so, open DevTools and send <Text style={{color:"var( --semi-color-link)"}} copyable={true}> await ai.languageModel.create();</Text> in the console. This will likely fail but it’s intended.</li>
+                                <li>Force Chrome to recognize that you want to use this API. To do so, open DevTools and send <Text style={{color:"var( --semi-color-link)"}} copyable={true}> await LanguageModel.create();</Text> in the console. This will likely fail but it's intended.</li>
                                 <li>Relaunch Chrome.</li>
                                 <li>Open a new tab in Chrome, go to <Text style={{color:"var( --semi-color-link)"}}>chrome://components</Text></li>
                                 <li>Confirm that Gemini Nano is either available or is being downloaded</li>
@@ -154,7 +154,7 @@ function Chrome_AI_Info({visible,handleOk}){
                                     <li>You&#39;ll want to see the <Text style={{color:"var( --semi-color-link)"}}> Optimization Guide On Device Model</Text> present with a version greater or equal to 2024.5.21.1031.</li>
                                     <li>If there is no version listed, click on Check for update to force the download.</li>
                                 </ul>
-                                <li>Once the model has downloaded and has reached a version greater than shown above, open DevTools and send <Text copyable={true} style={{color:"var( --semi-color-link)"}}>(await ai.languageModel.capabilities()).available;</Text> in the console. If this returns “readily”, then you are all set.</li>
+                                <li>Once the model has downloaded and has reached a version greater than shown above, open DevTools and send <Text copyable={true} style={{color:"var( --semi-color-link)"}}>(await LanguageModel.availability()).available;</Text> in the console. If this returns "readily", then you are all set.</li>
                                 <ul>
                                     <li>Otherwise, relaunch, wait for a little while, and try again from step 1. </li>
                                 </ul>
@@ -166,14 +166,14 @@ function Chrome_AI_Info({visible,handleOk}){
                         <p style={{ lineHeight: 1.8, color: 'var(--semi-color-text-1)' }}>
                             Some participants have reported that the following steps helped them get the component to show up:
                             <ul>
-                                <li>If you want to try the API on a device that doesn&#39;t have the performance or VRAM requirement (i.e., when capabilities() === &#39;no&#39;), you can override it by setting the flag #optimization-guide-on-device-mode to  &#34;Enabled BypassPerfRequirement&#34;, then retry the setup steps. This comes with the caveat that, while the model may be able to run, it may also fail to execute with generic failure errors.</li>
+                                <li>If you want to try the API on a device that doesn&#39;t have the performance or VRAM requirement (i.e., when availability().available === &#39;no&#39;), you can override it by setting the flag #optimization-guide-on-device-mode to  &#34;Enabled BypassPerfRequirement&#34;, then retry the setup steps. This comes with the caveat that, while the model may be able to run, it may also fail to execute with generic failure errors.</li>
                             </ul>
                         </p>
                         <p style={{ lineHeight: 1.8, color: 'var(--semi-color-text-0)', fontWeight: 600 }}>
                             Q：All my steps were successful, but I was prompted to &#34;downloading&#34; during verification.
                         </p>
                         <p style={{ lineHeight: 1.8, color: 'var(--semi-color-text-1)' }}>
-                            The browser may not start downloading the model right away. If your computer fulfills all the requirements and you don&#39;t see the model download start on <Text style={{color:"var( --semi-color-link)"}}>chrome://components</Text> after calling <Text copyable={true} style={{color:"var( --semi-color-link)"}}>ai.languageModel.create()</Text>, and Optimization Guide On Device Model shows version 0.0.0.0 / New, leave the browser open for a few minutes to wait for the scheduler to start the download.
+                            The browser may not start downloading the model right away. If your computer fulfills all the requirements and you don&#39;t see the model download start on <Text style={{color:"var( --semi-color-link)"}}>chrome://components</Text> after calling <Text copyable={true} style={{color:"var( --semi-color-link)"}}>LanguageModel.create()</Text>, and Optimization Guide On Device Model shows version 0.0.0.0 / New, leave the browser open for a few minutes to wait for the scheduler to start the download.
                         </p>
                         <p style={{ lineHeight: 1.8, color: 'var(--semi-color-text-0)', fontWeight: 600 }}>
                             Q：Prompting me about an unsupported language in a conversation?

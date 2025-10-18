@@ -34,9 +34,8 @@ const ResultPage = lazy(() => import("./Page/home_Page/ResultPage.jsx"));
 const ErrorPage = lazy(() => import("./Page/error_page/ErrorPage.jsx"));
 
 // 加载屏幕组件,在主内容加载时显示
-function LoadingScreen() {
+export function LoadingScreen(logo=null) {
     let theme_color=getSettings('theme_color')
-
     if (theme_color==='auto'){
         setAutoTheme()
     }else{
@@ -48,7 +47,8 @@ function LoadingScreen() {
             <div className="flex flex-col items-center gap-16">
                 {/* Logo Container */}
                 <div className="relative w-32 h-32">
-                    <svg
+                    {logo === null?logo:
+                     <svg
                         width="128"
                         height="128"
                         viewBox="0 0 128 128"
@@ -86,6 +86,8 @@ function LoadingScreen() {
                             }}
                         />
                     </svg>
+                    }
+                   
                 </div>
                 {/* 美观的进度条区域 */}
                 <div className="w-64 space-y-8">

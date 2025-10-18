@@ -20,3 +20,133 @@
 .read-the-docs {
   color: #888;
 }
+
+
+.about-gradient-bg::before,
+.about-gradient-bg::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(90px);
+  opacity: 0.5;
+}
+
+.about-gradient-bg::before {
+  top: 12%;
+  left: 18%;
+  width: 320px;
+  height: 320px;
+  background: rgba(255, 176, 96, 0.55);
+}
+
+.about-gradient-bg::after {
+  bottom: 10%;
+  right: 14%;
+  width: 380px;
+  height: 380px;
+  background: rgba(255, 214, 153, 0.6);
+}
+
+.about-hero-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 72px 20px 140px;
+  text-align: center;
+}
+
+.about-hero-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: 40px 56px;
+  border-radius: 32px;
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  box-shadow: 0 26px 68px rgba(255, 145, 64, 0.18);
+  max-width: 560px;
+}
+
+.about-hero-title {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  font-size: clamp(3.2rem, 6vw, 4.5rem);
+  line-height: 1.05;
+}
+
+.about-hero-subtitle {
+  margin: 0;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 600;
+  color: var(--semi-color-text-0);
+}
+
+.about-hero-tagline {
+  margin: 0;
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 122, 24, 0.88);
+}
+
+@keyframes about-scroll-cue {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  60% {
+    transform: translateY(34px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(34px);
+    opacity: 0;
+  }
+}
+
+.about-content-section {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 132px 20px 160px;
+}
+
+.about-content-inner {
+  width: 100%;
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+  text-align: center;
+}
+
+.about-card-stack {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+@media (max-width: 640px) {
+  .about-hero-card {
+    padding: 32px 28px;
+    border-radius: 24px;
+  }
+
+  .about-hero-section {
+    padding: 64px 16px 120px;
+  }
+
+  .about-content-section {
+    padding: 120px 16px 140px;
+  }
+}

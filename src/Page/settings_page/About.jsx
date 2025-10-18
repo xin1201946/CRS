@@ -10,7 +10,8 @@ import Chrome_AI_Info from "../info_Page/Chrome_AI_Info.jsx";
 import {detectDevice} from "../../code/check_platform.js";
 import {send_notify} from "../../code/SystemToast.jsx";
 import ServerInfo from "../info_Page/ServerInfo.jsx";
-import { Tag, TagGroup } from '@douyinfe/semi-ui';
+import { Tag } from '@douyinfe/semi-ui';
+import { motion } from "framer-motion";
 
 function AboutWE(){
     const { t } = useTranslation();
@@ -48,92 +49,141 @@ function AboutWE(){
     function appInfo(){
         return (
             <>
-                <div style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 16,
-                    padding: 20
-                }}>
-                    <div style={{display: "flex", flexDirection: "column", alignItems: "center", gap: 8, marginBottom: 8}}>
-                        <img src="/512x512.webp" alt="CCRS Logo" style={{width: 50, height: "auto"}}/>
-                        <p style={{fontWeight: 700, fontSize: 24, margin: 0}}>CCRS UI</p>
-                    </div>
-                    <Tag size="large">2.0.2.1</Tag>
-
-                    <Text type="secondary">Powered & Designed by <Text link={{href:"https://github.com/xin1201946"}}>Canfeng</Text></Text>
-
-                    <div style={{width: "100%", maxWidth: 720}}>
-                        <Card onClick={clickbeta}>
-                            <Descriptions align="left">
-                                <Descriptions.Item itemKey={t('App_name')}>铸造字识别系统</Descriptions.Item>
-                                <Descriptions.Item itemKey={t('Build_time')}>{getSettings('buile_time')}</Descriptions.Item>
-                                <Descriptions.Item itemKey={t('Server_IP')}><Text link={{
-                                    href: getServer(),
-                                    target: '_blank'
-                                }}>{getSettings('server_ip')}</Text></Descriptions.Item>
-                                <Descriptions.Item itemKey={t('AI_Support')}>
-                                    <Space>
-                                        <Text>{getSettings('ai_support')}</Text>
-                                        <Popover
-                                            content={
-                                                <article>
-                                                    <Text>{t('Click to see more information about AI')}</Text>
-                                                </article>
-                                            }
-                                            showArrow
-                                            arrowPointAtCenter
-                                            position={'top'}
-                                        >
-                                            <IconInfoCircle onClick={handleIconClick} style={{color: 'var(--semi-color-primary)'}}/>
-                                        </Popover>
-                                    </Space>
-                                </Descriptions.Item>
-                            </Descriptions>
-                        </Card>
-
-                        <br/>
-                        <Card
-                            onClick={sysIngoPagechange}
-                            shadows='hover'
-                            style={{cursor: "pointer"}}
-                            bodyStyle={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
+                <section className="about-hero-section" style={{ justifyContent: 'flex-start', paddingTop: '8vh' }}>
+                    <motion.div
+                        initial={{ opacity: 0, y: 32, filter: 'blur(10px)' }}
+                        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                        transition={{ duration: 0.9, ease: [0.19, 1, 0.22, 1] }}
+                        className="about-hero-card"
+                    >
+                        <motion.h1
+                            initial={{ scale: 0.94, y: 8 }}
+                            animate={{
+                                scale: 1,
+                                y: 0,
+                                backgroundPosition: ['0% 0%', '100% 0%', '0% 0%']
                             }}
-                        >
-                            <Meta
-                                title={t('Server Info')}
-                            />
-                            <IconChevronRight style={{color: 'var(--semi-color-primary)'}}/>
-                        </Card>
-                        <br/>
-                        <Card
-                            onClick={betaPchange}
-                            shadows='hover'
-                            style={{cursor: "pointer", visibility: betavisible}}
-                            bodyStyle={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
+                            transition={{
+                                type: 'spring',
+                                stiffness: 170,
+                                damping: 18,
+                                delay: 0.05,
+                                backgroundPosition: {
+                                    duration: 10,
+                                    repeat: Number.POSITIVE_INFINITY,
+                                    ease: 'linear'
+                                }
                             }}
+                            className="about-hero-title"
                         >
-                            <Meta
-                                title="BetaFunctionality"
-                            />
-                            <IconChevronRight style={{color: 'var(--semi-color-primary)'}}/>
-                        </Card>
-                    </div>
+                            CCRS UI
+                        </motion.h1>
 
-                    <SideSheet style={{maxWidth: "100%"}} title="BetaFunc" visible={betaPagevisible} onCancel={betaPchange}>
-                        <BetaFunctionalityPage></BetaFunctionalityPage>
-                    </SideSheet>
-                    <SideSheet width={"100%"} title={t('Server Info')} visible={sysIngoPagevisible} onCancel={sysIngoPagechange}>
-                        <ServerInfo></ServerInfo>
-                    </SideSheet>
-                </div>
+                        <motion.p
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.35, duration: 0.7, ease: 'easeOut' }}
+                            className="about-hero-subtitle"
+                        >
+                            <Tag size="large" style={{fontSize:"15px"}} type="solid" color="orange">2.0.2.1</Tag>
+                        </motion.p>
+
+                        <motion.p
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.55, duration: 0.7, ease: 'easeOut' }}
+                            className="about-hero-tagline"
+                        >
+                            REACT · SEMIUI
+                        </motion.p>
+                    </motion.div>
+
+                </section>
+
+                <section className="about-content-section">
+                    <motion.div
+                        initial={{ opacity: 0, y: 32 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-80px' }}
+                        transition={{ duration: 0.7, ease: 'easeOut' }}
+                        className="about-content-inner"
+                    >
+
+
+                        <div className="about-card-stack">
+                            <Card onClick={clickbeta} className="glass-card" shadows='hover'>
+                                <Descriptions align="left">
+                                    <Descriptions.Item itemKey={t('App_name')}>铸造字识别系统</Descriptions.Item>
+                                    <Descriptions.Item itemKey={t('Build_time')}>{getSettings('buile_time')}</Descriptions.Item>
+                                    <Descriptions.Item itemKey={t('Server_IP')}><Text link={{
+                                        href: getServer(),
+                                        target: '_blank'
+                                    }}>{getSettings('server_ip')}</Text></Descriptions.Item>
+                                    <Descriptions.Item itemKey={t('AI_Support')}>
+                                        <Space>
+                                            <Text>{getSettings('ai_support')}</Text>
+                                            <Popover
+                                                content={
+                                                    <article>
+                                                        <Text>{t('Click to see more information about AI')}</Text>
+                                                    </article>
+                                                }
+                                                showArrow
+                                                arrowPointAtCenter
+                                                position={'top'}
+                                            >
+                                                <IconInfoCircle onClick={handleIconClick} style={{color: 'var(--semi-color-primary)'}}/>
+                                            </Popover>
+                                        </Space>
+                                    </Descriptions.Item>
+                                </Descriptions>
+                            </Card>
+
+                            <Card
+                                onClick={sysIngoPagechange}
+                                className="glass-card"
+                                shadows='hover'
+                                style={{cursor: "pointer"}}
+                                bodyStyle={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                }}
+                            >
+                                <Meta
+                                    title={t('Server Info')}
+                                />
+                                <IconChevronRight style={{color: 'var(--semi-color-primary)'}}/>
+                            </Card>
+
+                            <Card
+                                onClick={betaPchange}
+                                className="glass-card"
+                                shadows='hover'
+                                style={{cursor: "pointer", visibility: betavisible}}
+                                bodyStyle={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                }}
+                            >
+                                <Meta
+                                    title="BetaFunctionality"
+                                />
+                                <IconChevronRight style={{color: 'var(--semi-color-primary)'}}/>
+                            </Card>
+                        </div>
+                        <Text type="secondary">Powered & Designed by <Text link={{href:"https://github.com/xin1201946"}}>Canfeng</Text></Text>
+
+                    </motion.div>
+                </section>
+
+                <SideSheet style={{maxWidth: "100%"}} title="BetaFunc" visible={betaPagevisible} onCancel={betaPchange}>
+                    <BetaFunctionalityPage></BetaFunctionalityPage>
+                </SideSheet>
+                <SideSheet width={"100%"} title={t('Server Info')} visible={sysIngoPagevisible} onCancel={sysIngoPagechange}>
+                    <ServerInfo></ServerInfo>
+                </SideSheet>
             </>
         );
     }
