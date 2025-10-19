@@ -11,6 +11,9 @@ let session = null;
 // 从设置中获取用户名称
 // Get the user name from the settings
 let user_name = getSettings('user_name');
+// 会话初始化状态
+// Session initialization status
+let sessionInitializing = false;
 
 /**
  * 初始化 AI 会话。
@@ -19,6 +22,31 @@ let user_name = getSettings('user_name');
  * @returns {Promise<boolean>} Returns true if the initialization is successful, otherwise false.
  */
 export async function initAI() {
+    // 如果会话已经存在，直接返回成功
+    // If the session already exists, return success directly
+    if (session) {
+        add_log('Chrome_AI_Support', 'info', 'Session is already initialized.');
+        return true;
+    }
+    
+    // 如果正在初始化，等待
+    // If initializing, wait
+    if (sessionInitializing) {
+        add_log('Chrome_AI_Support', 'info', 'Session initialization is in progress. Waiting...');
+        // 等待初始化完成
+        // Wait for initialization to complete
+        let waitAttempts = 0;
+        while (sessionInitializing && waitAttempts < 10) {
+            await new Promise(resolve => setTimeout(resolve, 500)); // 等待500ms
+            waitAttempts++;
+        }
+        return !!session; // 返回会话是否存在
+    }
+    
+    // 标记为正在初始化
+    // Mark as initializing
+    sessionInitializing = true;
+    
     try {
         // 检查 LanguageModel 对象是否未定义 (新版 Chrome API)
         // Check if the LanguageModel object is undefined (new Chrome API)
@@ -31,19 +59,24 @@ export async function initAI() {
         // 创建 AI 会话，使用新版 API 结构
         // Create an AI session using the new API structure
         session = await LanguageModel.create({
+            // 设置输出语言为英语（API要求指定输出语言）
+            // Set output language to English (API requires output language)
+            expectedInputs: [
+                { type: "text", languages: ["en" /* system prompt */, "ja" /* user prompt */] }
+            ],
+            expectedOutputs: [
+                { type: "text", languages: ["en"] }
+            ],
             // 设置系统提示信息作为初始提示
             // Set system prompt as initial prompts
             initialPrompts: [
                 {
                     role: "system",
-                    content: "Hi, you are speaking with " + user_name +
-                        ". Always refer to the user as '" + user_name +
-                        "' in your responses. \n" +
+                    content:
+                        "Hi, you are speaking with " + user_name + ".\n" +
                         "Database structure:\n" +
                         "- `history_record`: Records the identification history.\n" +
                         "- `record_info`: Records the details of each identification record.\n" +
-                        "\n" +
-                        "The user may ask how to query database information. Please follow these steps to guide the user:\n" +
                         "\n" +
                         "1. **Quick Query**: Inform the user that there is a quick query button at the bottom of the Terminal page, and recommend using this method as the simplest and safest option.\n" +
                         "2. **Command Line Query**: If the user prefers using the command line, guide them as follows:\n" +
@@ -59,8 +92,11 @@ export async function initAI() {
                         "\n" +
                         "Example scenario:\n" +
                         "If the user asks how to query recognition history, respond:\n" +
-                        "'You can use the quick query button at the bottom of the Terminal page, which is the recommended method. If you prefer the command line, open the Terminal at the top of the page and type: `rexec select * from history_record;`. Note that commands to delete or modify database records are prohibited.'"
-                }
+                        "'You can use the quick query button at the bottom of the Terminal page, which is the recommended method. If you prefer the command line, open the Terminal at the top of the page and type: `rexec select * from history_record;`. Note that commands to delete or modify database records are prohibited.'\n" +
+                        "\n" +
+                        "You are CCRS AI — an assistant integrated into this system. The program itself was created by Canfeng. You should never refer to yourself as Canfeng."
+                    }
+
             ],
             // 可选: 监视下载进度
             // Optional: monitor download progress
@@ -73,11 +109,15 @@ export async function initAI() {
         
         // 初始化成功，返回 true
         // Initialization successful, return true
+        sessionInitializing = false; // 重置初始化状态
         return true;
     } catch (error) {
         // 记录初始化失败日志
         // Record the initialization failure log
         add_log('Chrome_AI_Support', 'error', `Failed to initialize AI: ${error}`);
+        // 重置初始化状态
+        // Reset initialization status
+        sessionInitializing = false;
         // 初始化失败，返回 false
         // Initialization failed, return false
         return false;
@@ -121,7 +161,16 @@ export async function checkAPIAvailability() {
         try {
             // 获取 AI 语言模型的可用性信息 (新版API)
             // Get the availability information of the AI language model (new API)
-            const { available } = await LanguageModel.availability();
+            const { available } = await LanguageModel.availability({
+                // 使用与创建会话时相同的语言设置
+                // Use the same language settings as when creating the session
+                expectedInputs: [
+                    { type: "text", languages: ["en", "ja"] }
+                ],
+                expectedOutputs: [
+                    { type: "text", languages: ["en"] }
+                ]
+            });
             
             // 检查 API 是否可用
             // Check if the API is available
@@ -181,12 +230,21 @@ export async function tryAskAI(something) {
         // 检查会话是否未初始化
         // Check if the session is not initialized
         if (!session) {
-            // 记录会话未初始化错误
-            // Record the session uninitialized error
-            add_log('Chrome_AI_Support', 'error', 'Session is not initialized.');
-            // 返回会话未初始化提示
-            // Return the session uninitialized prompt
-            return 'AI session is not initialized.';
+            // 记录会话初始化尝试日志
+            // Record session initialization attempt log
+            add_log('Chrome_AI_Support', 'info', 'Session is not initialized. Attempting to initialize...');
+            console.log("Initializing AI before asking...");
+            
+            // 等待AI初始化完成
+            // Wait for AI initialization to complete
+            const initSuccess = await initAI();
+            
+            if (!initSuccess) {
+                add_log('Chrome_AI_Support', 'error', 'Failed to initialize AI session.');
+                return 'AI session initialization failed. Please try again or check your browser settings.';
+            }
+            
+            add_log('Chrome_AI_Support', 'success', 'AI session initialized successfully.');
         }
 
         // 检查 AI 支持和使用 Gemini 是否启用
@@ -195,7 +253,13 @@ export async function tryAskAI(something) {
             // 向 AI 提问 (使用新的 API 结构)
             // Ask the AI a question (using new API structure)
             console.log("Asking AI:", something);
-            const result = await session.prompt(something);
+            const result = await session.prompt(something, {
+                // 使用与创建会话时相同的语言设置
+                // Use the same language settings as when creating the session
+                expectedOutputs: [
+                    { type: "text", languages: ["en"] }
+                ]
+            });
             // 返回 AI 的回答或错误信息
             // Return the AI's answer or an error message
             return typeof result === 'string' ? result : `Invalid result format: ${JSON.stringify(result)}`;
@@ -229,31 +293,43 @@ export async function tryAskAIStream(something, onChunk) {
         // 检查会话是否未初始化
         // Check if the session is not initialized
         if (!session) {
-            // 记录会话未初始化错误
-            // Record the session uninitialized error
-            add_log('Chrome_AI_Support', 'error', 'Session is not initialized.');
-            // 返回会话未初始化提示
-            // Return the session uninitialized prompt
-            return 'AI session is not initialized.';
+            // 记录会话初始化尝试日志
+            // Record session initialization attempt log
+            add_log('Chrome_AI_Support', 'info', 'Session is not initialized. Attempting to initialize...');
+            console.log("Initializing AI before streaming...");
+            
+            // 等待AI初始化完成
+            // Wait for AI initialization to complete
+            const initSuccess = await initAI();
+            
+            if (!initSuccess) {
+                add_log('Chrome_AI_Support', 'error', 'Failed to initialize AI session.');
+                return 'AI session initialization failed. Please try again or check your browser settings.';
+            }
+            
+            add_log('Chrome_AI_Support', 'success', 'AI session initialized successfully.');
         }
         // 检查 AI 支持和使用 Gemini 是否启用
         // Check if AI support and use of Gemini are enabled
-        console.log("AI Support:", getSettings('ai_support'), "Use Gemini:", getSettings("use_gemini"));
         if (getSettings('ai_support') !== "False" && getSettings("use_gemini") !== "false") {
             // 以流式方式向 AI 提问 (使用新的 API 结构)
             // Ask the AI a question in a streaming manner (using new API structure)
-            const result = session.promptStreaming(something);
+            const result = session.promptStreaming(something, {
+                // 使用与创建会话时相同的语言设置
+                // Use the same language settings as when creating the session
+                expectedOutputs: [
+                    { type: "text", languages: ["en"] }
+                ]
+            });
             // 存储完整回答
             // Store the full answer
             let fullResponse = "";
-            console.log("Streaming AI response for:", something);
             // 遍历流式回答的每一部分
             // Iterate through each part of the streaming answer
             for await (const chunk of result) {
                 // 拼接完整回答
                 // Concatenate the full answer
                 fullResponse += chunk;
-                console.log("Received chunk:", chunk);
                 // 每收到一部分就调用回调更新 UI
                 // Call the callback to update the UI when each part is received
                 if (typeof onChunk === 'function') {
@@ -279,10 +355,10 @@ export async function tryAskAIStream(something, onChunk) {
 }
 
 /**
- * 获取AI会话信息，如当前已用的令牌数和最大令牌数。
- * Get AI session information, such as the current number of tokens used and the maximum number of tokens.
- * @returns {Object|null} 返回包含令牌信息的对象，如果会话未初始化则返回 null。
- * @returns {Object|null} Returns an object containing token information, or null if the session is not initialized.
+ * 获取AI会话信息，包括令牌使用情况和配额。
+ * Get AI session information, including token usage and quota.
+ * @returns {Object|null} 返回包含会话信息的对象，如果会话未初始化则返回 null。
+ * @returns {Object|null} Returns an object containing session information, or null if the session is not initialized.
  */
 export function getSessionInfo() {
     if (!session) {
@@ -290,9 +366,16 @@ export function getSessionInfo() {
     }
     
     return {
-        tokensSoFar: session.tokensSoFar || 0,
-        maxTokens: session.maxTokens || 0,
-        tokensLeft: session.tokensLeft || 0
+        // 新版API的配额跟踪
+        // New API quota tracking
+        inputUsage: session.inputUsage || 0,
+        inputQuota: session.inputQuota || 0,
+        
+        // 保留旧有字段以保持向后兼容
+        // Keep old fields for backward compatibility
+        tokensSoFar: session.inputUsage || 0,
+        maxTokens: session.inputQuota || 0,
+        tokensLeft: session.inputQuota - session.inputUsage || 0
     };
 }
 
