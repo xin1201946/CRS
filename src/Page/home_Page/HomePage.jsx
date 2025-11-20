@@ -259,45 +259,44 @@ function HomePage() {
     })
 
     const CombinedPage = React.memo(function CombinedPage() {
+        const isPhone = detectDevice() === "Phone";
+
         return (
-            <div className=" flex flex-col" style={{height:"100vh"}}>
+            <div className="flex flex-col" style={{height: isPhone ? "auto" : "100vh", paddingBottom: isPhone ? "40px" : "0"}}>
                 {/* 上半部分：HeroSection */}
-                <section id="hero" className=" flex-1 flex  justify-between px-14" style={{marginTop:"6%"}}>
-                    <div className={" text-left"}>
-                        <h1 className="text-5xl md:text-6xl font-bold mb-6">
+                <section id="hero" className="flex-1 flex flex-col md:flex-row justify-between px-4 md:px-14 pt-20 md:pt-[6%]">
+                    <div className="text-left w-full">
+                        <h1 className="text-4xl md:text-6xl font-bold mb-6 text-center md:text-left">
                             <span>{t("Tip_Homepage_title_1")}</span>
                             <p className="text-primary">{t("Tip_Homepage_title_2")}</p>
                         </h1>
                         <div className="text-left">
-                            <div style={{
-                                display: "grid",
-                                gridTemplateColumns: detectDevice() === "PC" ?"repeat(2, minmax(280px, 1fr))":"repeat(1, minmax(280px, 1fr))", // 强制 2 列
-                                gap: "16px",
-                                maxWidth: "1200px",
-                                margin: "0 auto"
-                            }}>
+                            <div className="grid gap-4 max-w-[1200px] mx-auto"
+                                 style={{
+                                     gridTemplateColumns: detectDevice() === "PC" ? "repeat(2, minmax(280px, 1fr))" : "1fr"
+                                 }}>
                                 <FeatureCard title={t("Advantage1")} icon={Puzzle} />
                                 <FeatureCard title={t("Advantage2")} icon={Layers} />
                                 <FeatureCard title={t("Advantage3")} icon={Fingerprint} />
                                 <FeatureCard title={t("Advantage4")} icon={LayoutTemplate} />
                             </div>
                         </div>
-                        <div className="flex gap-4" style={{marginTop:"20px"}}>
-                            <Space wrap={true}>
-                                <button className="btn btn-primary" onClick={changeSelectKey}>
+                        <div className="flex flex-col md:flex-row gap-4 mt-8 justify-center md:justify-start">
+                             <div className="flex flex-wrap justify-center gap-3">
+                                <button className="btn btn-primary w-full md:w-auto" onClick={changeSelectKey}>
                                     {t("Start_OCR")}
                                 </button>
-                                <button className="btn btn-ghost gap-2" onClick={()=>{navigate("/settings/home")}}>
+                                <button className="btn btn-ghost w-full md:w-auto gap-2" onClick={()=>{navigate("/settings/home")}}>
                                     {t("Change_Settings")}
                                 </button>
-                                <button className="btn btn-ghost gap-2" onClick={()=>{navigate("/settings/logs")}}>
+                                <button className="btn btn-ghost w-full md:w-auto gap-2" onClick={()=>{navigate("/settings/logs")}}>
                                     {t("Check_logs")}
                                 </button>
-                            </Space>
+                            </div>
                         </div>
                     </div>
                     {detectDevice() === "PC" && (
-                        <div className="flex">
+                        <div className="flex w-full md:w-auto mt-8 md:mt-0">
                             <OcrDemo />
                         </div>
                     )}
@@ -310,10 +309,10 @@ function HomePage() {
     // Features 区块
     const FeaturesSection = React.memo(function FeaturesSection() {
         return (
-            <section id="features" className="py-20 bg-auto relative overflow-hidden">
+            <section id="features" className="py-10 md:py-20 bg-auto relative overflow-hidden">
                 <div className="max-w-6xl mx-auto px-4">
-                    <h2 className="text-4xl font-bold text-center mb-16">{t("Features")}</h2>
-                    <div className="grid md:grid-cols-3 gap-8">
+                    <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-16">{t("Features")}</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 place-items-center">
                         <Cards title={t("Advantage5")} icon="⚙️">
                             {" "}
                             {t("Tip_Homepage_1")}
@@ -336,12 +335,10 @@ function HomePage() {
         const IconComponent = icon;
         return (
             <div
-                className="card bg-[--semi-color-bg-1] shadow-xl p-4"
+                className="card bg-[--semi-color-bg-1] shadow-xl p-4 w-full"
                 style={{
                     height: "110px",
-                    width: "100%", // 改为100%以适应容器宽度
-                    maxWidth: "400px", // 设置最大宽度限制
-                    minWidth: "280px"  // 设置最小宽度
+                    maxWidth: "100%",
                 }}
             >
                 <div className="flex items-center space-x-4">
@@ -358,19 +355,19 @@ function HomePage() {
     // eslint-disable-next-line react/prop-types
     function Cards({ title, icon, children }) {
         return (
-            <div className="card bg-[--semi-color-bg-1] shadow-xl p-4 w-80 flex flex-col items-center">
+            <div className="card bg-[--semi-color-bg-1] shadow-xl p-4 w-full max-w-xs flex flex-col items-center">
                 <div className="flex items-center justify-center p-4 text-[--semi-color-bg-1] rounded-full text-4xl">
                     {icon}
                 </div>
-                <h2 className="card-title">{title}</h2>
-                <div className="mt-2 text-sm text-gray-600">{children}</div>
+                <h2 className="card-title text-center">{title}</h2>
+                <div className="mt-2 text-sm text-gray-600 text-center">{children}</div>
             </div>
         );
     }
 
     function NewHomePage() {
         return (
-            <div className="scroll-smooth">
+            <div className="scroll-smooth w-full overflow-x-hidden">
                 {/* 页面内容 */}
                 <AnimatedBackground />
                 <CombinedPage/>
@@ -395,4 +392,3 @@ function HomePage() {
 }
 
 export default HomePage
-

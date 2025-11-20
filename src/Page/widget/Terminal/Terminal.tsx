@@ -243,24 +243,26 @@ export const Terminal: React.FC<TerminalProps> = ({ commands, initScript, onExec
       case 'table':
         const { head, rows } = msg.content;
         return (
-          <table className="semi-table " style={{padding:"10px"}}>
-            <thead className="semi-table-header">
-              <tr >
-                {head.map((h: string, i: number) => (
-                  <th style={{color:"--semi-color-tertiary"}} key={i}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row: string[], i: number) => (
-                <tr key={i}>
-                  {row.map((cell, j) => (
-                    <td key={j}>{cell}</td>
+          <div className="overflow-x-auto">
+            <table className="semi-table " style={{padding:"10px", width: "100%"}}>
+              <thead className="semi-table-header">
+                <tr >
+                  {head.map((h: string, i: number) => (
+                    <th style={{color:"--semi-color-tertiary"}} key={i}>{h}</th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {rows.map((row: string[], i: number) => (
+                  <tr key={i}>
+                    {row.map((cell, j) => (
+                      <td key={j}>{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         );
       case 'input':
         return (
@@ -288,17 +290,17 @@ export const Terminal: React.FC<TerminalProps> = ({ commands, initScript, onExec
   };
 
   return (
-    <div className="card " style={{textAlign: 'left',backgroundColor: 'var(--semi-color-bg-0)',userSelect: 'auto'}}>
-      <div className="card-body p-0 ">
-        <div className="p-2 flex items-center gap-2 rounded-t-xl">
+    <div className="card h-full flex flex-col" style={{textAlign: 'left',backgroundColor: 'var(--semi-color-bg-0)',userSelect: 'auto'}}>
+      <div className="card-body p-0 flex flex-col h-full">
+        <div className="p-2 flex items-center gap-2 rounded-t-xl flex-shrink-0">
             <TerminalIcon size={18} />
             <span className="font-mono text-sm">CCRS Terminal</span>
         </div>
 
         <div
               ref={terminalRef}
-              className="h-auto overflow-y-auto p-4 font-mono text-sm"
-              style={{ height: '60vh', overflowY: 'scroll', userSelect: 'text', cursor: 'default' }}
+              className="flex-1 overflow-y-auto p-4 font-mono text-sm"
+              style={{ height: '100%', overflowY: 'auto', userSelect: 'text', cursor: 'default' }}
         >
             {messages.map((msg, idx) => (
                 <div key={idx} className="mb-2">
@@ -323,8 +325,8 @@ export const Terminal: React.FC<TerminalProps> = ({ commands, initScript, onExec
               />
             </div>
             {suggestions.length > 0 && (
-                <div className="absolute left-0 right-0 mt-1">
-                  <div className="text-base-content opacity-50">
+                <div className="absolute left-0 right-0 mt-1 z-10">
+                  <div className="text-base-content opacity-50 bg-base-200 p-2 rounded shadow-lg">
                     {suggestions.join('  ')}
                   </div>
                 </div>

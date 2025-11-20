@@ -49,7 +49,8 @@ function AboutWE(){
     function appInfo(){
         return (
             <>
-                <section className="about-hero-section" style={{ justifyContent: 'flex-start', paddingTop: '8vh' }}>
+                <section className="about-hero-section">
+                    <div className="about-gradient-bg"></div>
                     <motion.div
                         initial={{ opacity: 0, y: 32, filter: 'blur(10px)' }}
                         animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
@@ -85,7 +86,7 @@ function AboutWE(){
                             transition={{ delay: 0.35, duration: 0.7, ease: 'easeOut' }}
                             className="about-hero-subtitle"
                         >
-                            <Tag size="large" style={{fontSize:"15px"}} type="solid" color="orange">2.0.2.1</Tag>
+                            <Tag size="large" style={{fontSize:"15px", borderRadius: '8px', fontWeight: '600'}} type="solid" color="orange">2.0.2.1</Tag>
                         </motion.p>
 
                         <motion.p
@@ -111,7 +112,7 @@ function AboutWE(){
 
 
                         <div className="about-card-stack">
-                            <Card onClick={clickbeta} className="glass-card" shadows='hover'>
+                            <Card onClick={clickbeta} className="glass-card !rounded-3xl border-none" shadows='hover'>
                                 <Descriptions align="left">
                                     <Descriptions.Item itemKey={t('App_name')}>铸造字识别系统</Descriptions.Item>
                                     <Descriptions.Item itemKey={t('Build_time')}>{getSettings('buile_time')}</Descriptions.Item>
@@ -141,39 +142,41 @@ function AboutWE(){
 
                             <Card
                                 onClick={sysIngoPagechange}
-                                className="glass-card"
+                                className="glass-card !rounded-3xl border-none"
                                 shadows='hover'
                                 style={{cursor: "pointer"}}
                                 bodyStyle={{
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'space-between',
+                                    padding: '24px'
                                 }}
                             >
                                 <Meta
-                                    title={t('Server Info')}
+                                    title={<span className="text-lg font-medium">{t('Server Info')}</span>}
                                 />
-                                <IconChevronRight style={{color: 'var(--semi-color-primary)'}}/>
+                                <IconChevronRight style={{color: 'var(--semi-color-text-2)', fontSize: '20px'}}/>
                             </Card>
 
                             <Card
                                 onClick={betaPchange}
-                                className="glass-card"
+                                className="glass-card !rounded-3xl border-none"
                                 shadows='hover'
                                 style={{cursor: "pointer", visibility: betavisible}}
                                 bodyStyle={{
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'space-between',
+                                    padding: '24px'
                                 }}
                             >
                                 <Meta
-                                    title="BetaFunctionality"
+                                    title={<span className="text-lg font-medium">BetaFunctionality</span>}
                                 />
-                                <IconChevronRight style={{color: 'var(--semi-color-primary)'}}/>
+                                <IconChevronRight style={{color: 'var(--semi-color-text-2)', fontSize: '20px'}}/>
                             </Card>
                         </div>
-                        <Text type="secondary">Powered & Designed by <Text link={{href:"https://github.com/xin1201946"}}>Canfeng</Text></Text>
+                        <Text type="secondary" className="mt-8 opacity-60">Powered & Designed by <Text link={{href:"https://github.com/xin1201946"}} className="font-semibold">Canfeng</Text></Text>
 
                     </motion.div>
                 </section>
