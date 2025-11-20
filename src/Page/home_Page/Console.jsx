@@ -5,6 +5,7 @@ import {useMemo, useState} from "react";
 import {useTranslation} from 'react-i18next';
 import {IconSearch} from "@douyinfe/semi-icons";
 import WebTerminal from "../widget/WebTerminal";
+import { detectDevice } from "../../code/check_platform.js";
 
 function Console(){
     const { t } = useTranslation();
@@ -12,6 +13,9 @@ function Console(){
     const [columns,setcolumns] = useState([]);
     const [datas,setdatas] = useState([]);
     const [Table_Visible, setTable_Visible] = useState(false);
+
+    const isPhone = detectDevice() === "Phone";
+
     const showDialog = (data) => {
         // 第一行数据作为列名
         const columns_cahce = data[0].map((col, index) => ({
@@ -188,8 +192,8 @@ function Console(){
 
     return (
         <>
-            <div style={{ display: 'flex', flexDirection: 'column', height: '89vh' }}>
-                <Content style={{ flex: 1 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', height: isPhone ? 'calc(100vh - 140px)' : '89vh' }}>
+                <Content style={{ flex: 1, overflow: 'hidden' }}>
                     <WebTerminal sendCommand={send_command} />
                 </Content>
                 <Card
@@ -199,15 +203,30 @@ function Console(){
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        boxShadow: '0 -2px 6px rgba(0, 0, 0, 0.1)', // 轻微上方阴影
-                        borderRadius: '8px 8px 0 0', // 仅顶部圆角
-                        padding: '12px',
-                    }}>
-                    <ButtonGroup style={{ display: 'flex', gap: '12px' }}>
-                        <Button type="primary" onClick={Search_history_Lungu}>{t('Search_history_Lungu')}</Button>
-                        <Button type="default" onClick={Search_moju_Lungu}>{t('Search_moju_lungu')}</Button>
-                        <Button type="dashed" onClick={() => { view_table() }}>{t('History')}</Button>
-                    </ButtonGroup>
+                        boxShadow: '0 -2px 6px rgba(0, 0, 0, 0.05)', // 轻微上方阴影
+                        borderRadius: '16px 16px 0 0', // 仅顶部圆角
+                        padding: isPhone ? '8px' : '12px',
+                        zIndex: 10
+                    }}
+                    bodyStyle={{ padding: isPhone ? '8px' : '20px', width: '100%' }}
+                >
+                     <div style={{
+                         display: 'flex',
+                         flexWrap: 'wrap',
+                         gap: '8px',
+                         justifyContent: 'center',
+                         width: '100%'
+                     }}>
+                        <Button theme="solid" type="primary" onClick={Search_history_Lungu} style={{ flex: isPhone ? '1 1 auto' : 'initial' }}>
+                            {t('Search_history_Lungu')}
+                        </Button>
+                        <Button theme="light" type="tertiary" onClick={Search_moju_Lungu} style={{ flex: isPhone ? '1 1 auto' : 'initial' }}>
+                            {t('Search_moju_lungu')}
+                        </Button>
+                        <Button theme="light" type="tertiary" onClick={() => { view_table() }} style={{ flex: isPhone ? '1 1 auto' : 'initial' }}>
+                            {t('History')}
+                        </Button>
+                    </div>
                 </Card>
             </div>
 
@@ -216,8 +235,15 @@ function Console(){
                 visible={Table_Visible}
                 onOk={handleOk}
                 onCancel={handleOk}
+                width={isPhone ? '95%' : 800}
+                style={{ top: isPhone ? 20 : 100 }}
             >
-                <Table columns={columns} dataSource={datas} pagination={pagination} />
+                <Table
+                    columns={columns}
+                    dataSource={datas}
+                    pagination={pagination}
+                    scroll={isPhone ? { x: 600 } : undefined}
+                />
             </Modal>
         </>
     );

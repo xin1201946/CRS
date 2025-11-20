@@ -1,8 +1,8 @@
 import { useRef, useEffect, useState ,Suspense} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Button, Layout, Nav } from '@douyinfe/semi-ui';
+import { Button, Layout, Nav, SideSheet } from '@douyinfe/semi-ui';
 import { motion } from 'framer-motion';
-import { ArrowLeft, X } from 'lucide-react';
+import { ArrowLeft, X, Menu } from 'lucide-react';
 import { useSettingsRoutes } from './widget/Settings/settingsConfig';
 import SettingsSlot from './widget/Settings/SettingsSlot';
 import "./widget/Settings/settings.css";
@@ -23,11 +23,13 @@ function SettingsLayout({ backgroundColor = 'var(--semi-color-bg-0)', textColor 
     const settingsRoute = useSettingsRoutes();
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [collapsed, setCollapsed] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const toggleCollapse = () => setCollapsed(!collapsed);
     const currentPath = location.pathname.split('/settings/')[1]?.split('/')[0] || 'home';
     const [indicatorStyle] = useState({ top: 0, height: 0 });
     const navRef = useRef(null);
     const scrollWrapperRef = useRef(null);
+
     useEffect(() => {
         const handleResize = () => {
             setWindowWidth(window.innerWidth);
@@ -72,47 +74,68 @@ function SettingsLayout({ backgroundColor = 'var(--semi-color-bg-0)', textColor 
     }));
     const currentRoute = settingsRoute.find(route => currentPath.startsWith(route.path));
 
+    const isPhone = detectDevice() === "Phone";
+
+    const handleMobileNavSelect = (data) => {
+        navigate(`/settings/${data.itemKey}`);
+        setIsMobileMenuOpen(false);
+    };
+
     return (
         <Suspense fallback={<LoadingScreen logo={<Settings />} />}>
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.3 }} className="h-full">
             <Layout className="h-full ">
-                <div className="h-14 bg-[--semi-color-nav-bg] flex items-center px-4 shadow-sm justify-between">
-                    <div className="flex items-center gap-2 bg-[--semi-color-nav-bg]">
+                <div className="h-14 bg-[--semi-color-nav-bg] flex items-center px-4 shadow-sm justify-between z-20 relative">
+                    <div className="flex items-center gap-3 bg-[--semi-color-nav-bg]">
                         <button onClick={() => navigate(-1)} className="text-gray-600 hover:text-gray-900">
-                            <ArrowLeft size={17} />
+                            <ArrowLeft size={20} />
                         </button>
-                        <span className="text-sm"  style={{ height: '100%', display: detectDevice() === "Phone" ? "none" : "block" }}>{t("Settings")}</span>
+
+                        {/* Mobile Menu Toggle */}
+                        {isPhone && (
+                            <button onClick={() => setIsMobileMenuOpen(true)} className="text-gray-600 hover:text-gray-900 ml-1">
+                                <Menu size={20} />
+                            </button>
+                        )}
+
+                        <span className="text-base font-medium" style={{ height: '100%', display: isPhone ? "block" : "block" }}>
+                            {isPhone && currentRoute ? currentRoute.text : t("Settings")}
+                        </span>
                     </div>
                     <button onClick={() => navigate("/")} className="text-gray-600 hover:text-gray-900">
-                        <X size={17} />
+                        <X size={20} />
                     </button>
                 </div>
                 <Layout className="h-[calc(100%-3.5rem)]">
-                    <Sider className="bg-[--semi-color-nav-bg] relative">
-                        <div ref={navRef} className="h-full">
-                            <Nav
-                                items={menuItems}
-                                selectedKeys={[currentPath]}
-                                onSelect={(data) => navigate(`/settings/${data.itemKey}`)}
-                                style={{ height: '100%', display: detectDevice() === "Phone" ? "none" : "block" }}
-                                isCollapsed={detectDevice() === 'PC' && windowWidth >= 1000 ? collapsed : true}
-                                footer={{
-                                    children: (
-                                        detectDevice() === 'PC' && windowWidth >= 1000 ? (
-                                            <Button
-                                                icon={<IconSidebar style={{ color: collapsed ? 'var(--semi-color-tertiary-active)' : 'var(--semi-color-primary)' }} />}
-                                                onClick={toggleCollapse}
-                                                theme="borderless"
-                                            >
-                                                {collapsed ? "" : t('Close navigation')}
-                                            </Button>
-                                        ) : null
-                                    )
-                                }}
-                            />
-                        </div>
-                        <motion.div className="highlight-indicator" initial={false} animate={indicatorStyle} transition={{ type: "spring", stiffness: 500, damping: 40 }} />
-                    </Sider>
+                    {/* Desktop Sidebar */}
+                    {!isPhone && (
+                        <Sider className="bg-[--semi-color-nav-bg] relative">
+                            <div ref={navRef} className="h-full">
+                                <Nav
+                                    items={menuItems}
+                                    selectedKeys={[currentPath]}
+                                    onSelect={(data) => navigate(`/settings/${data.itemKey}`)}
+                                    style={{ height: '100%' }}
+                                    isCollapsed={windowWidth >= 1000 ? collapsed : true}
+                                    footer={{
+                                        children: (
+                                            windowWidth >= 1000 ? (
+                                                <Button
+                                                    icon={<IconSidebar style={{ color: collapsed ? 'var(--semi-color-tertiary-active)' : 'var(--semi-color-primary)' }} />}
+                                                    onClick={toggleCollapse}
+                                                    theme="borderless"
+                                                >
+                                                    {collapsed ? "" : t('Close navigation')}
+                                                </Button>
+                                            ) : null
+                                        )
+                                    }}
+                                />
+                            </div>
+                            <motion.div className="highlight-indicator" initial={false} animate={indicatorStyle} transition={{ type: "spring", stiffness: 500, damping: 40 }} />
+                        </Sider>
+                    )}
+
                     <Content
                         style={{
                             display: 'flex',
@@ -124,7 +147,7 @@ function SettingsLayout({ backgroundColor = 'var(--semi-color-bg-0)', textColor 
                         <div style={{ overflow: 'auto' }} ref={scrollWrapperRef}>
                             <PageTitle title={currentRoute?.description || t("Page Not Found")} showTitle={currentRoute?.showTilte} scrollContainer={scrollWrapperRef} />
 
-                            <div style={{ padding: '2rem', minHeight: 'calc(100% - 40vh)' }}>
+                            <div style={{ padding: isPhone ? '1rem' : '2rem', minHeight: 'calc(100% - 40vh)' }}>
                                 {currentRoute ? (
                                     <SettingsSlot component={currentRoute.component} backgroundColor={backgroundColor} textColor={textColor} />
                                 ) : (
@@ -141,6 +164,25 @@ function SettingsLayout({ backgroundColor = 'var(--semi-color-bg-0)', textColor 
                     </Content>
                 </Layout>
             </Layout>
+
+            {/* Mobile Navigation Drawer */}
+            <SideSheet
+                title={t("Settings")}
+                visible={isMobileMenuOpen}
+                onCancel={() => setIsMobileMenuOpen(false)}
+                placement="left"
+                width="80%"
+                style={{ maxWidth: '300px' }}
+                bodyStyle={{ padding: 0 }}
+            >
+                <Nav
+                    items={menuItems}
+                    selectedKeys={[currentPath]}
+                    onSelect={handleMobileNavSelect}
+                    style={{ height: '100%', border: 'none' }}
+                />
+            </SideSheet>
+
         </motion.div>
         </Suspense>
         
