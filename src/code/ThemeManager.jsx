@@ -79,6 +79,7 @@ function hydrateThemeConfig() {
 let currentConfig = hydrateThemeConfig();
 let resolvedMode = resolveMode(currentConfig);
 let holidayInfo = detectHoliday();
+let snapshot = createSnapshot();
 
 function resolveMode(config) {
     if (config.themeMode === "auto") {
@@ -90,6 +91,14 @@ function resolveMode(config) {
 function detectHoliday(date = new Date()) {
     const key = `${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
     return HOLIDAY_MAP[key] || null;
+}
+
+function createSnapshot() {
+    return {config: currentConfig, resolvedMode, holiday: holidayInfo};
+}
+
+function refreshSnapshot() {
+    snapshot = createSnapshot();
 }
 
 function applyHolidayLayer(info) {
@@ -156,7 +165,7 @@ function subscribe(listener) {
 }
 
 function getSnapshot() {
-    return {config: currentConfig, resolvedMode, holiday: holidayInfo};
+    return snapshot;
 }
 
 function updateThemeConfig(partial = {}) {
@@ -165,6 +174,7 @@ function updateThemeConfig(partial = {}) {
     holidayInfo = detectHoliday();
     ensureMediaListener();
     applyThemeConfig(currentConfig);
+    refreshSnapshot();
     add_log("ThemeManager:update", "successfully", JSON.stringify({...partial, resolvedMode}));
     notify();
     return currentConfig;
