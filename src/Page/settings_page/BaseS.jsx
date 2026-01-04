@@ -228,7 +228,7 @@ function BaseSPage(){
                                 </RadioGroup>
                             </Space>
                             <Divider margin='12px' />
-                            <Text strong>{t('Theme_color')}</Text>
+                            <Text strong>Theme Mode</Text>
                             <RadioGroup
                                 type='pureCard'
                                 value={color_int()}
