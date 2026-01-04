@@ -13,8 +13,8 @@ import {
     Typography
 } from "@douyinfe/semi-ui";
 import {getSettings, setSettings} from "../../code/Settings.js";
-import {useState} from "react";
-import {setAutoTheme, setDarkTheme, setLightTheme} from "../../code/theme_color.js";
+import {useEffect, useState} from "react";
+import {useTheme} from "../../code/ThemeManager.jsx";
 import {useTranslation} from "react-i18next";
 import {send_notify} from "../../code/SystemToast.jsx";
 import Chrome_AI_Info from "../info_Page/Chrome_AI_Info.jsx";
@@ -26,9 +26,24 @@ function BaseSPage(){
     const navigate = useNavigate();
     const { Title } = Typography;
     const { Text } = Typography;
+    const { config: themeConfig, setThemeMode, updateTheme, icons } = useTheme();
     const [switchMenuPchecked, setswitchMenuPchecked] = useState('true'===getSettings('use_app_content_menu'));
     const [use_use_gemini_checked, set_use_gemini_checked] = useState('true'===getSettings('use_gemini'))
     const [user_name, set_user_name] = useState(getSettings('user_name'));
+    const [themeForm, setThemeForm] = useState({
+        primaryColor: themeConfig.primaryColor,
+        backgroundColor: themeConfig.backgroundColor,
+        backgroundImage: themeConfig.backgroundImage,
+        iconSet: themeConfig.iconSet,
+    });
+    useEffect(() => {
+        setThemeForm({
+            primaryColor: themeConfig.primaryColor,
+            backgroundColor: themeConfig.backgroundColor,
+            backgroundImage: themeConfig.backgroundImage,
+            iconSet: themeConfig.iconSet,
+        });
+    }, [themeConfig]);
     const onswitchMenuChange = checked => {
         setswitchMenuPchecked(checked);
         setSettings('use_app_content_menu',checked.toString());
@@ -49,17 +64,8 @@ function BaseSPage(){
     const showChromeAIInfos = () => {
         setShowChromeAIInfo(true);
     };
-    function set_autocolor(){
-        setAutoTheme();
-        setSettings('theme_color','auto')
-    }
-    function set_light(){
-        setLightTheme();
-        setSettings('theme_color','light')
-    }
-    function set_dark(){
-        setDarkTheme();
-        setSettings('theme_color','dark')
+    function saveThemeForm(){
+        updateTheme(themeForm);
     }
     function save_data(){
         let server_ip=document.getElementById("server_ip_inputbox").value;
@@ -96,18 +102,7 @@ function BaseSPage(){
         }
     }
 
-    function color_int(){
-        const body = document.body;
-        if (getSettings('theme_color')!=='auto') {
-            if (body.hasAttribute('theme-mode')) {
-                return 2
-            }else{
-                return 1
-            }
-        } else {
-            return 0
-        }
-    }
+    const color_int = () => themeConfig.themeMode === 'auto' ? 0 : themeConfig.themeMode === 'light' ? 1 : 2;
     // const close_newNotify = () => {
     //     send_notify('Notification','You successfully deleted a notification.',null,3,'info',false,'light');
     // }
@@ -143,14 +138,14 @@ function BaseSPage(){
                     <Space>
                         <RadioGroup
                             type='pureCard'
-                            defaultValue={color_int()}
+                            value={color_int()}
                             direction='vertical'
                             aria-label={'Theme_color'}
                             name="demo-radio-group-pureCard"
                         >
                             <Radio value={0} extra='' style={{width: 280}}
                                    onChange={function () {
-                                       set_autocolor()
+                                       setThemeMode('auto')
                                    }}
                             >
                                 <Space>
@@ -161,19 +156,67 @@ function BaseSPage(){
 
                             <Radio value={1} extra='' style={{width: 280}}
                                    onChange={function () {
-                                       set_light()
+                                       setThemeMode('light')
                                    }}
                             >
                                 {t('Theme_light')}
                             </Radio>
                             <Radio value={2} extra='' style={{width: 280}}
                                    onChange={function () {
-                                       set_dark()
-                                   }}
+                                       setThemeMode('dark')
+                                    }}
                             >
                                 {t('Theme_dark')}
                             </Radio>
                         </RadioGroup>
+                        <Divider margin='12px' />
+                        <Space vertical align={'start'} style={{width:'100%'}}>
+                            <Space>
+                                <Text strong>{t('Theme_color')}</Text>
+                                <icons.Primary style={{width:16,height:16}} />
+                                <input
+                                    aria-label="primary-color"
+                                    type="color"
+                                    value={themeForm.primaryColor}
+                                    onChange={(e)=>setThemeForm(prev=>({...prev,primaryColor:e.target.value}))}
+                                    style={{width:60,height:28,border:'none',background:'transparent',cursor:'pointer'}}
+                                />
+                            </Space>
+                            <Space align={'center'}>
+                                <Text strong>Background</Text>
+                                <input
+                                    aria-label="background-color"
+                                    type="color"
+                                    value={themeForm.backgroundColor}
+                                    onChange={(e)=>setThemeForm(prev=>({...prev,backgroundColor:e.target.value}))}
+                                    style={{width:60,height:28,border:'none',background:'transparent',cursor:'pointer'}}
+                                />
+                            </Space>
+                            <Space wrap style={{width:'100%'}}>
+                                <Text strong>Background image</Text>
+                                <Input
+                                    placeholder={'https://example.com/bg.png'}
+                                    value={themeForm.backgroundImage}
+                                    onChange={(value)=>setThemeForm(prev=>({...prev,backgroundImage:value}))}
+                                    aria-label="background-image"
+                                />
+                            </Space>
+                            <Space align={'center'}>
+                                <Text strong>Icon set</Text>
+                                <RadioGroup
+                                    type="button"
+                                    value={themeForm.iconSet}
+                                    onChange={(value)=>{
+                                        const nextValue = value?.target ? value.target.value : value;
+                                        setThemeForm(prev=>({...prev,iconSet:nextValue}));
+                                    }}
+                                >
+                                    <Radio value={'lucide'}>Lucide</Radio>
+                                    <Radio value={'emoji'}>Emoji</Radio>
+                                </RadioGroup>
+                            </Space>
+                            <Button onClick={saveThemeForm} type='primary'>{t('Save_setting')}</Button>
+                        </Space>
                     </Space>
                 </Card>
                 <br/>

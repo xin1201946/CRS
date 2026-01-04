@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button, Dropdown, SideSheet, Space, Typography } from '@douyinfe/semi-ui';
-import { MdHdrAuto, MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
-import { getSetTheme, setAutoTheme, setDarkTheme, setLightTheme } from "../code/theme_color.js";
+import { useTheme } from "../code/ThemeManager.jsx";
 import { IconLanguage, IconMail, IconSetting } from "@douyinfe/semi-icons";
 import { detectDevice } from "../code/check_platform.js";
 import { useTranslation } from 'react-i18next';
@@ -9,7 +8,6 @@ import checkNetwork from "../code/NetWorkConnect.js";
 import { getServer } from "../code/get_server.js";
 import { send_notify } from "../code/SystemToast.jsx";
 import { get_language, set_language } from "../code/language.js";
-import { getSettings } from "../code/Settings.js";
 import NotifyCenter from "../Page/NotifyCenter.jsx";
 import { emit } from "../code/PageEventEmitter.js";
 import { useNavigate } from "react-router-dom";
@@ -18,25 +16,21 @@ function Header1() {
     const navigate = useNavigate();
     const { Text } = Typography;
     const { t } = useTranslation();
+    const { config, setThemeMode, resolvedMode, icons } = useTheme();
     const langmenu = [
         { node: 'item', name: '中文', type: 'primary', active: get_language() === 1, onClick: () => set_language(1) },
         { node: 'item', name: 'English', type: 'primary', active: get_language() === 2, onClick: () => set_language(2) },
     ];
 
-    // 获取初始主题图标的函数
-    const getInitialThemeIcon = () => {
-        const theme = getSettings('theme_color');
-        if (theme === 'light') {
-            return <MdOutlineLightMode style={{ width: '20px', height: '20px' }} />;
-        } else if (theme === 'dark') {
-            return <MdOutlineDarkMode style={{ width: '20px', height: '20px' }} />;
-        } else {
-            return <MdHdrAuto style={{ width: '20px', height: '20px' }} />;
+    const themeToggleIcon = useMemo(() => {
+        if (config.themeMode === 'auto') {
+            return <icons.Auto style={{ width: '20px', height: '20px' }} />;
         }
-    };
-
-    // 初始化状态时动态计算主题图标
-    const [settingThemeIcon, set_ThemeIcon] = useState(getInitialThemeIcon);
+        if (resolvedMode === 'dark') {
+            return <icons.Moon style={{ width: '20px', height: '20px' }} />;
+        }
+        return <icons.Sun style={{ width: '20px', height: '20px' }} />;
+    }, [config.themeMode, resolvedMode, icons]);
 
     const s_side_sheet_change = () => {
         navigate("/settings/home");
@@ -51,28 +45,14 @@ function Header1() {
         set_NotifyCenter_visible(!NotifyCenter_visible);
     };
 
-    // 监听主题变化事件以实时更新图标
-    useEffect(() => {
-        const handleThemeChange = () => {
-            set_ThemeIcon(getInitialThemeIcon());
-        };
-        window.addEventListener('themeChange', handleThemeChange);
-        return () => {
-            window.removeEventListener('themeChange', handleThemeChange);
-        };
-    }, []);
-
     // 切换主题模式并更新图标
     function switchDarkMode() {
-        if (getSetTheme() === 'dark') {
-            setAutoTheme();
-            set_ThemeIcon(<MdHdrAuto style={{ width: '20px', height: '20px' }} />);
-        } else if (getSetTheme() === 'light') {
-            setDarkTheme();
-            set_ThemeIcon(<MdOutlineDarkMode style={{ width: '20px', height: '20px' }} />);
-        } else if (getSetTheme() === 'auto') {
-            setLightTheme();
-            set_ThemeIcon(<MdOutlineLightMode style={{ width: '20px', height: '20px' }} />);
+        if (config.themeMode === 'dark') {
+            setThemeMode('auto');
+        } else if (config.themeMode === 'light') {
+            setThemeMode('dark');
+        } else {
+            setThemeMode('light');
         }
     }
 
@@ -154,7 +134,7 @@ function Header1() {
                  }}
             >
                 <div className="flex-0">
-                    <button onClick={changeSelectKey} style={{ borderRadius: '7px' }} className="btn btn-ghost text-2xl">
+                    <button onClick={changeSelectKey} style={{ borderRadius: '7px' }} className="btn btn-ghost text-2xl holiday-decorated">
                         <Space>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -193,7 +173,7 @@ function Header1() {
                 <div className="flex-1"></div>
                 <div className="flex-2">
                     <Space>
-                        <Button style={{ margin: "10px" }} theme='borderless' icon={settingThemeIcon}
+                        <Button style={{ margin: "10px" }} theme='borderless' icon={themeToggleIcon}
                                 onClick={switchDarkMode}
                                 aria-label="切换颜色" />
                         <Button style={{ margin: "10px", display: detectDevice() === 'PC' ? "none" : '' }} theme='borderless' icon={<IconMail />}
