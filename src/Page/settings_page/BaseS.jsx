@@ -13,8 +13,8 @@ import {
     Typography
 } from "@douyinfe/semi-ui";
 import {getSettings, setSettings} from "../../code/Settings.js";
-import {useEffect, useState} from "react";
-import {useTheme} from "../../code/ThemeManager.jsx";
+import {useEffect, useMemo, useState} from "react";
+import {getThemePresets, useTheme} from "../../code/ThemeManager.jsx";
 import {useTranslation} from "react-i18next";
 import {send_notify} from "../../code/SystemToast.jsx";
 import Chrome_AI_Info from "../info_Page/Chrome_AI_Info.jsx";
@@ -27,6 +27,7 @@ function BaseSPage(){
     const { Title } = Typography;
     const { Text } = Typography;
     const { config: themeConfig, setThemeMode, updateTheme, icons } = useTheme();
+    const themePresets = useMemo(() => getThemePresets(), []);
     const [switchMenuPchecked, setswitchMenuPchecked] = useState('true'===getSettings('use_app_content_menu'));
     const [use_use_gemini_checked, set_use_gemini_checked] = useState('true'===getSettings('use_gemini'))
     const [user_name, set_user_name] = useState(getSettings('user_name'));
@@ -35,14 +36,20 @@ function BaseSPage(){
         backgroundColor: themeConfig.backgroundColor,
         backgroundImage: themeConfig.backgroundImage,
         iconSet: themeConfig.iconSet,
+        presetTheme: themeConfig.presetTheme || "default",
+        allowModeSwitch: themeConfig.allowModeSwitch ?? true,
     });
+    const [modeChoice, setModeChoice] = useState(themeConfig.themeMode);
     useEffect(() => {
         setThemeForm({
             primaryColor: themeConfig.primaryColor,
             backgroundColor: themeConfig.backgroundColor,
             backgroundImage: themeConfig.backgroundImage,
             iconSet: themeConfig.iconSet,
+            presetTheme: themeConfig.presetTheme || "default",
+            allowModeSwitch: themeConfig.allowModeSwitch ?? true,
         });
+        setModeChoice(themeConfig.themeMode);
     }, [themeConfig]);
     const onswitchMenuChange = checked => {
         setswitchMenuPchecked(checked);
@@ -64,8 +71,23 @@ function BaseSPage(){
     const showChromeAIInfos = () => {
         setShowChromeAIInfo(true);
     };
+    const handlePresetChange = (presetValue) => {
+        const nextPreset = themePresets[presetValue] || themePresets.default;
+        const nextMode = nextPreset.allowModeSwitch ? (modeChoice || nextPreset.defaultMode) : nextPreset.defaultMode;
+        setModeChoice(nextMode);
+        setThemeMode(nextMode);
+        setThemeForm(prev => ({
+            ...prev,
+            ...nextPreset.config,
+            presetTheme: presetValue,
+            allowModeSwitch: nextPreset.allowModeSwitch,
+        }));
+    };
     function saveThemeForm(){
-        updateTheme(themeForm);
+        updateTheme({
+            ...themeForm,
+            themeMode: modeChoice,
+        });
     }
     function save_data(){
         let server_ip=document.getElementById("server_ip_inputbox").value;
@@ -102,7 +124,7 @@ function BaseSPage(){
         }
     }
 
-    const color_int = () => themeConfig.themeMode === 'auto' ? 0 : themeConfig.themeMode === 'light' ? 1 : 2;
+    const color_int = () => modeChoice === 'auto' ? 0 : modeChoice === 'light' ? 1 : 2;
     // const close_newNotify = () => {
     //     send_notify('Notification','You successfully deleted a notification.',null,3,'info',false,'light');
     // }
@@ -135,41 +157,31 @@ function BaseSPage(){
                 <Card
                     id={'theme_color'}
                     title={t('Theme_color')}>
-                    <Space>
-                        <RadioGroup
-                            type='pureCard'
-                            value={color_int()}
-                            direction='vertical'
-                            aria-label={'Theme_color'}
-                            name="demo-radio-group-pureCard"
-                        >
-                            <Radio value={0} extra='' style={{width: 280}}
-                                   onChange={function () {
-                                       setThemeMode('auto')
-                                   }}
+                    <Space align="start" wrap>
+                        <Space vertical align="start">
+                            <Text strong>Theme presets</Text>
+                            <RadioGroup
+                                type='pureCard'
+                                value={themeForm.presetTheme}
+                                direction='vertical'
+                                aria-label={'Theme presets'}
+                                name="theme-presets"
+                                onChange={(val)=>{
+                                    const value = val?.target ? val.target.value : val;
+                                    handlePresetChange(value);
+                                }}
                             >
-                                <Space>
-                                    {t('Theme_auto')}
-                                    <Tag size="small" shape='circle' color='blue'> New </Tag>
-                                </Space>
-                            </Radio>
-
-                            <Radio value={1} extra='' style={{width: 280}}
-                                   onChange={function () {
-                                       setThemeMode('light')
-                                   }}
-                            >
-                                {t('Theme_light')}
-                            </Radio>
-                            <Radio value={2} extra='' style={{width: 280}}
-                                   onChange={function () {
-                                       setThemeMode('dark')
-                                    }}
-                            >
-                                {t('Theme_dark')}
-                            </Radio>
-                        </RadioGroup>
-                        <Divider margin='12px' />
+                                {Object.entries(themePresets).map(([key,preset])=>(
+                                    <Radio key={key} value={key} style={{width: 280}}>
+                                        <Space>
+                                            {preset.label}
+                                            {!preset.allowModeSwitch && <Tag size="small" color='purple'>Dark only</Tag>}
+                                        </Space>
+                                    </Radio>
+                                ))}
+                            </RadioGroup>
+                        </Space>
+                        <Divider margin='12px' layout="vertical" />
                         <Space vertical align={'start'} style={{width:'100%'}}>
                             <Space>
                                 <Text strong>{t('Theme_color')}</Text>
@@ -215,6 +227,56 @@ function BaseSPage(){
                                     <Radio value={'emoji'}>Emoji</Radio>
                                 </RadioGroup>
                             </Space>
+                            <Divider margin='12px' />
+                            <Text strong>{t('Theme_color')}</Text>
+                            <RadioGroup
+                                type='pureCard'
+                                value={color_int()}
+                                direction='vertical'
+                                aria-label={'Theme_color'}
+                                name="demo-radio-group-pureCard"
+                            >
+                                <Radio value={0} extra='' style={{width: 280}}
+                                       onChange={function () {
+                                           if(themeForm.allowModeSwitch){
+                                               setModeChoice('auto');
+                                               setThemeMode('auto')
+                                           }
+                                       }}
+                                       disabled={!themeForm.allowModeSwitch}
+                                >
+                                    <Space>
+                                        {t('Theme_auto')}
+                                        <Tag size="small" shape='circle' color='blue'> New </Tag>
+                                    </Space>
+                                </Radio>
+
+                                <Radio value={1} extra='' style={{width: 280}}
+                                       onChange={function () {
+                                           if(themeForm.allowModeSwitch){
+                                               setModeChoice('light');
+                                               setThemeMode('light')
+                                           }
+                                       }}
+                                       disabled={!themeForm.allowModeSwitch}
+                                >
+                                    {t('Theme_light')}
+                                </Radio>
+                                <Radio value={2} extra='' style={{width: 280}}
+                                       onChange={function () {
+                                           if(themeForm.allowModeSwitch){
+                                               setModeChoice('dark');
+                                               setThemeMode('dark')
+                                            }
+                                       }}
+                                       disabled={!themeForm.allowModeSwitch}
+                                >
+                                    {t('Theme_dark')}
+                                </Radio>
+                            </RadioGroup>
+                            {!themeForm.allowModeSwitch && (
+                                <Text type="tertiary" size="small">This theme forces dark mode.</Text>
+                            )}
                             <Button onClick={saveThemeForm} type='primary'>{t('Save_setting')}</Button>
                         </Space>
                     </Space>

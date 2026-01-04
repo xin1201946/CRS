@@ -21,6 +21,44 @@ const defaultThemeConfig = {
     backgroundColor: "#f5f7fb",
     backgroundImage: "",
     iconSet: "lucide", // lucide | emoji
+    presetTheme: "default",
+    allowModeSwitch: true,
+};
+
+const THEME_PRESETS = {
+    default: {
+        label: "Default",
+        allowModeSwitch: true,
+        defaultMode: "auto",
+        config: {
+            primaryColor: "#415CF7",
+            backgroundColor: "#f5f7fb",
+            backgroundImage: "",
+            iconSet: "lucide",
+        },
+    },
+    halloween: {
+        label: "Halloween",
+        allowModeSwitch: false,
+        defaultMode: "dark",
+        config: {
+            primaryColor: "#f97316",
+            backgroundColor: "#0b0b0f",
+            backgroundImage: "",
+            iconSet: "emoji",
+        },
+    },
+    "new-year": {
+        label: "New Year",
+        allowModeSwitch: true,
+        defaultMode: "light",
+        config: {
+            primaryColor: "#d00000",
+            backgroundColor: "#fff7e6",
+            backgroundImage: "",
+            iconSet: "lucide",
+        },
+    },
 };
 
 const HOLIDAY_MAP = {
@@ -53,10 +91,22 @@ const mediaQuery = hasWindow ? window.matchMedia("(prefers-color-scheme: dark)")
 let mediaAttached = false;
 
 function safeMergeThemeConfig(base, patch = {}) {
-    return {
+    const presetName = patch.presetTheme || base.presetTheme || defaultThemeConfig.presetTheme;
+    const preset = THEME_PRESETS[presetName] || THEME_PRESETS.default;
+    const nextMode =
+        patch.themeMode ??
+        (preset.allowModeSwitch ? (base.themeMode ?? defaultThemeConfig.themeMode) : preset.defaultMode);
+    const merged = {
+        ...preset.config,
         ...base,
         ...patch,
-        iconSet: patch.iconSet && iconSets[patch.iconSet] ? patch.iconSet : (patch.iconSet ?? base.iconSet ?? defaultThemeConfig.iconSet),
+        themeMode: nextMode,
+        presetTheme: presetName,
+        allowModeSwitch: preset.allowModeSwitch,
+    };
+    return {
+        ...merged,
+        iconSet: merged.iconSet && iconSets[merged.iconSet] ? merged.iconSet : defaultThemeConfig.iconSet,
     };
 }
 
@@ -272,6 +322,10 @@ export function getThemeConfig() {
 
 export function updateTheme(partial) {
     return updateThemeConfig(partial);
+}
+
+export function getThemePresets() {
+    return THEME_PRESETS;
 }
 
 applyThemeConfig(currentConfig);
