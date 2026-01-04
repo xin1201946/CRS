@@ -6,6 +6,7 @@ import {Notification} from '@douyinfe/semi-ui';
 import {subscribeToServerNotifications} from '././server_information_subscription_service.js'
 import {v4 as uuidv4} from 'uuid';
 import {checkAPIAvailability} from "./chrome_gemini_support.js";
+import {getThemeConfig} from "./ThemeManager.jsx";
 
 /**
  * 初始化应用程序的设置。
@@ -87,6 +88,9 @@ export default function initializeSettings(){
     // 如果 theme_color 设置不存在，则设置默认主题颜色
     // If the theme_color setting does not exist, set the default theme color
     getSettings('theme_color')===null ? setSettings("theme_color",theme_color):"";
+    if (getSettings('theme_config',true)===null){
+        setSettings("theme_config",getThemeConfig(),true);
+    }
     // 如果 use_https 设置不存在，则设置默认是否使用 HTTPS
     // If the use_https setting does not exist, set the default value for using HTTPS
     getSettings('use_https')===null ? setSettings("use_https",use_https):"";

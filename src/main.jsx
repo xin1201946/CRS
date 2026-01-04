@@ -11,6 +11,7 @@ import enUS from './locales/en-US.json';
 import {LocaleProvider} from '@douyinfe/semi-ui';
 import {get_language} from './code/language.js';
 import {HashRouter} from "react-router-dom"; // 引入语言设置函数
+import {ThemeProvider} from "./code/ThemeManager.jsx";
 
 // 初始化 i18next
 i18n
@@ -33,9 +34,11 @@ const currentLocale = get_language() === 1 ? zh_CN : en_US;
 createRoot(document.getElementById('root')).render(
     <StrictMode>
         <LocaleProvider locale={currentLocale}>
-            <HashRouter> {/* 包裹整个应用 */}
-                <App />
-            </HashRouter>
+            <ThemeProvider locale={currentLocale}>
+                <HashRouter> {/* 包裹整个应用 */}
+                    <App />
+                </HashRouter>
+            </ThemeProvider>
         </LocaleProvider>
     </StrictMode>
 );

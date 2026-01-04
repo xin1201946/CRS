@@ -6,19 +6,16 @@ import { motion } from "framer-motion"
 import initializeSettings from "./code/QuickLoadingService.js";
 import {Routes, Route, useNavigate} from 'react-router-dom';
 import {getSettings} from "./code/Settings.js";
-import {queck_change_theme, setAutoTheme, setDarkTheme, setLightTheme} from "./code/theme_color.js";
+import {setAutoTheme, setDarkTheme, setLightTheme, useTheme} from "./code/ThemeManager.jsx";
 import {detectDevice} from "./code/check_platform.js";
 import {
     Clipboard,
     CloudDownload,
     Copy, House,
     Languages,
-    Moon,
     Notebook,
     RotateCcw, Scan, Server,
     Settings, SquareChevronRight,
-    Sun,
-    SunMoon,
     SwatchBook
 } from "lucide-react";
 import {send_notify} from "./code/SystemToast.jsx";
@@ -35,13 +32,6 @@ const ErrorPage = lazy(() => import("./Page/error_page/ErrorPage.jsx"));
 
 // 加载屏幕组件,在主内容加载时显示
 export function LoadingScreen(logo=null) {
-    let theme_color=getSettings('theme_color')
-    if (theme_color==='auto'){
-        setAutoTheme()
-    }else{
-        queck_change_theme(theme_color);
-    }
-
     return (
         <div className={`flex flex-col items-center justify-center min-h-screen bg-[--semi-color-bg-0] overflow-hidden`}>
             <div className="flex flex-col items-center gap-16">
@@ -145,6 +135,7 @@ function App() {
     add_log('UI was Start...', 'successfully', 'Start successfully');
     // Register services and logs
     initializeSettings();
+    const theme = useTheme();
     const navigate = useNavigate();
     const [contextMenu, setContextMenu] = useState({
         visible: false,
@@ -220,17 +211,17 @@ function App() {
                             label: t('Theme_color'),
                             subItems: [
                                 {
-                                    icon: <SunMoon className="w-4 h-4 text-purple-400" />,
+                                    icon: <theme.icons.Auto className="w-4 h-4 text-purple-400" />,
                                     label: t('Theme_auto'),
                                     onClick: () => { setAutoTheme() },
                                 },
                                 {
-                                    icon: <Sun className="w-4 h-4 text-purple-400" />,
+                                    icon: <theme.icons.Sun className="w-4 h-4 text-purple-400" />,
                                     label: t('Theme_light'),
                                     onClick: () => { setLightTheme() },
                                 },
                                 {
-                                    icon: <Moon className="w-4 h-4 text-purple-400" />,
+                                    icon: <theme.icons.Moon className="w-4 h-4 text-purple-400" />,
                                     label: t('Theme_dark'),
                                     onClick: () => { setDarkTheme() },
                                 },

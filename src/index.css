@@ -9,7 +9,9 @@ html{
 :root {
   color-scheme: light dark;
   color: var(--semi-color-text-0);
-  background-color: var( --semi-color-bg-0);
+  background-color: var(--app-bg, var(--semi-color-bg-0));
+  --app-bg: var(--semi-color-bg-0);
+  --app-bg-image: none;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -22,7 +24,11 @@ body {
   margin: 0;
   place-items: center;
   color: var(--semi-color-text-0);
-  background-color: var( --semi-color-bg-0);
+  background-color: var(--app-bg, var(--semi-color-bg-0));
+  background-image: var(--app-bg-image);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   transition-duration: 0.4s;
   -webkit-transition-duration: 0.4s;
 }
