@@ -26,7 +26,7 @@ function BaseSPage(){
     const navigate = useNavigate();
     const { Title } = Typography;
     const { Text } = Typography;
-    const { config: themeConfig, setThemeMode, updateTheme, icons } = useTheme();
+    const { config: themeConfig, setThemeMode, updateTheme } = useTheme();
     const themePresets = useMemo(() => getThemePresets(), []);
     const [switchMenuPchecked, setswitchMenuPchecked] = useState('true'===getSettings('use_app_content_menu'));
     const [use_use_gemini_checked, set_use_gemini_checked] = useState('true'===getSettings('use_gemini'))
@@ -183,51 +183,6 @@ function BaseSPage(){
                         </Space>
                         <Divider margin='12px' layout="vertical" />
                         <Space vertical align={'start'} style={{width:'100%'}}>
-                            <Space>
-                                <Text strong>{t('Theme_color')}</Text>
-                                <icons.Primary style={{width:16,height:16}} />
-                                <input
-                                    aria-label="primary-color"
-                                    type="color"
-                                    value={themeForm.primaryColor}
-                                    onChange={(e)=>setThemeForm(prev=>({...prev,primaryColor:e.target.value}))}
-                                    style={{width:60,height:28,border:'none',background:'transparent',cursor:'pointer'}}
-                                />
-                            </Space>
-                            <Space align={'center'}>
-                                <Text strong>Background</Text>
-                                <input
-                                    aria-label="background-color"
-                                    type="color"
-                                    value={themeForm.backgroundColor}
-                                    onChange={(e)=>setThemeForm(prev=>({...prev,backgroundColor:e.target.value}))}
-                                    style={{width:60,height:28,border:'none',background:'transparent',cursor:'pointer'}}
-                                />
-                            </Space>
-                            <Space wrap style={{width:'100%'}}>
-                                <Text strong>Background image</Text>
-                                <Input
-                                    placeholder={'https://example.com/bg.png'}
-                                    value={themeForm.backgroundImage}
-                                    onChange={(value)=>setThemeForm(prev=>({...prev,backgroundImage:value}))}
-                                    aria-label="background-image"
-                                />
-                            </Space>
-                            <Space align={'center'}>
-                                <Text strong>Icon set</Text>
-                                <RadioGroup
-                                    type="button"
-                                    value={themeForm.iconSet}
-                                    onChange={(value)=>{
-                                        const nextValue = value?.target ? value.target.value : value;
-                                        setThemeForm(prev=>({...prev,iconSet:nextValue}));
-                                    }}
-                                >
-                                    <Radio value={'lucide'}>Lucide</Radio>
-                                    <Radio value={'emoji'}>Emoji</Radio>
-                                </RadioGroup>
-                            </Space>
-                            <Divider margin='12px' />
                             <Text strong>Theme Mode</Text>
                             <RadioGroup
                                 type='pureCard'
